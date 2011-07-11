@@ -1,4 +1,7 @@
-/* @override http://jek.brettterpstra.dev/css/style.css */
+/* @override 
+	http://jek.brettterpstra.dev/css/style.css
+	http://temp.brettterpstra.dev/css/style.css
+*/
 /* -------------------------------------------------------------- 
    Auguste
    Blog + Portfolio
@@ -56,7 +59,13 @@ span.fancy {font-family:"Hoefler Text",Baskerville,Garamond,"Palatino Linotype",
 .button:focus {outline:0;}
 .button:active {position:relative; top:1px;}
 .button:link,.button:visited {color:#2d3133;}
-.btn-more:link,.btn-more:visited {background-color:#dcdbcc; color:#3b3024; font-size:12px; line-height:normal; padding:3px 6px; margin:0; -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; position:absolute; right:10px; top:20px;-webkit-transition:all .2s ease-in-out;
+.btn-more:link,.btn-more:visited {background-color:#dcdbcc; color:#3b3024; font-size:12px; line-height:normal; padding:3px 6px; -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; 
+display:block;
+text-align:center;
+float:right;
+clear:both;
+margin:10px 20px 10px;
+-webkit-transition:all .2s ease-in-out;
 -moz-transition:all .2s ease-in-out;
 -o-transition:all .2s ease-in-out;
 transition:all .2s ease-in-out;}
@@ -157,7 +166,7 @@ transition:all .2s ease-in-out;
 		#sidebar .tabnav li a {background:#dcdbcc; color:#3b3024; font-size:11px; font-style:normal; font-family: Helvetica,Arial,sans-serif; text-transform:uppercase; padding:9px; border:1px solid #ccc; border-left:1px solid #d0cfc1; margin-bottom:-2px; display:block; float: left;margin-right:2px;}
 		#sidebar .tabnav li.ui-state-active a {background-color:#efefe9; color:#3b3024; outline:none; border-left:1px solid #d0cfc1;}
 		#sidebar .tabnav li a:hover, #sidebar .tabnav li a:active {color:#3b3024; text-decoration:none;}
-		#sidebar .tab-content {padding:10px 0; border-top:1px solid #d0cfc1; border-bottom: 1px solid transparent; }
+		#sidebar .tab-content {padding:10px 0; border-top:1px solid #d0cfc1; border-bottom: 1px solid transparent; position:relative;}
 		#sidebar .tab-content li {font-style:normal; padding:4px 0;}
 		#sidebar .tab-content li:first-child {padding-top:4px;}
 		.ui-tabs .ui-tabs-hide {display:none;}
@@ -713,6 +722,7 @@ a.more-link:hover {
   height:70px;
   width:auto;
   float:right;
+  margin:0 0 10px 10px;
 }
 .archive .post p {
   display:inline;

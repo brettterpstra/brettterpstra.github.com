@@ -719,7 +719,7 @@ a.more-link:hover {
   margin-bottom:0;
 }
 .archive .post img {
-  height:70px;
+  max-height:70px;
   width:auto;
   float:right;
   margin:0 0 10px 10px;

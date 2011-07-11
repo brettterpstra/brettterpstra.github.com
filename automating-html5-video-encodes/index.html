@@ -1,0 +1,283 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>Automating HTML5 video encodes</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">27 Mar 2011 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">Automating HTML5 video encodes</a></h1>
+		
+<p>I spent an inordinate amount of time <em>not</em> doing useful things today. During this non-productivity bender, I got a little obsessed with making the HTML5 video encoding process easier. I&rsquo;ve been working on a <a href="http://bundle.weblogzinc.com/video">tutorial site</a> for the Blogsmith Bundle, so this whole deal needed to be sped up. I came out with a script which, when combined with the right command line utilities, takes 90% of the manual labor out of creating the multiple formats needed.</p>
+
+<p>HTML5 video, if you&rsquo;re not familiar, provides a means to supply modern browsers with high-quality video <em>without</em> using Flash. It works across iOS devices beautifully, and the markup is highly semantic. The problem is that every browser has chosen a different format to promote, and using HTML5 video effectively means providing the same video in three formats (OGV, MP4, WEBM). Then, you need to code in a Flash fallback for older browsers. This would all be fine if my usual video conversion tools had a multiple-encode feature. They don&rsquo;t. The only one that comes close is <a href="http://thelittleappfactory.com/evom/">Evom</a>, which has an HTML5 preset to encode OGV and MP4 at the same time, but the OGV files won&rsquo;t play in Firefox and it can&rsquo;t do WEBM at <em>all</em> right now.</p>
+
+<p>So, taking matters into my own hands&hellip;</p>
+
+<!--more-->
+
+<h3 id="the-workflow">The workflow</h3>
+
+<p>Here&rsquo;s the workflow I&rsquo;m using now:</p>
+
+<ol>
+  <li>Export a screencast as an MP4 file to a bucket folder</li>
+  <li>Hazel detects a new MP4 file and runs a shell script on it which:
+    <ol>
+      <li>Creates a new folder based on the file&rsquo;s base name and moves the file into it</li>
+      <li>Runs an ffmpeg sequence to create a webm version</li>
+      <li>Runs an ffmpeg2theora command to create an ogv</li>
+      <li>Uses ffmpeg to create a poster image from the first frame of the mp4</li>
+      <li>Uses rsync to put the finished folder on my server</li>
+    </ol>
+  </li>
+  <li>I get a growl notification from Hazel that files are converted and uploaded</li>
+  <li>I insert the ungodly-long &ldquo;shortcode&rdquo; for the <a href="http://wordpress.org/extend/plugins/videojs-html5-video-player-for-wordpress/installation/">VideoJS plugin</a> using TextExpander into a new WordPress post.</li>
+</ol>
+
+<p>Four steps, and I only have to interact with two of them. The script is pretty hardcoded for my setup, but I moved some of the config up to the top for convenience. You&rsquo;ll need ffmpeg and ffmpeg2theora installed, both of which are really easy to set up with <a href="https://github.com/mxcl/homebrew">homebrew</a>. You can probably find binaries, too, but I just used <code>brew</code> for these.</p>
+
+<h3 id="the-script">The script</h3>
+
+<p>Here&rsquo;s the script, hope it helps someone else, too:</p>
+
+<pre lang="bash" filename="html5encode.sh" escaped="true">
+#!/bin/bash
+# html5encode.sh
+# Brett Terpstra, 2011 - http://brettterpstra.dev/automating-html5-video-encodes
+# Requires ffmpeg and ffmpeg2theora
+##################
+### CONFIG #######
+MAXSIZE=&quot;960x540&quot;
+SSHURL=&quot;username@your.webserver.com&quot;
+SSHDIR=&quot;/www/video/media/&quot;
+### END CONFIG ###
+
+INPUT=$1
+DIRNAME=`dirname &quot;$INPUT&quot;`
+FILENAME=`basename &quot;$INPUT&quot;`
+BASENAME=${FILENAME%%.*}
+
+cd &quot;$DIRNAME&quot;
+if [ -d &quot;$BASENAME&quot; ]; then
+  # /usr/local/bin/growlnotify -s -i &quot;Terminal.app&quot; -m &quot;Found $FILENAME, but directory $BASENAME already exists. Aborting&quot;
+  exit 1
+fi
+mkdir &quot;$BASENAME&quot;
+mv &quot;$FILENAME&quot; &quot;$BASENAME/&quot;
+cd &quot;$BASENAME&quot;
+
+/usr/local/bin/ffmpeg -pass 1 -passlogfile &quot;$FILENAME&quot; -threads 16  -keyint_min 0 \
+-g 250 -skip_threshold 0 -qmin 1 -qmax 51 -i &quot;$FILENAME&quot; -vcodec libvpx -b 614400 \
+-s $MAXSIZE -aspect 16:9 -an -y temp.webm
+
+/usr/local/bin/ffmpeg -pass 2 -passlogfile &quot;$FILENAME&quot; -threads 16  -keyint_min 0 \
+-g 250 -skip_threshold 0 -qmin 1 -qmax 51 -i &quot;$FILENAME&quot; -vcodec libvpx -b 614400 \
+-s $MAXSIZE -aspect 16:9 -acodec libvorbis -y &quot;$BASENAME&quot;.webm
+
+rm temp.webm
+rm *.log
+
+/usr/local/bin/ffmpeg2theora --videoquality 5 --audioquality 1 --max_size $MAXSIZE &quot;$FILENAME&quot; -o &quot;$BASENAME.ogv&quot;
+/usr/local/bin/ffmpeg -i &quot;$FILENAME&quot; -ss 0 -vframes 1 -vcodec mjpeg -f image2 &quot;${BASENAME}Poster.jpg&quot;
+cd ..
+rsync -v -r -e ssh &quot;`pwd`/$BASENAME&quot; $SSHURL:$SSHDIR
+</pre>
+
+<p>The Hazel rule I&rsquo;m running simply looks for files in the bucket folder with the <code>.mp4</code> extension and passes them to the shell script.</p>
+
+<p>Let me know if you have a better way to automate this. Also, let me know if you&rsquo;ve found a good way to encode h.264 from the command line on a Mac. I haven&rsquo;t been able to get ffmpeg to compile with x/h.264 support yet, but it was irrelevant as I had to output <em>some</em> format to begin with. Might as well save to the one format I can&rsquo;t encode properly from a shell script&hellip;</p>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/new-textexpander-downloads-with-custom-prefixes"><span>New: TextExpander downloads with custom prefixes</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/web-excursions-march-20-march-25"><span>Web excursions: March 20 - March 25</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/bash" name="bash">bash</a></li>
+		
+			<li><a href="/tags/video" name="video">video</a></li>
+		
+			<li><a href="/tags/html5" name="html5">html5</a></li>
+		
+			<li><a href="/tags/automation" name="automation">automation</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/automating-html5-video-encodes';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>TextExpander experiments</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">07 May 2010 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">TextExpander experiments</a></h1>
+		<p>I&rsquo;ve seen a few people around the &lsquo;net sharing their <a href="http://smileonmymac.com/TextExpander/">TextExpander</a> snippets, so I thought I&rsquo;d join in. Not familiar with TextExpander? It&rsquo;s a Mac utility that expands short snippets into full text you&rsquo;ve defined. There are quite a few programs that do text expansion (see <a href="http://www.ergonis.com/products/typinator/">Typinator</a>), but TextExpander currently holds my heart because of its extra features such as shell scripting, completion suggestion and a new Fill dialog for variable input.</p>
+
+<p>Most of my snippets are specific only to me, such as email signoffs and abbreviations for companies I work for. I have a few more general snippets, though, so that&rsquo;s what I&rsquo;m sharing. For reference, I&rsquo;m currently experimenting with triggering only after a Tab press, a la TextMate tab-triggers. That shouldn&rsquo;t make a difference on many of these, they should work with whatever you have set up.</p>
+
+<p>All of the snippets I&rsquo;m sharing are <a href="#downloadlink">available for download</a>. For more detail, read on&hellip;</p>
+
+<!--more-->
+<p>#### Lorem Ipsum ####</p>
+
+<p>First, there are the Lipsums. This is a collection of my most-used <a href="http://www.lipsum.com/">Lorem Ipsum</a> snippets, great for filling in fields when testing forms, making quick HTML markup for CSS styling, or anywhere you just need to fill up some space. I have snippets for 1, 2, and 3 paragraphs of standard Lorem Ipsum text, as well as a few for HTML-specific lipsum. The king of these is a snippet I pulled from  <a href="http://html-ipsum.com/">http://html-ipsum.com/</a> that inserts all of the major elements of HTML markup. It&rsquo;s great for giving your CSS stylesheet a quick test to make sure you&rsquo;ve covered the basics.</p>
+
+<p>The Tools collection is a sampling of scripts and snippets, some more useful than others, that I&rsquo;ve been experimenting with (and, in some cases, making good use of). Some examples:</p>
+
+<h4 id="hyphenate-clipboard">Hyphenate clipboard</h4>
+
+<p>I tend to write out very long, multi-word modifiers that need hyphenation. While it&rsquo;s more effective to use a System Service, I&rsquo;ve found that the Automator services are too slow for such simple operations. So I cut the needs-to-be-hyphenated text to the clipboard and type ,,-. When I hit tab, the hyphenated version is pasted, with proper attention to punctuation and leading/trailing spaces. It looks like this:</p>
+
+<pre><code>#!/usr/bin/env ruby -wKU
+
+# get the clipboard using pbpaste
+clip = %x{__CF_USER_TEXT_ENCODING=$UID:0x8000100:0x8000100 pbpaste}
+# print it out, hyphenated
+print clip.gsub(/\b\s\b/,'-')
+</code></pre>
+
+<h4 id="encode-email-address">Encode email address</h4>
+
+<p>This one takes an email address from the clipboard and returns a &ldquo;mailto:&rdquo; link with the email address itself encrypted, at least to the point where it&rsquo;s not human readable anymore.</p>
+
+<pre><code>#!/usr/bin/env ruby -wKU
+
+clipboard = %x{__CF_USER_TEXT_ENCODING=$UID:0x8000100:0x8000100 pbpaste}.strip
+print "mailto:#{$2.gsub(/./) {sprintf("&amp;#x%02X;", $&amp;.unpack("U")[0])}}" if clipboard =~ /\A(mailto:)?(.*?@.*\..*)\z/
+</code></pre>
+
+<h4 id="paste-markdown-references">Paste Markdown references</h4>
+
+<p>This one parses the clipboard for any and all urls, pasting the resulting matches as a <a href="http://daringfireball.net/projects/markdown/">Markdown</a> reference list. It automatically names the references based on the url&rsquo;s domain, strips duplicate urls and sorts the list alphanumerically by reference name. If the clipboard is already a reference list, it will sort it and remove duplicates before pasting it. You can then use the references in your Markdown to link to the associated URL, or just make the list look nice in an email or other non-rendered document.</p>
+
+<pre><code>#!/usr/bin/env ruby -rjcode -Ku
+clipboard = %x{__CF_USER_TEXT_ENCODING=$UID:0x8000100:0x8000100 pbpaste}.strip
+links = clipboard.scan /(?:\[([^\]]+)\]\: )?(https?:\/\/[^ \n\r"]+)/m
+norepeat = []
+output = []
+exit if links.nil?
+
+links.each {|url|
+  fresh = true
+  output.each {|a|
+    fresh = false if a['link'] == url[1]
+  }
+  next unless fresh
+
+	if url[0].nil?
+		domain = url[1].match(/https?:\/\/([^\/]+)/)
+		parts = domain[1].split('.')
+		name = case parts.length
+			when 1,2: parts[0]
+			else parts[1]
+		end
+	else
+		name = url[0]
+	end
+
+  name = "itunes" if url[1] =~ /(itunes|phobos).apple.com/
+
+	while norepeat.include? name
+		name = name =~ / ?[0-9]$/ ? name.next! : name = name + " 2"
+	end
+	output &lt;&lt; {'title' =&gt; name, 'link' =&gt; url[1] }
+	norepeat.push name
+}
+
+output.sort {|a,b| a['title'] &lt;=&gt; b['title']}.each { |x| puts "[#{x['title']}]: #{x['link']}" }
+</code></pre>
+
+<h4 id="shortening-urls">Shortening URLs</h4>
+
+<p>There are 4 commands in the group for shortening URLs, using bit.ly, go., is.gd and tinyurl, respectively. There are some AppleScript-based commands already available which do this, but I like the string-handling flexibility of Ruby a little better (and it processes a tiny bit quicker, as well).</p>
+
+<p>The basic command looks like this, with slight differences for each service:</p>
+
+<pre><code>#!/usr/bin/env ruby -wKU
+
+require 'open-uri'
+require 'cgi'
+
+def entity_escape(text)
+  text.gsub(/&amp;(?!([a-zA-Z0-9]+|#[0-9]+|#x[0-9a-fA-F]+);)/, '&amp;amp;')
+end
+
+def make_link(text)
+  case text
+  when %r{\Ahttps?://.*?\.\w{2,4}.*?\z}:
+    entity_escape(text)
+  when %r{\A(www\..*|.*\.\w{2,4})\z}:
+    "http://#{entity_escape text}"
+  when %r{\A.*?\.\w{2,4}\/?.*\z}:
+    "http://#{entity_escape text}"
+  else
+    nil
+  end
+end
+
+
+url = make_link %x{__CF_USER_TEXT_ENCODING=$UID:0x8000100:0x8000100 pbpaste}.strip
+
+print open("http://bit.ly/api?url=#{CGI.escape(url)}").read unless url.nil?
+</code></pre>
+
+<p>I&rsquo;ll stop there for now. The Tools set also contains:</p>
+
+<ul>
+  <li>
+    <p><strong>Clipboard HTML link</strong></p>
+
+    <p>Makes an html hyperlink (code, not rich text) from a url in the clipboard. Uses the Fill feature to request the link text.</p>
+  </li>
+  <li>
+    <p><strong>Markdown Link</strong></p>
+
+    <p>Makes a Markdown format link from a url in the clipboard. Uses the Fill feature to request the link text.</p>
+  </li>
+  <li>
+    <p><strong>Rounded Corners</strong></p>
+
+    <p>Uses the Fill feature to request a pixel radius, and creates cross-browser CSS for rounded corners. There are 5 variations, one for each corner and one for all corners.</p>
+  </li>
+  <li>
+    <p><strong>CSS Reset</strong></p>
+
+    <p>Your typical CSS reset code, in Meyers and YUI flavors.</p>
+  </li>
+  <li>
+    <p><strong>Make URL</strong></p>
+
+    <p>Take whatever text is in the clipboard and provide a best-guess URL for it. Handy if you have a qualified domain and just need the protocol added, or if you have an email address and want it to be a mailto: link.</p>
+  </li>
+  <li>
+    <p><strong>Hashbang</strong></p>
+
+    <p>Instant hashbangs for ruby, osascript and bash.</p>
+  </li>
+</ul>
+
+<p>Feel free to download, explore and improve!</p>
+
+<p><a id="downloadlink">
+[download id=&rdquo;6&rdquo;]</a></p>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/a-system-service-for-to-url-shortening"><span>A System Service for to. url shortening</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/a-few-scripts-for-taskpaper-users"><span>A few scripts for TaskPaper users</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/snow-leopard" name="snow-leopard">snow leopard</a></li>
+		
+			<li><a href="/tags/os-x" name="os-x">os x</a></li>
+		
+			<li><a href="/tags/textexpander" name="textexpander">textexpander</a></li>
+		
+			<li><a href="/tags/mac" name="mac">mac</a></li>
+		
+			<li><a href="/tags/utilities" name="utilities">utilities</a></li>
+		
+			<li><a href="/tags/lorem-ipsum" name="lorem-ipsum">lorem ipsum</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/textexpander-experiments';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Quick tip: running nvALT after a Notational Velocity update</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p><strong>Unimportant update:</strong> its an update, not an udpate. I need a headline proofreader.</p>
+
+<p>If you&rsquo;ve run the newest version of <a href="http://notational.net/">Notational Velocity</a>, you may have noticed that you can no longer run <a href="http://brettterpstra.dev/code/notational-velocity-alt/">nvALT</a> (<a href="http://brettterpstra.dev/notational-velocity-update-breaks-nvalt/">as mentioned here</a>). The database changes, and even though it offers to run anyway, either button quits the app.</p>
+
+<p>I&rsquo;m working on the next version of nvALT, but incorporating the changes is proving tedious and it&rsquo;s going to be a little while (a week or two, I think). In the meantime, I will soon be posting an interim version which switches the database it uses, creating a new one with a different name. If you sync with Simplenote and don&rsquo;t run both versions at the same time, your notes will stay the same. If you import from Dropbox, you can store both preference files in the Dropbox folder, and your notes will show back up from there. You will, however, lose your local tags (Simplenote tags will be fine). When the final 1.0.8 comes out, it should be able to use the original database, which Simplenote and/or Dropbox will have kept up-to-date. More instructions on that as soon as I get the interim update out.</p>
+
+<!--more-->
+
+<h2 id="restoring-the-database">Restoring the database</h2>
+
+<p>In the meantime, if you want to use the current version of nvALT and can&rsquo;t, here are some options. No matter which you choose, you&rsquo;ll be missing your local tags until the new version comes out, and any tags created between now and then won&rsquo;t be kept (older tags will be restored, if I get it right).</p>
+
+<ul>
+  <li>If you happen to be a new user and don&rsquo;t have any notes you need to save, just delete the Notes &amp; Settings file (See below for where to find the file) and let nvALT create a new one.</li>
+  <li>If you sync via Simplenote, just delete the Notes &amp; Settings file on your drive, and let the notes sync back down.</li>
+  <li>If you store your notes as files in Dropbox, you can delete the Notes &amp; Settings file in your Dropbox folder and restore it to a previous version using the web interface for Dropbox. That&rsquo;s an ideal solution, as any tags created up to that point will show back up.</li>
+  <li>If you do neither, you&rsquo;re out of luck unless you have a backup of the Notes &amp; Settings file from before the first time you ran the updated nvALT. Time Machine may be of assistance, or BackBlaze/Mozy/Arq, etc. If you do have a backup, just restore it, overwriting the current version.</li>
+</ul>
+
+<h3 id="the-notes--settings-file">The Notes &amp; Settings file</h3>
+
+<p>If you keep your notes in the database only (you don&rsquo;t write files to disk), your Notes &amp; Settings file will be in <code>~/Library/Application Support/Notational Data/Notes &amp; Settings</code>, where the ~ is your user&rsquo;s home directory.</p>
+
+<p>If you do write files to disk, whether it&rsquo;s Dropbox or elsewhere, your Notes &amp; Settings file will be in that folder.</p>
+
+<p>You should back that file up before replacing it. Simply copy or move it out of the directory to a safe place.</p>
+
+<p>I hope that helps, let me know if you have any trouble.</p>
+
+</div>
+
+</body>
+</html>

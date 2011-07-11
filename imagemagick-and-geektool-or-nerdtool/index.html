@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>ImageMagick and GeekTool (or NerdTool)</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">20 Feb 2011 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">ImageMagick and GeekTool (or NerdTool)</a></h1>
+		<p>This is going to be a relatively quick post, and it&rsquo;s definitely aimed at people who can already find their way around the command line, and probably have a little experience with <a href="http://projects.tynsoe.org/en/geektool/">GeekTool</a> and/or <a href="http://mutablecode.com/apps/nerdtool">NerdTool</a> as well.</p>
+
+<p>I kind of stumbled on this concept while working on something unrelated. Basically, you pipe output from a shell command into ImageMagick&rsquo;s <code>convert</code> command as a label, and then manipulate it to get an image you can display on your desktop. It allows for reflections, rotations, gradients and all kinds of fun things you could never do with a shell Geeklet alone. As an experiment, I just wanted a basic reflection, with a little bit of vertical text&hellip;</p>
+
+<!--more-->
+
+<p>Here&rsquo;s what I was aiming for:</p>
+
+<p><a href="http://brettterpstra.dev/wp-content/uploads/2011/02/reflection_gradient.jpg"><img src="http://brettterpstra.dev/wp-content/uploads/2011/02/reflection_gradient_small.jpg" alt="Reflection Gradient Small" /></a></p>
+
+<p>Here&rsquo;s how I got it:</p>
+
+<ol>
+  <li>Install ImageMagick. It&rsquo;s easiest with <a href="https://github.com/adamv/homebrew">Homebrew</a> (<code>brew install imagemagick</code>), but you&rsquo;ll figure out a way. Think you already have it? Check for the <code>convert</code> command. (Also make sure you have GhostScript, which should be installed by HomeBrew. Thanks to Rich G. for the catch.)</li>
+  <li>Install the script below in ~/scripts/shadow.sh (you can put it anywhere, just be sure to modify the upcoming instructions appropriately).</li>
+  <li>Make the script executable: <code>chmod a+x ~/scripts/shadow.sh</code></li>
+  <li>Set up a shell geeklet or nerdlet (GeekTool or NerdTool) to refresh every 60 seconds and run this command: <code>~/scripts/shadow.sh 2&gt;&amp;1</code>. Alternatively, you can run this with cron. Make the Geeklet invisible by sizing it or setting transparency on it.</li>
+  <li>Add an Image geek/nerdlet to display /Users/yourusername/reflected.png. Make it really big, left aligned and turn off scaling. Set the refresh time to 60 seconds. Since it&rsquo;s not running a shell script, you could probably set it to 10 seconds and not raise CPU average load noticeably. Your choice.</li>
+</ol>
+
+<p>Here&rsquo;s the script:</p>
+
+<pre lang="bash" escaped="false" filename="shadow.sh">
+#!/bin/bash
+
+# ======= CONFIG ============================================
+# set this to the location of ImageMagick's convert command
+CONVERTER="/usr/local/bin/convert"
+# set this to the location where your Image geeklet will look
+OUTFILE="$HOME/reflected.jpg"
+# ===========================================================
+
+# don't mess with these
+workdir=$TMPDIR
+infile="$workdir/combo.png"
+
+# create the pieces of the date (year, month, day) in $TMPDIR
+date +'%Y' - $CONVERTER -background none -fill white -kerning -9 -font Helvetica -pointsize 120 -trim -bordercolor none -border 0x8 label:@- $workdir/year.png
+date +'%A %I:%M%p' - $CONVERTER -background none -fill white -kerning 10 -font Helvetica -pointsize 70 -trim -bordercolor none -border 0x8 label:@- $workdir/day.png
+date +'%B %d' - $CONVERTER -background none -fill white -kerning 0 -font Helvetica -pointsize 200 label:@- -trim $workdir/month.png
+# stack the day on top of the month
+$CONVERTER $workdir/day.png $workdir/month.png -background none -trim -append $workdir/daymonth.png
+# rotate the result 90 degrees
+$CONVERTER $workdir/daymonth.png -background none -trim -rotate 90 $workdir/daymonth90.png
+# stack the year on top of the rotated day/month and rotate the result -90 degrees
+$CONVERTER $workdir/year.png $workdir/daymonth90.png -gravity northeast -background none -append -rotate -90 $infile
+# set the width and height variables
+ww=`$CONVERTER $infile -format "%w" info:`
+hh=`$CONVERTER $infile -format "%h" info:`
+hhr=`$CONVERTER xc: -format "%[fx:$hh*40/50]" info:`
+# clone the original image, flip it, composite a gradient and append it below the original
+$CONVERTER $infile \
+\( -size ${ww}x0 xc:none \) \
+\( -clone 0 -flip +repage \) \
+\( -clone 0 -alpha extract -flip +repage \
+-size ${ww}x${hh} gradient: +level 0x50% \
+-compose multiply -composite \) \
+\( -clone 2 -clone 3 -alpha off -compose copy_opacity -composite \) \
+-delete 2,3 -channel rgba -alpha on -background none -append $OUTFILE
+exit 0
+</pre>
+
+<p>The script is adapted from one I found at <a href="http://www.imagemagick.org/discourse-server/viewtopic.php?f=1&amp;t=15371">imagemagick.org&rsquo;s forum</a>, and there&rsquo;s a good breakdown of how it works at the bottom of the thread.</p>
+
+<p>You should see something like the image above on your desktop now, if all went well. If not, first look for the output file (~/reflected.png) and see if it exists. If it does, check your image geeklet. If it doesn&rsquo;t, try executing the script on the command line and see what happens (<code>~/scripts/shadow.sh</code>). Any error messages you get will help you start debugging.</p>
+
+<p>There are a lot of fancy things you can do with ImageMagick, but this is what I had time to throw together. Play with the settings, and then find some <a href="http://www.imagemagick.org/script/command-line-options.php">decent documentation</a> for ImageMagick and do something way cooler!</p>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/wordpress-custom-taxonomy-and-xml-rpc"><span>WordPress, custom taxonomy, and XML-RPC</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/my-desktop-february-2011"><span>My Desktop, February 2011</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/geektool" name="geektool">geektool</a></li>
+		
+			<li><a href="/tags/desktop" name="desktop">desktop</a></li>
+		
+			<li><a href="/tags/imagemagick" name="imagemagick">imagemagick</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/imagemagick-and-geektool-or-nerdtool';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Quick Tip: throttling parallel batch processes in Terminal</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  
+<p><img src="http://brettterpstra.dev/wp-content/uploads/2011/05/parallel_clipart.jpg" class="alignright shadow" alt="Parallel Planes ClipartIt" /><em><a href="http://brettterpstra.dev/tag/quicktip/">Quick tips</a> are random posts regarding something I discovered on my way to something bigger. They usually get longer than &ldquo;quick&rdquo; would imply, for which I refuse to apologize.</em></p>
+
+<p>It starts out with <a href="http://developer.apple.com/library/mac/#documentation/Darwin/Reference/ManPages/man1/mdfind.1.html">mdfind</a> and all of the <a href="http://www.tuaw.com/2008/02/15/terminal-tips-creating-a-spotlight-based-gallery/">creative scripting</a> you can do with it. You start finding batches of files with something in common and you do things with them or to them. It sounds genocidal; it&rsquo;s not. It&rsquo;s very productive after the initial script setup.</p>
+
+<p>Take, for example, a little script I run to add thumbnails to weblocs I have laying around. It looks something like this:</p>
+
+<div class="highlight"><pre><code class="bash">mdfind -onlyin ~/Dropbox/Sync/Bookmark/ <span class="se">\</span>
+<span class="s1">&#39;(! ( ((kMDItemOMUserTags == &quot;*donotthumbnail*&quot;cd) \</span>
+<span class="s1">|| (kOMUserTags == &quot;*donotthumbnail*&quot;cd) ) ) \</span>
+<span class="s1">&amp;&amp; (kMDItemFSHasCustomIcon = &quot;0&quot;) \</span>
+<span class="s1">&amp;&amp; (kMDItemContentType == &quot;*webloc*&quot;cd))&#39;</span> | <span class="k">while </span><span class="nb">read </span>file; <span class="se">\</span>
+<span class="k">do</span> /usr/local/bin/setWeblocThumb <span class="s2">&quot;$file&quot;</span> ; <span class="k">done</span>
+</code></pre>
+</div>
+
+<p>It&rsquo;s a one-liner, you&rsquo;d want to reassemble it to run it (remove the backslashes at the line ends and join them all together), but it uses mdfind to search my shared bookmarks folder for recent items which don&rsquo;t already have a custom thumbnail, passes them to <a href="http://hasseg.org/setWeblocThumb/">setWeblocThumb</a> and processes them&hellip; one at a time. I know my machine and my bandwidth can handle more than that, but if the list is 50+ long, that&rsquo;s a lot of processes doing some relatively intensive labor. It would grind my machine to a halt. Yes, I tried it just to be sure.</p>
+
+<p>So I needed a way to throttle the number of simultaneous processes, and I know that someone out there must have long beat me to the solution. There it was: <a href="http://pebblesinthesand.wordpress.com/2008/05/22/a-srcipt-for-running-processes-in-parallel-in-bash/">parallel</a>. It&rsquo;s a script you can download and make executable in your path, and then run it with a few parameters and a batch of files or arguments. It will keep your defined number of processes going until the job is done, but won&rsquo;t let things get out of hand. You can add <code>nice</code> (<a href="http://man.cx/nice">man page</a>) in each process if you need more cpu control over the process.</p>
+
+<p>My new command looks like:</p>
+
+<div class="highlight"><pre><code class="bash">mdfind -onlyin /Users/ttscoff/Dropbox/Sync/Bookmark/ <span class="se">\</span>
+<span class="s1">&#39;(! ( ((kMDItemOMUserTags == &quot;*donotthumbnail*&quot;cd) \</span>
+<span class="s1">|| (kOMUserTags == &quot;*donotthumbnail*&quot;cd) ) ) \</span>
+<span class="s1">&amp;&amp; (kMDItemFSHasCustomIcon = &quot;0&quot;) \</span>
+<span class="s1">&amp;&amp; (kMDItemContentType == &quot;*webloc*&quot;cd))&#39;</span>| parallel -j 8 -r <span class="s2">&quot;/usr/local/bin/setWeblocThumb&quot;</span>
+</code></pre>
+</div>
+
+<p>Seriously, if you&rsquo;re doing anything in batch you should <a href="http://pebblesinthesand.wordpress.com/2008/05/22/a-srcipt-for-running-processes-in-parallel-in-bash/">check Parallel out</a>, or show me an even better one. Parallel made my morning, and by keeping CPU from maxing I actually got through some batches even faster. I&rsquo;m sure there are other elegant ways of handling this. Let &lsquo;em rip.</p>
+
+</div>
+
+</body>
+</html>

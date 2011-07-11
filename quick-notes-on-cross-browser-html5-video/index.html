@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>Quick notes on cross-browser HTML5 video</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">15 Sep 2010 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/blog">Blog</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">Quick notes on cross-browser HTML5 video</a></h1>
+		<p><img src="http://brettterpstra.dev/wp-content/uploads/2010/09/catholictv.jpg" alt="Catholic TV Screenshot" border="0" width="300" height="180" class="alignright" />I&rsquo;ve been doing some screencasts lately, and have wanted to post them as HTML5 videos in many cases. I also wanted to serve them from my <a href="http://aws.amazon.com/cloudfront/">Cloudfront</a> <abbr title="Content Distribution Network">CDN</abbr>. This is not a how-to post, just some things I learned that I couldn&rsquo;t find existing answers to. For an excellent primer, see <a href="http://diveintohtml5.org/video.html">Video On the Web</a> from <a href="http://diveintohtml5.org/">Dive Into HTML5</a>.</p>
+
+<p>I kept running into hurdles, whether it was the content-type of the file being served, or the OGV encoding not working in Firefox, weird sizing, slight variations in syntax, etc. So here are my notes on how I got from <a href="http://www.telestream.net/screen-flow/overview.htm">ScreenFlow</a> to a cross-browser HTML5 video embed. They may not be of much use outside of that situation, but they might help somebody.</p>
+
+<!--more-->
+<ol>
+  <li>The only way I could get an OGV file that actually played in Firefox was to export from ScreenFlow in a DV format, and use <a href="http://thelittleappfactory.com/evom/">Evom</a> or <a href="http://v2v.cc/~j/ffmpeg2theora/">ffmpeg2theora</a> to convert. Note that Evom requires the file extension to be <code>mov</code>, as it doesn&rsquo;t recognize (and won&rsquo;t accept) <code>dv</code> files. Evom has a setting called HTML5 that will create both MP4 and OGV files.</li>
+  <li>Aside from writing my own Ruby scripts to handle the upload to my <a href="http://aws.amazon.com/s3/">Amazon S3</a> account, <a href="http://www.panic.com/transmit/">Transmit</a> is the only app I could find that would let me automatically set appropriate MIME headers on uploaded video files, and allow me to automatically make them public. I now have a Transmit droplet in <a href="http://aptonic.com/">Dropzone</a> that will upload my files directly to the S3 bucket that my Cloudfront account uses, set their Content-Type to video/ogg and video/mp4, respectively, and make them public-readable.</li>
+  <li>The embed code is a little bit flexible, with parameters like &ldquo;preload&rdquo; and &ldquo;autobuffer&rdquo; seemingly being interchangeable. My current, working embed code looks like:
+&lt;div markdown=0&gt;</li>
+</ol>
+<pre><code>
+&lt;video width=&quot;476&quot; height=&quot;324&quot; controls=&quot;&quot; autobuffer=&quot;autobuffer&quot;&gt;
+  &lt;source src=&quot;http://cdn.brettterpstra.dev/media/TablinksDemo2.mp4&quot; type=&#x27;video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;&#x27;&gt;
+  &lt;source src=&quot;http://cdn.brettterpstra.dev/media/TablinksDemo2.ogv&quot;  type=&#x27;video/ogg; codecs=&quot;theora, vorbis&quot;&#x27;&gt;
+&lt;/video&gt;
+</code></pre>
+<p>&lt;/div&gt;</p>
+
+<p>With those steps in place, I&rsquo;ve got video that plays (and looks decent) in Safari 5, Firefox 4 and Chrome. Obviously, I&rsquo;d normally want a Flash fallback, but given that the videos I&rsquo;m currently working on are about Safari 5, I&rsquo;m not overly concerned whether Internet Explorer can see them or not. There&rsquo;s always good-looking plugins like <a href="http://flarevideo.com/">FlareVideo</a> if that&rsquo;s a requirement. </p>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/tablinks-2-0"><span>TabLinks 2.0</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/clear-sticky-growl-notifications-with-a-keyboard-shortcut"><span>Clear sticky Growl notifications with a keyboard shortcut</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/safari" name="safari">safari</a></li>
+		
+			<li><a href="/tags/video" name="video">video</a></li>
+		
+			<li><a href="/tags/html5" name="html5">html5</a></li>
+		
+			<li><a href="/tags/browsers" name="browsers">browsers</a></li>
+		
+			<li><a href="/tags/firefox" name="firefox">firefox</a></li>
+		
+			<li><a href="/tags/chrome" name="chrome">chrome</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/quick-notes-on-cross-browser-html5-video';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

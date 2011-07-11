@@ -1,0 +1,257 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>Quick calculations in Bash</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">02 Feb 2011 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">Quick calculations in Bash</a></h1>
+		<p><img src="http://brettterpstra.dev/wp-content/uploads/2011/02/calculatorretrop.jpg" alt="Retro Calculator image" border="0" width="268" height="328" class="alignright" />This is probably going to seem stupid, but every time I decide to do something in Bash that should only take me a minute, I end up losing an hour. I obsess over &ldquo;better&rdquo; ways to do everything. Not surprisingly, my motivation often wanes before I actually find the better, more elegant way, so these little projects end up lackluster. Fortunately, I end up learning all kinds of new, mostly unrelated things in the process, which is what happened this evening. It&rsquo;s amazing to me that I use UNIX every day, and can still be blown away by a new trick every time I go digging on Stack Overflow. There are some very, very smart people out there.</p>
+
+<p>Anyway, I had two goals: first, I wanted a basic calculator on the command line with the ability to optionally output a result with no newlines, so it would be easy to substitute within another command or pass to <code>pbcopy</code>. Basic inline math. Then, as a side project to this side project, I wanted a tally-keeper that would allow me to just keep inputting numbers until I told it to stop, and then just add them all up. Nothing brilliant, and I had simple answers for both problems in about 10 minutes.</p>
+
+<p>Built-in evaluators in Bash kind of stink, though, and they need special formatting and escaping to deal with floats and accommodate basic symbols. <a href="http://man.cx/bc"><code>bc</code></a> seemed like the logical answer to that, and that&rsquo;s what I&rsquo;m using right now. I picked up a few good tips from the blog post that Allan Odgaard wrote when he was on <a href="http://sigpipe.macromates.com/2005/07/26/shell-calculator/">a similar mission</a>, both from Allan and from the commenters. I love the web.</p>
+
+<!--more-->
+
+<p>So here&rsquo;s what I&rsquo;ve got for the calculator. It strips any character that&rsquo;s not grade-school math out and normalizes spaces, which works well for my needs. You can actually just trash the whole second line and pass &ldquo;$@&rdquo; to bc if you want to use additional symbols. The second function in this block calls the first and strips newlines, good for integration elsewhere. You can also alias either of these to a question mark for fast access (inspired by Allan) with <code>alias ?="calc"</code> in your <code>.bash_profile</code>. That&rsquo;s where these functions are likely to go as well. If you want to try them out, paste them into ~/.bash_profile, save it, run <code>source ~/.bash_profile</code> in Terminal and then type <code>calc 3+(5*2)</code> or whatever you like.</p>
+
+<pre lang="bash" escaped="true" filename="calc.sh">
+function calc() {
+  equat=$(echo ${@//[^0-9\.\+\/\*\(\)]/ }| sed &#x27;s/[ \t]*//g&#x27;)
+  echo $equat|bc -lq
+}
+
+## just for fun, ccalc trims the newline 
+## and copies the result directly to the clipboard
+function ccalc () {
+  calc $@|tr -d &#x27;\n&#x27;|pbcopy
+}
+</pre>
+
+<p>Things get tricky if you need to control the number of decimal places you have in the result. You need to pass additional commands to <code>bc</code>, which appears to require some heredoc magic. This works for me (the scale=4 sets it to four decimal places):</p>
+
+<pre lang="bash" escaped="true">
+function calc2() {
+  bc -l &lt;&lt; EOF
+scale=4
+$@
+quit
+EOF
+}
+</pre>
+
+<p>Next up is <code>tally()</code>, a function that does what it says. You can either pass it a list of numbers, or run it and let it go into interactive mode. It will let you type numbers separated by returns, spaces or a combination, as long as there&rsquo;s a separation. When you press &ldquo;=&rdquo; it adds up all of the numbers you&rsquo;ve entered. I wanted it for when people start giving me numbers and amounts on the phone. And yes, I can do it in LaunchBar (et al), but like I said, sometimes I just get a bug to do it the hard way. The only thing I hate about this implementation is that you can&rsquo;t use the default mapping of the Backspace key, as everything is interpreted raw. You have to run <code>read</code> in readline mode to avoid this, but that means you can&rsquo;t use Enter anymore. That&rsquo;s the kind of thing that makes me spend an hour trying to solve it. This version is my compromise; you can try it with the &ldquo;-e&rdquo; argument and see if you prefer backspace to enter. Same installation: paste it, source and run it.</p>
+
+<pre lang="bash" escaped="true" filename="total.sh">
+function tally() {
+  if [[ $# == 0 ]]; then
+    echo &quot;Enter numbers, press = for sum:&quot;
+    read -d &quot;=&quot;
+    input=$REPLY
+    echo &quot;================&quot;
+  else
+    input=&quot;$@&quot;
+  fi
+  sum=0
+  for i in $input; do 
+    sum=$sum+$i
+  done
+  echo $sum|bc -l
+}
+</pre>
+
+<p>And that, ladies and gentleman, is your dose of stupid Bash tricks for the evening. Good night.</p>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/web-excursions-january-30-february-1"><span>Web excursions: January 30 - February 1</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/textexpander-lipsum-followup-with-ice-cream"><span>TextExpander lipsum followup, with ice cream</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/bash" name="bash">bash</a></li>
+		
+			<li><a href="/tags/scripting" name="scripting">scripting</a></li>
+		
+			<li><a href="/tags/experiments" name="experiments">experiments</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/quick-calculations-in-bash';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

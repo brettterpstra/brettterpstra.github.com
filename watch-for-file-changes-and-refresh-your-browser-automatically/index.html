@@ -1,0 +1,336 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>Watch for file changes and refresh your browser automatically</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">07 Mar 2011 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">Watch for file changes and refresh your browser automatically</a></h1>
+		<p><img src="http://brettterpstra.dev/wp-content/uploads/2011/03/magcodepic.jpg" alt="Post image for Watcher Service" title="Code Watcher" width="288" height="263" class="alignright size-full wp-image-2062" />After my epic three-part post on Saturday, I spent the rest of the weekend doing more &ldquo;useful&rdquo; things. Now it&rsquo;s Sunday night (Monday morning, I think), and I&rsquo;ve got some kind of minor food poisoning which is currently keeping me awake. Thus a &ldquo;hey, cool trick&rdquo; post.</p>
+
+<p>I actually already own an app which can do this to some extent, and I know there are more available. I like to do things the hard way once in a while. What I wanted was a basic script which could execute arbitrary code whenever a file of a certain type changed within a directory. The use case is web development: whenever I change a site-related file (html, php, css, less, rb, erb, etc.), I want Safari to refresh the related page. </p>
+
+<p>Folder Actions don&rsquo;t work well on my system (do they work for anyone?). Hazel would work, but I needed something more immediate. I had a version that used <code>launchd</code>, but it was difficult to consistently start and stop from a script. Here&rsquo;s the final solution I came up with.</p>
+
+<!--more-->
+
+<p>At the top, let me say that the heavy lifting in my script was taken from a SASS file-watching script by <a href="https://github.com/carlo/haml-sass-file-watcher">Carlo Zottman</a>. It uses Ruby to poll a file collection for modification date variations, and keeps a pretty low profile. I wanted to avoid compiled code for this, as I eventually do want to go to bed tonight.</p>
+
+<p>The basic goals:</p>
+
+<ul>
+  <li>Watch only files of a specific type</li>
+  <li>Refresh my primary browser when a change occurs</li>
+  <li>Refresh across windows and tabs, but limit by user-specified keyword in URL</li>
+</ul>
+
+<p>I built both a command line script and a System Service to do this, and both work as standalone solutions. The Automator action makes it possible to right click a folder in Finder and choose &ldquo;Watcher&rdquo; to start watching it, and it asks you for the tab keyword in a nice popup dialog. Beyond that, it really just wraps the command line script. You can modify either with the following instructions.</p>
+
+<p>Here&rsquo;s the command line version:</p>
+
+<pre lang="ruby" filename="watch.rb" escaped="true">
+#!/usr/bin/env ruby
+# watch.rb by Brett Terpstra, 2011 &lt;http://brettterpstra.dev&gt;
+# with credit to Carlo Zottmann &lt;https://github.com/carlo/haml-sass-file-watcher&gt;
+
+trap(&quot;SIGINT&quot;) { exit }
+
+if ARGV.length &lt; 2
+  puts &quot;Usage: #{$0} watch_folder keyword&quot;
+  puts &quot;Example: #{$0} . mywebproject&quot;
+  exit
+end
+
+dev_extension = 'dev'
+filetypes = ['css','html','htm','php','rb','erb','less','js']
+watch_folder = ARGV[0]
+keyword = ARGV[1]
+puts &quot;Watching #{watch_folder} and subfolders for changes in project files...&quot;
+
+while true do
+  files = []
+  filetypes.each {|type|
+    files += Dir.glob( File.join( watch_folder, &quot;**&quot;, &quot;*.#{type}&quot; ) )
+  }
+  new_hash = files.collect {|f| [ f, File.stat(f).mtime.to_i ] }
+  hash ||= new_hash
+  diff_hash = new_hash - hash
+
+  unless diff_hash.empty?
+    hash = new_hash
+
+    diff_hash.each do |df|
+      puts &quot;Detected change in #{df[0]}, refreshing&quot;
+      %x{osascript&lt;&lt;ENDGAME
+        	tell application &quot;Safari&quot;
+          	set windowList to every window
+          	repeat with aWindow in windowList
+          		set tabList to every tab of aWindow
+          		repeat with atab in tabList
+          			if (URL of atab contains &quot;#{keyword}&quot;) then
+          			  tell atab to do javascript &quot;window.location.reload()&quot;
+          			end if
+          		end repeat
+          	end repeat
+        	end tell
+ENDGAME
+}
+    end
+  end
+
+  sleep 1
+end
+</pre>
+
+<h2 id="installing">Installing</h2>
+
+<p>If you want to use the above script from Terminal, just put it in a directory in your path and run <code>chmod a+x watch.rb</code> on it. Then you can call it with <code>watch.rb folder/to/watch keyword</code>. The keyword you pass will determine which tabs will refresh in your browser. For example, if I&rsquo;m working on dev.heckyesmarkdown.com (my local development version), I would use &ldquo;dev.heckyes&rdquo; to limit the refresh to only associated tabs. Once the script is running, you can stop it any time by typing Control-C in that Terminal. If you&rsquo;ve run it in the background, you&rsquo;ll either need to foreground it or kill it manually.</p>
+
+<p>To install the System Service, <a href="#download">download the workflow</a>, unzip it and place it in <code>~/Library/Services</code> (where &lsquo;~&rsquo; is your home folder). It will now show up when you right click on one or more selected folders in the Finder. Choose &ldquo;Watcher,&rdquo; enter a URL-matching keyword and let it go. You should see the spinning gear icon in your menubar. When you want to stop watching the folder, click that icon and choose &ldquo;Stop Watcher&rdquo;.</p>
+
+<h2 id="customizing">Customizing</h2>
+
+<p>In the standalone Ruby script (above), you can easily modify the watched filetypes in line 14, and you can replace the AppleScript with your own starting on line 34. I&rsquo;ll offer some examples for other browsers below.</p>
+
+<p>The Service contains pretty much the same script, but modified to work with an Automator workflow. If you open it in Automator and skip to the last action, you&rsquo;ll see the script and you can make your filetype and AppleScript modifications in there.</p>
+
+<h3 id="using-other-browsers">Using other browsers</h3>
+
+<p>Chrome has decent AppleScript support these days, so changing this script to work with it is trivial. Just replace the AppleScript portion (beginning with &ldquo;tell application&hellip;&rdquo;) with the following:</p>
+
+<pre lang="applescript" escaped="true">
+tell application &quot;Google Chrome&quot;
+	set windowList to every window
+	repeat with aWindow in windowList
+		set tabList to every tab of aWindow
+		repeat with atab in tabList
+			if (URL of atab contains &quot;#{keyword}&quot;) then
+				tell atab to reload
+			end if
+		end repeat
+	end repeat
+end tell
+</pre>
+
+<p>Firefox is a little less elegant, as far as I know, and requires System Events scripting to refresh a page. If you know a better way, I&rsquo;d love to hear it, but here&rsquo;s a basic script for reloading the front page. You might as well delete the keyword portions of the script/workflow if you go this route, they won&rsquo;t be applicable:</p>
+
+<pre lang="applescript" escaped="true">
+ tell app &quot;Firefox&quot; to activate
+ tell app &quot;System Events&quot;
+   keystroke &quot;r&quot; using command down
+ end tell
+</pre>
+
+<p>I won&rsquo;t detail any other browsers; if you&rsquo;re doing web development in something more exotic, I&rsquo;ll assume you know how to script it.</p>
+
+<h3 id="executing-arbitrary-code">Executing arbitrary code</h3>
+
+<p>You don&rsquo;t have to refresh browsers with this. You don&rsquo;t even have to use it for web development. Have it watch text files for changes and run an iCal script when one is modified. It&rsquo;s basically a hyperactive Folder Action.</p>
+
+<p>If you want to have the script do something new every time you use it, you might want to externalize the action code. Just modify the <code>diff_hash.each do |df|</code> block to run an outside script. If it&rsquo;s shell code, just make it executable and call it with <code>%x{path/to/script}</code>, and if it&rsquo;s AppleScript, call it with <code>%x{/usr/bin/osascript path/to/script}</code>. Then you can modify the action script each time without changing the watch.rb file.</p>
+
+<p>If you want to get really crazy, you could pass the script to execute as a command line parameter, or request it in the Automator workflow and pass it in. I don&rsquo;t have a need for that right now, but if you build it, let me know!</p>
+
+<p>I hope folks find this useful. Now, excuse me while I go retch for a little bit.</p>
+
+<h2 id="download">Download</h2>
+
+<p>[download id=&rdquo;33&rdquo;]</p>
+
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/grabbing-a-mac-apps-icon-building-blocks"><span>Grabbing a Mac app's icon: building blocks</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/web-excursions-march-3-march-7"><span>Web excursions: March 3 - March 7</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/service" name="service">service</a></li>
+		
+			<li><a href="/tags/ruby" name="ruby">ruby</a></li>
+		
+			<li><a href="/tags/os-x" name="os-x">os x</a></li>
+		
+			<li><a href="/tags/webdev" name="webdev">webdev</a></li>
+		
+			<li><a href="/tags/automator" name="automator">automator</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/watch-for-file-changes-and-refresh-your-browser-automatically';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

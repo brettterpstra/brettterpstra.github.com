@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Make CSSEdit use the latest Webkit nightly every time</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  
+<p><img src="http://brettterpstra.dev/wp-content/uploads/2011/03/CSSEditWebkitMashup.jpg" alt="Post main image" title="CSSEditWebkitMashup" width="350" height="276" class="alignright size-full wp-image-2130" />If you&rsquo;re a web designer with a Mac, you probably use&ndash;or at least know of&ndash;<a href="http://macrabbit.com/cssedit/">CSSEdit</a>. In it&rsquo;s heyday, it was <em>the</em> way to edit CSS. It&rsquo;s fallen a little out of repair; it doesn&rsquo;t recognize new selectors and properties (which messes up color coding and completion). Plus, it doesn&rsquo;t play well with nifty frameworks like LESS or SASS, if you&rsquo;re in the habit of using those. My <a href="http://brettterpstra.dev/watch-for-file-changes-and-refresh-your-browser-automatically/">&ldquo;watcher&rdquo; script</a> was my solution to the latter. There&rsquo;s a cool trick, though, that allows you to force CSSEdit to use the bleeding-edge Webkit for rendering.</p>
+
+<p>Quite a while back, developer Jan Van Boghout <a href="http://macrabbit.com/blog/tip-cssedit-webkit-nightly/">posted a tip</a> for unlinking the default Webkit framework and using the one inside of the latest nightly build you have installed. It was a simple Terminal command that you had to launch from the command line, and the effect only lasted for that session. The command eventually stopped working, until <a href="http://macrabbit.com/blog/tip-cssedit-webkit-nightly/#c7970">Ian Beck noted</a> that the location of the frameworks in Webkit.app had changed. It worked with that tweak, but it was still a pain sometimes, even with aliases.</p>
+
+<!--more-->
+
+<h3 id="the-solution">The solution</h3>
+
+<p>I don&rsquo;t know why it took me this long to think of it, but there&rsquo;s an easy way to make the command into a wrapper within the CSSEdit application bundle. This isn&rsquo;t for the faint of heart, and it will have to be done again if CSSEdit ever updates in the future, but it&rsquo;s a good hack for the time being.</p>
+
+<p>I&rsquo;m going to write these instructions to exclusively use Terminal, although many steps can be accomplished through Finder (use Show Package Contents from the right click menu).</p>
+
+<ul>
+  <li>
+    <p>Go to the executable folder within the CSSEdit.app bundle:</p>
+
+    <p><code>$ cd /Applications/CSSEdit.app/Contents/MacOS/</code></p>
+  </li>
+  <li>
+    <p>Rename the main executable:</p>
+
+    <p><code>$ mv CSSEdit _CSSEdit</code></p>
+  </li>
+  <li>
+    <p>Create a new CSSEdit file (using whatever editor you like):</p>
+
+    <p><code>$ vim CSSEdit</code></p>
+  </li>
+  <li>
+    <p>Put the following code into it:</p>
+
+    <pre lang="bash">
+#!/bin/bash
+env DYLD_FRAMEWORK_PATH=/Applications/WebKit.app/Contents/Frameworks/10.6/ WEBKIT_UNSET_DYLD_FRAMEWORK_PATH=YES /Applications/CSSEdit.app/Contents/MacOS/_CSSEdit</pre>
+  </li>
+  <li>
+    <p>Save the file, close it, and make it executable:</p>
+
+    <p><code>chmod a+x CSSEdit</code></p>
+  </li>
+</ul>
+
+<p>Now, when you launch the app, it will run the shell command to unlink and relink the Webkit framework. Note that if you do this on Leopard, you&rsquo;ll need to change the DYLD_FRAMEWORK_PATH to point to 10.5 instead of 10.6. Enjoy!</p>
+
+</div>
+
+</body>
+</html>

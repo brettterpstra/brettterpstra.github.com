@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>TextMate as WriteRoom, for free</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p><a href="http://brettterpstra.dev/wp-content/uploads/2011/03/TextMateWriteRoom.jpg"><img src="http://brettterpstra.dev/wp-content/uploads/2011/03/TextMateWriteRoom-300x168.jpg" alt="" title="TextMate as WriteRoom" width="300" height="168" class="alignright size-medium wp-image-2085" /></a>I use TextMate for editing most of my Markdown. I could name a dozen reasons why this is the case, but let&rsquo;s leave it at auto-pairing, wrapping and the <a href="http://bundle.weblogzinc.com">Blogsmith Bundle</a> features. Anyhow, I got a bug yesterday to make TextMate work in &ldquo;concentration&rdquo; mode (ala <a href="http://www.hogbaysoftware.com/products/writeroom">WriteRoom</a>). Not because I think that will improve my writing habits, I just wanted to see if it was possible. A few Google searches later, I have a pretty good solution.</p>
+
+<p>There are a few things we need to pull off:</p>
+
+<ul>
+  <li>Hide other windows, desktop and icons</li>
+  <li>Match the background to our TextMate theme background</li>
+  <li>Maximize the TextMate window, preferably remove top bar</li>
+  <li>Hide scrollbar when not needed</li>
+</ul>
+
+<!--more-->
+
+<p>The first step is easy. I used <a href="http://willmore.eu/software/isolator/">Isolator</a>, which can hide everything but the foreground window and let you specify a background color (taking care of the second point as well). There are a few apps that do this well, Isolator is just simple and free. It&rsquo;s great for screencasting, too.</p>
+
+<p>Now we need to maximize the TextMate window, but only vertically. The most effective way to do this is with a <a href="http://culater.net/software/SIMBL/SIMBL.php">SIMBL</a>  plugin called Megazoomer, which will remove the top bar, too. There&rsquo;s a <a href="http://sadilek.blogspot.com/2009/01/fullscreen-editing-in-textmate-la.html">hack of Megazoomer</a> available which only maximizes vertically. If you maximize the window to the full width of a widescreen monitor, editing is less than friendly, so this is important. If you&rsquo;re not into installing SIMBL (and if you&rsquo;re not using it for anything else<sup id="fnref:fn1"><a href="#fn:fn1" rel="footnote">1</a></sup>, I wouldn&rsquo;t), stick with zooming or take a look at the <a href="https://github.com/mads379/TextMate-Fullscreen-Plugin">Fullscreen Plugin</a> on GitHub.</p>
+
+<p>Finally, some adjustments to the &ldquo;chrome&rdquo; in TextMate. The <a href="http://jason-evers.com/projects/green-moleskine">Green Moleskine</a> mod for TextMate is worth downloading for many reasons, and I&rsquo;ve used it without issue on multiple Macs. I&rsquo;d recommend just doing it. It will give you a cooler icon, nicer Bundle Editor, HUD &ldquo;Go to line&rdquo; and more. It will also hide the scrollbars when they&rsquo;re not needed, taking care of the last point. Turn off all of the &ldquo;Gutter&rdquo; options under the view menu.</p>
+
+<p>Now, with a few clicks, you&rsquo;ve got a WriteRoom-style editing space in TextMate.</p>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:fn1">
+      <p>Visor makes SIMBL worthwhile to me, and I use it for Leech as well, but that&rsquo;s about all. SIMBL on Snow Leopard isn&rsquo;t as annoying as it was on Leopard, but still a chance I wouldn&rsquo;t take if I didn&rsquo;t feel it was worth the consequences.<a href="#fnref:fn1" rev="footnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+</div>
+
+</body>
+</html>

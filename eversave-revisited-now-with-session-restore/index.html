@@ -1,0 +1,307 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>EverSave revisited, now with session restore!</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">15 Jul 2010 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">EverSave revisited, now with session restore!</a></h1>
+		
+<p>Safari 5 has brought several solutions for managing lists of open tabs, from the simple (like my <a href="http://brettterpstra.dev/2010/06/18/tablinks-safari-extension/">TabLinks extension</a>) to full session-management capabilities (see the beautiful <a href="http://dl.dropbox.com/u/8247646/sessions/index.html">Sessions extension</a>). However, I&rsquo;ve found I still like using my <a href="http://brettterpstra.dev/2010/03/06/saving-safari-browsing-sessions-to-evernote/">EverSave script</a> in many situations, primarily because it allows me to annotate, tag and sync my important sessions for later retrieval. One thing&rsquo;s been bugging me, though, and that&rsquo;s the inability to do a mass restore on a tab list (i.e. open them all at once).</p>
+
+<p>When I decided to fix this, the first issue was that when EverSave creates the Evernote note, it lets Evernote convert the list from HTML to Rich Text. Once it&rsquo;s stored in Rich Text Format (RTF), manipulating it via any shell language, including AppleScript, becomes quite difficult. It&rsquo;s not impossible, but I quickly decided it wasn&rsquo;t a route I wanted to wander down. Here&rsquo;s what I <strong>did</strong> do&hellip;
+<!--more-->
+### Saving tabs to Evernote</p>
+
+<p>What I ended up doing was modifying what EverSave stored, and including the actual URL in the visible text of the note. It&rsquo;s not the prettiest solution, but it&rsquo;s the only way that this particular system will work. I did my best to minimize the visual presence of the URL using the rudimentary markup that Evernote actually pays attention to. The final product looks like this:</p>
+
+<p><img src="http://brettterpstra.dev/wp-content/uploads/2010/07/EverSaveRevisedBookmarks1.jpg" alt="EverSaveRevisedBookmarks.jpg" border="0" width="650" height="93" /></p>
+
+<p>The actual layout is still fully controlled by the _template property in the first line, which is the only line that&rsquo;s changed from the original script. I&rsquo;m posting the whole thing again, with this minor revision, for convenience. With a little bit of HTML (remember to escape your double quotes), you can modify the template to look however you like. Just keep in mind that Evernote strips 90% of markup out when it creates the note from your HTML, so stick with basic tags. See the <a href="http://brettterpstra.dev/2010/03/06/saving-safari-browsing-sessions-to-evernote/">original EverSave post</a> for a breakdown of the script.</p>
+
+<p>Be sure to continue reading after the script to see how we handle the &ldquo;restore&rdquo; functionality.</p>
+
+<pre lang="applescript" escaped="true" filename="EverSave.applescript">
+property _template : &quot;&lt;li&gt;&lt;strong&gt;&lt;a href=&quot;%url&quot;&gt;&amp;uArr;&lt;/a&gt; %name&lt;/strong&gt; &lt; &lt;small&gt;%url&lt;/small&gt; &gt;&quot;
+
+--search and replace function for template
+on snr(tofind, toreplace, TheString)
+	set ditd to text item delimiters
+	set text item delimiters to tofind
+	set textItems to text items of TheString
+	set text item delimiters to toreplace
+	if (class of TheString is string) then
+		set res to textItems as string
+	else -- if (class of TheString is Unicode text) then
+		set res to textItems as Unicode text
+	end if
+	set text item delimiters to ditd
+	return res
+end snr
+
+set prettyDate to do shell script &quot;date '+%A, %B %d, %Y at %l:%M %p'&quot;
+set theTitle to &quot;Bookmarks &quot; &amp; prettyDate
+set urlList to &quot;&lt;ul&gt;&quot;
+
+tell application &quot;Safari&quot;
+	set tabList to every tab of front window
+	repeat with aTab in tabList
+		set aLink to _template
+		set aLink to my snr(&quot;%name&quot;, name of aTab, aLink)
+		set aLink to my snr(&quot;%url&quot;, URL of aTab, aLink)
+		set urlList to urlList &amp; aLink &amp; return
+	end repeat
+end tell
+set urlList to urlList &amp; &quot;&lt;/ul&gt;&quot;
+
+tell application &quot;Evernote&quot;
+	set theNote to create note with html urlList title theTitle notebook &quot;Bookmarks&quot;
+end tell
+</pre>
+
+<p>I have this script saved as &ldquo;EverSave.scpt&rdquo; in my <code>~/Library/Scripts/Applications/Safari</code> folder (create it if you don&rsquo;t have it), and launch it using <a href="http://www.red-sweater.com/fastscripts/">FastScripts</a> with a Command-Shift-S shortcut. Safari doesn&rsquo;t have anything bound to that key-combo, and it&rsquo;s easy to remember (Save As in most programs).</p>
+
+<h3 id="restoring-tabs">Restoring tabs</h3>
+
+<p>This solution makes a few assumptions, but the script is easily customized to handle any differences in your setup. I went with a System Service (Snow Leopard) for the restore function, primarily because it allows me to act directly on selected text in Evernote. It&rsquo;s a very simple Ruby script that parses the selected text for urls, and then opens any that it finds in sequential order using your default browser. There&rsquo;s a commented out line if you want to always target Safari directly when opening them, which may be useful in some situations. I use <a href="http://www.choosyosx.com/">Choosy</a>, and have a rule that just directs all of these to Safari. If you have Safari set as your default browser, and that&rsquo;s where you want to open your links, this will just work as is.</p>
+
+<p>To set up the service:</p>
+
+<ol>
+  <li>Open Automator and select &ldquo;Service&rdquo; as the new file type.</li>
+  <li>On the right hand side, tell it that &ldquo;Service receives selected&rdquo; <strong><em>text</em></strong> in <strong><em>Evernote.app</em></strong> (choose Other&hellip; and select Evernote).</li>
+  <li>Find &ldquo;Run Shell Script&rdquo; in the list on the left and drag it into the area on the right.</li>
+  <li>Set the Shell dropdown to /usr/bin/ruby</li>
+  <li>Insert the following code, and feel free to modify</li>
+  <li>Save the result as &ldquo;EverRestore&rdquo;</li>
+  <li>Assign a shortcut key, if desired, in System Preferences &gt; Keyboard &gt; Keyboard Shortcuts &gt; Services</li>
+</ol>
+
+<p>Here&rsquo;s the code for the service:</p>
+
+<pre lang="ruby" filename="EverRestore.rb" escaped="true">
+ARGF.each do |f|
+    links = f.scan /&lt; (https?://.*?) &gt;/mi
+    # The above scans specifically for the angle brackets in my template. 
+    # If you remove those from the output of EverSave, be sure to update
+    # the regular expression accordingly.
+    if links.empty? then
+        exit
+    else
+        links.each {|link| %x{osascript -e &#x27;open location &quot;#{link[0]}&quot;&#x27;}}
+        # links.each {|link| %x{osascript -e &#x27;tell application &quot;Safari&quot; to open location &quot;#{link[0]}&quot;&#x27;} }
+    end
+end
+</pre>
+
+<p>The simple regular expression in line 2 does scan specifically for the angle brackets I used in the new EverSave template. That just relieves some complexity. If you want a regular expression that doesn&rsquo;t require the angle brackets, try replacing line 2 with this:</p>
+
+<pre lang="ruby" escaped="true">
+links = f.scan /(https?://([^s&quot;,;]+)..{2,4}(/[^s&quot;,;!]+))/mi
+</pre>
+
+<p>Once it&rsquo;s saved in Automator, it should be available when you select text in Evernote. If there are visible URLs in the selected text, running this Service will open them in tabs in Safari (or your default browser). You can selectively open certain urls by only selecting the lines that contain the ones you want to open. Non-contiguous selections will require a little text editing, of course.</p>
+
+<h3 id="not-as-hard-as-it-looks-really">Not as hard as it looks&hellip; really.</h3>
+
+<p>The explanation got a little long, and probably seems unnecessarily complex. The fact is, I can save a Safari browsing session with one key combo, edit, annotate and tag it (if I want to), then restore it later by highlighting and typing a new command combination. It&rsquo;s actually quite convenient, and fairly bulletproof. I&rsquo;d love to hear how you use it, or what you&rsquo;re doing instead! </p>
+
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/new-safari-extensions-give-good-source"><span>New Safari Extensions give good source</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/instapaper-beyond-fix-for-text-style-controls"><span>Instapaper Beyond: fix for text style controls</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/evernote" name="evernote">evernote</a></li>
+		
+			<li><a href="/tags/service" name="service">service</a></li>
+		
+			<li><a href="/tags/safari" name="safari">safari</a></li>
+		
+			<li><a href="/tags/snow-leopard" name="snow-leopard">snow leopard</a></li>
+		
+			<li><a href="/tags/applescript" name="applescript">applescript</a></li>
+		
+			<li><a href="/tags/system-service" name="system-service">System Service</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/eversave-revisited-now-with-session-restore';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

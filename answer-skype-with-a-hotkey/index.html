@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>Answer Skype with a hotkey</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">03 Oct 2010 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">Answer Skype with a hotkey</a></h1>
+		<p><img src="http://brettterpstra.dev/wp-content/uploads/2010/10/applescriptskypeicons.jpg" alt="applescriptskypeicons.jpg" border="0" width="198" height="183" class="alignright" />If you use <a href="http://www.skype.com/">Skype</a> and happen to be as clumsy as I am, you may have run into this at some point: you see a call come in, you fumble for your headset, you go back to your mouse, find the cursor on your big screen and then try to click the &ldquo;Answer&rdquo; button on the call window&hellip; only to miss the call because you took too long. I solved this for myself a while back, and thought I&rsquo;d share my solution.</p>
+
+<p>It&rsquo;s a fairly simple AppleScript that requires nothing but Skype. It will make good use of <a href="http://growl.info/">Growl</a> if you have it installed, but it&rsquo;s only needed for visual feedback; the script will function fine without it. I use <a href="http://www.shadowlab.org/Software/spark.php">Spark</a> to trigger it, but you can use any kind of launcher that can run AppleScripts. If Spark isn&rsquo;t your cup of tea, definitely check out <a href="http://www.red-sweater.com/fastscripts/">FastScripts</a>. Ultimately, you just need to assign the following script to a hotkey&hellip;<!--more-->
+### The script</p>
+
+<pre lang="applescript" filename="SkypeAnswer.applescript" escaped="true">
+global _proc
+global use_growl
+
+tell application &quot;System Events&quot; to set _proc to name of processes as list
+if _proc contains &quot;GrowlHelperApp&quot; then
+	set use_growl to true
+	my growlRegister()
+else
+	set use_growl to false
+end if
+
+if _proc contains &quot;Skype&quot; then
+	tell application &quot;Skype&quot;
+		set calls to send command &quot;SEARCH ACTIVECALLS&quot; script name &quot;AnsweringScript&quot;
+		set callID to last word of calls
+		if callID is not &quot;CALLS&quot; then
+			set status to send command &quot;GET CALL &quot; &amp; callID &amp; &quot; STATUS&quot; script name &quot;AnsweringScript&quot;
+			if last word of status is &quot;RINGING&quot; then
+				send command &quot;ALTER CALL &quot; &amp; callID &amp; &quot; ANSWER&quot; script name &quot;AnsweringScript&quot;
+				my growlNotify(&quot;SkypeAnswer&quot;, &quot;Answering call&quot;)
+				return
+			else
+				send command &quot;ALTER CALL &quot; &amp; callID &amp; &quot; HANGUP&quot; script name &quot;AnsweringScript&quot;
+				my growlNotify(&quot;SkypeAnswer&quot;, &quot;Hanging up&quot;)
+			end if
+		else
+			my growlNotify(&quot;SkypeAnswer&quot;, &quot;No call found to answer or hang up&quot;)
+		end if
+	end tell
+else
+	my growlNotify(&quot;SkypeAnswer&quot;, &quot;Skype not detected&quot;)
+end if
+
+using terms from application &quot;GrowlHelperApp&quot;
+	on growlRegister()
+		tell application &quot;GrowlHelperApp&quot;
+			register as application &quot;SkypeAnswer&quot; all notifications {&quot;Alert&quot;} default notifications {&quot;Alert&quot;} icon of application &quot;Skype.app&quot;
+		end tell
+	end growlRegister
+
+	on growlNotify(grrTitle, grrDescription)
+		if use_growl is true then
+			tell application &quot;GrowlHelperApp&quot;
+				notify with name &quot;Alert&quot; title grrTitle description grrDescription application name &quot;SkypeAnswer&quot;
+			end tell
+		end if
+	end growlNotify
+end using terms from
+</pre>
+
+<p><a href="applescript://com.apple.scripteditor?action=new&amp;script=global%20_proc%0Aglobal%20use_growl%0A%0Atell%20application%20%22System%20Events%22%20to%20set%20_proc%20to%20name%20of%20processes%20as%20list%0Aif%20_proc%20contains%20%22GrowlHelperApp%22%20then%0A%09set%20use_growl%20to%20true%0A%09my%20growlRegister%28%29%0Aelse%0A%09set%20use_growl%20to%20false%0Aend%20if%0A%0Aif%20_proc%20contains%20%22Skype%22%20then%0A%09tell%20application%20%22Skype%22%0A%09%09set%20calls%20to%20send%20command%20%22SEARCH%20ACTIVECALLS%22%20script%20name%20%22AnsweringScript%22%0A%09%09set%20callID%20to%20last%20word%20of%20calls%0A%09%09if%20callID%20is%20not%20%22CALLS%22%20then%0A%09%09%09set%20status%20to%20send%20command%20%22GET%20CALL%20%22%20%26%20callID%20%26%20%22%20STATUS%22%20script%20name%20%22AnsweringScript%22%0A%09%09%09if%20last%20word%20of%20status%20is%20%22RINGING%22%20then%0A%09%09%09%09send%20command%20%22ALTER%20CALL%20%22%20%26%20callID%20%26%20%22%20ANSWER%22%20script%20name%20%22AnsweringScript%22%0A%09%09%09%09my%20growlNotify%28%22SkypeAnswer%22%2C%20%22Answering%20call%22%29%0A%09%09%09%09return%0A%09%09%09else%0A%09%09%09%09send%20command%20%22ALTER%20CALL%20%22%20%26%20callID%20%26%20%22%20HANGUP%22%20script%20name%20%22AnsweringScript%22%0A%09%09%09%09my%20growlNotify%28%22SkypeAnswer%22%2C%20%22Hanging%20up%22%29%0A%09%09%09end%20if%0A%09%09else%0A%09%09%09my%20growlNotify%28%22SkypeAnswer%22%2C%20%22No%20call%20found%20to%20answer%20or%20hang%20up%22%29%0A%09%09end%20if%0A%09end%20tell%0Aelse%0A%09my%20growlNotify%28%22SkypeAnswer%22%2C%20%22Skype%20not%20detected%22%29%0Aend%20if%0A%0Ausing%20terms%20from%20application%20%22GrowlHelperApp%22%0A%09on%20growlRegister%28%29%0A%09%09tell%20application%20%22GrowlHelperApp%22%0A%09%09%09register%20as%20application%20%22SkypeAnswer%22%20all%20notifications%20%7B%22Alert%22%7D%20default%20notifications%20%7B%22Alert%22%7D%20icon%20of%20application%20%22Skype%2Eapp%22%0A%09%09end%20tell%0A%09end%20growlRegister%0A%09%0A%09on%20growlNotify%28grrTitle%2C%20grrDescription%29%0A%09%09if%20use_growl%20is%20true%20then%0A%09%09%09tell%20application%20%22GrowlHelperApp%22%0A%09%09%09%09notify%20with%20name%20%22Alert%22%20title%20grrTitle%20description%20grrDescription%20application%20name%20%22SkypeAnswer%22%0A%09%09%09end%20tell%0A%09%09end%20if%0A%09end%20growlNotify%0Aend%20using%20terms%20from">Open this script in your Script Editor</a></p>
+
+<p>In an app like Spark, I can just paste the source into a new command and assign a hotkey. If you&rsquo;re running a launcher that needs file input, just open the source in your AppleScript Editor and save it as an .scpt file, then point to that.</p>
+
+<p>The script basically looks at current calls in Skype, and if a call is ringing or in progress, it takes the appropriate action (answers if it&rsquo;s ringing, hangs up if it&rsquo;s in progress). If no calls are happening, it will just exit (with a little whimper via Growl). Put it on an easy-to-hit keyboard shortcut and you&rsquo;ll be able to grab your headset and answer a call faster than, well&hellip; faster than I&rsquo;ve ever managed to without it.</p>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/homecontrol-local-mac-control-for-iphone"><span>HomeControl: Local Mac control for iPhone</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/ten-dollars-and-the-app-store"><span>Ten dollars and the App Store</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/applescript" name="applescript">applescript</a></li>
+		
+			<li><a href="/tags/scripting" name="scripting">scripting</a></li>
+		
+			<li><a href="/tags/skype" name="skype">skype</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/answer-skype-with-a-hotkey';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

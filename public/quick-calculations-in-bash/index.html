@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Quick calculations in Bash</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p><img src="http://brettterpstra.dev/wp-content/uploads/2011/02/calculatorretrop.jpg" alt="Retro Calculator image" border="0" width="268" height="328" class="alignright" />This is probably going to seem stupid, but every time I decide to do something in Bash that should only take me a minute, I end up losing an hour. I obsess over &ldquo;better&rdquo; ways to do everything. Not surprisingly, my motivation often wanes before I actually find the better, more elegant way, so these little projects end up lackluster. Fortunately, I end up learning all kinds of new, mostly unrelated things in the process, which is what happened this evening. It&rsquo;s amazing to me that I use UNIX every day, and can still be blown away by a new trick every time I go digging on Stack Overflow. There are some very, very smart people out there.</p>
+
+<p>Anyway, I had two goals: first, I wanted a basic calculator on the command line with the ability to optionally output a result with no newlines, so it would be easy to substitute within another command or pass to <code>pbcopy</code>. Basic inline math. Then, as a side project to this side project, I wanted a tally-keeper that would allow me to just keep inputting numbers until I told it to stop, and then just add them all up. Nothing brilliant, and I had simple answers for both problems in about 10 minutes.</p>
+
+<p>Built-in evaluators in Bash kind of stink, though, and they need special formatting and escaping to deal with floats and accommodate basic symbols. <a href="http://man.cx/bc"><code>bc</code></a> seemed like the logical answer to that, and that&rsquo;s what I&rsquo;m using right now. I picked up a few good tips from the blog post that Allan Odgaard wrote when he was on <a href="http://sigpipe.macromates.com/2005/07/26/shell-calculator/">a similar mission</a>, both from Allan and from the commenters. I love the web.</p>
+
+<!--more-->
+
+<p>So here&rsquo;s what I&rsquo;ve got for the calculator. It strips any character that&rsquo;s not grade-school math out and normalizes spaces, which works well for my needs. You can actually just trash the whole second line and pass &ldquo;$@&rdquo; to bc if you want to use additional symbols. The second function in this block calls the first and strips newlines, good for integration elsewhere. You can also alias either of these to a question mark for fast access (inspired by Allan) with <code>alias ?="calc"</code> in your <code>.bash_profile</code>. That&rsquo;s where these functions are likely to go as well. If you want to try them out, paste them into ~/.bash_profile, save it, run <code>source ~/.bash_profile</code> in Terminal and then type <code>calc 3+(5*2)</code> or whatever you like.</p>
+
+<pre lang="bash" escaped="true" filename="calc.sh">
+function calc() {
+  equat=$(echo ${@//[^0-9\.\+\/\*\(\)]/ }| sed &#x27;s/[ \t]*//g&#x27;)
+  echo $equat|bc -lq
+}
+
+## just for fun, ccalc trims the newline 
+## and copies the result directly to the clipboard
+function ccalc () {
+  calc $@|tr -d &#x27;\n&#x27;|pbcopy
+}
+</pre>
+
+<p>Things get tricky if you need to control the number of decimal places you have in the result. You need to pass additional commands to <code>bc</code>, which appears to require some heredoc magic. This works for me (the scale=4 sets it to four decimal places):</p>
+
+<pre lang="bash" escaped="true">
+function calc2() {
+  bc -l &lt;&lt; EOF
+scale=4
+$@
+quit
+EOF
+}
+</pre>
+
+<p>Next up is <code>tally()</code>, a function that does what it says. You can either pass it a list of numbers, or run it and let it go into interactive mode. It will let you type numbers separated by returns, spaces or a combination, as long as there&rsquo;s a separation. When you press &ldquo;=&rdquo; it adds up all of the numbers you&rsquo;ve entered. I wanted it for when people start giving me numbers and amounts on the phone. And yes, I can do it in LaunchBar (et al), but like I said, sometimes I just get a bug to do it the hard way. The only thing I hate about this implementation is that you can&rsquo;t use the default mapping of the Backspace key, as everything is interpreted raw. You have to run <code>read</code> in readline mode to avoid this, but that means you can&rsquo;t use Enter anymore. That&rsquo;s the kind of thing that makes me spend an hour trying to solve it. This version is my compromise; you can try it with the &ldquo;-e&rdquo; argument and see if you prefer backspace to enter. Same installation: paste it, source and run it.</p>
+
+<pre lang="bash" escaped="true" filename="total.sh">
+function tally() {
+  if [[ $# == 0 ]]; then
+    echo &quot;Enter numbers, press = for sum:&quot;
+    read -d &quot;=&quot;
+    input=$REPLY
+    echo &quot;================&quot;
+  else
+    input=&quot;$@&quot;
+  fi
+  sum=0
+  for i in $input; do 
+    sum=$sum+$i
+  done
+  echo $sum|bc -l
+}
+</pre>
+
+<p>And that, ladies and gentleman, is your dose of stupid Bash tricks for the evening. Good night.</p>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Quick Link: Terminal navigation utilities</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p><img src="http://brettterpstra.dev/wp-content/uploads/2011/05/ttscoffbashprompt.jpg" alt="Bash prompt screenshot" title="Bash prompt" width="245" height="148" class="alignright size-full wp-image-2365 shadow" />If you follow me <a href="https://twitter.com/#!/ttscoff">on Twitter</a>, you&rsquo;ve probably seen me express my adoration for <a href="https://github.com/joelthelion/autojump">autojump</a>, a command-line utility for navigating frequently-used folders. The only problem is that I deal with a lot of repetitive folder hierarchies; for example, the multiple site structures in my web development folder. <code>j css</code> almost certainly isn&rsquo;t going to take me to the one I was thinking of.</p>
+
+<p>I found a couple of solutions this morning. There&rsquo;s a package called <code>cdargs</code> which lets you bookmark folders with short names, autocomplete bookmarks, use bookmarks in copy and move actions and list and visually select from all of your bookmarks. I had some conflicts on my system that prevented me from using it, though, so I went with a simpler solution: <a href="http://www.huyng.com/bashmarks-directory-bookmarks-for-the-shell/">bashmarks</a> by Huy Nguyen.</p>
+
+<p>Bashmarks lets me do most of what cdargs can do, but with a few less frills (and no conflicts with my setup). I can bookmark the css folder in my blog development folder <code>btcss</code>, and one in a client folder as <code>clientcss</code> and be able to quickly jump to the right one. Bashmarks provides autocomplete, too, so typing <code>g bt[tab]</code> gets me to btcss in a jiffy.</p>
+
+<p>On the way, I also discovered a package called <a href="https://github.com/rupa/z">z</a>, which bills itself as &ldquo;the new j&rdquo; (in reference to autojump). It takes multiple arguments and uses them to more specifically match the folder you want to jump to. So, if I have a css folder in /brettterpstra/ and in /myclientsite/, I could type <code>z brett css</code> or <code>z client css</code> to distinguish between them. I haven&rsquo;t bothered with replacing autojump in my config files yet, but this looks promising.</p>
+
+</div>
+
+</body>
+</html>

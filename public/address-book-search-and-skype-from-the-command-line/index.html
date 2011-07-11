@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Address Book search and Skype from the command line</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  
+<p><img src="http://brettterpstra.dev/wp-content/uploads/2011/04/oldphone.jpg" class="alignright" />Here&rsquo;s a neat little command-line utility for searching your address book: <a href="https://github.com/chneeb/aboo">aboo</a>. It&rsquo;s not complex&hellip; it just takes a single word or phrase and searches your Address Book entries&rsquo; names for it. It can output vcards and YAML, too. I created a <a href="https://github.com/ttscoff/aboo">fork</a> that adds a few things, most importantly I extended search to business names and notes. It also does a better job of realizing there&rsquo;s no proper name and substituting the Company name in the output, if it exists. There&rsquo;s a <a href="https://github.com/downloads/ttscoff/aboo/aboo-ttscoff-1.0.zip">compiled binary of my fork</a> on GitHub, too. Just put it in <code>/usr/local/bin</code> and run <code>aboo -h</code> to see the options.</p>
+
+<p>So, I&rsquo;m toying with that this morning and I get a sudden urge to be able to make a Skype phone call from the command line. I added a -p flag to <code>aboo</code> which only returns entries which have a phone number. A little <code>awk</code> on the output, and you can get a menu of people to send straight to a function that can call them with Skype. I&rsquo;ll skip the middle part for now, but here&rsquo;s a bash function for dialing a number. It accepts multiple formats of strings and tries to turn it into a standardized format for Skype (+15554321111). Usage: <code>skype 5555551111</code> or <code>skype "(555) 555 5124"</code> (it will strip the extra characters, makes it easier to paste and dial quickly).</p>
+
+<pre lang="bash" escaped="true" filename="dialskype.sh">
+skype () {
+  number=`echo $1|sed 's/[\(\)\+ \-]//g'|sed 's/^1//'|sed 's/^/+1/'`
+  osascript -e &quot;tell application \&quot;Skype\&quot; to send command \&quot;CALL $number\&quot; script name \&quot;CLIDIALER\&quot;&quot;
+}
+</pre>
+
+<p>I normally make most of my Skype calls from LaunchBar, but this will come in handy every once in a while when I&rsquo;m already working in Terminal. Thought it might be handy for someone else, too.</p>
+
+</div>
+
+</body>
+</html>

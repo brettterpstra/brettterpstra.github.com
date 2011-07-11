@@ -1,0 +1,274 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>My new favorite Bash prompt</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">17 Nov 2009 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">My new favorite Bash prompt</a></h1>
+		<p><img class="alignleft headerimg" src="http://brettterpstra.dev/wp-content/uploads/2009/11/my_new_favorite_bash_prompt.jpg" alt="My new favorite Bash prompt" width="440" height="187" />
+I do a lot in Terminal. Sometimes, it&rsquo;s easier. Sometimes it&rsquo;s faster. Sometimes I&rsquo;d just rather type it out. Whatever the reason, I&rsquo;ve never been able to stand looking at a boring shell prompt. Bash is my primary shell, mostly because I&rsquo;ve never taken the time to learn much else. I&rsquo;ll get there someday. For now, here&rsquo;s my current Bash shell prompt&hellip;</p>
+
+<p>I&rsquo;m using the <code>PROMPT_COMMAND</code> variable to run a few quick functions to generate the prompt. It doesn&rsquo;t do anything processor-intensive, so I haven&rsquo;t seen any lag caused by this one (unlike some of my previous experiments). <code>PROMPT_COMMAND</code> is set to call a function called, appropriately, <code>prompt_command()</code>. This, in turn, calls a few external functions defined in my <code>.bash_profile</code>. To use it, just stick all of the code below into your <code>.bash_profile</code>, and modify it as you see fit. Be sure to replace any definitions of <code>PROMPT_COMMAND</code> or <code>PS1</code>.</p>
+
+<!--more-->
+<p>The prompt has a few unique features, and some &ldquo;hidden&rdquo; features:</p>
+
+<ul>
+  <li>The current time is formatted just the way I like it. You can modify the <code>fmt_time</code> function with your own <code>strftime</code> strings as desired.</li>
+  <li>The current 1m average CPU load is included in the prompt in dark grey, gathered using a quick <code>uptime</code> command.</li>
+  <li>If the previous command returned an error message, the error code returned will show up at the end of the first line in red.</li>
+  <li>If you use Git, and your current working directory is a Git repository, the current branch will be shown in green before the actual prompt on the second line. This might cause problems if you don&rsquo;t have Git installed; if you see Git-related errors, you can remove the section of the code under the Git comment from <code>if</code> to <code>fi</code>. Also remove the <code>${BRANCH}</code> from the last line of the <code>prompt_command</code> function.</li>
+  <li>Lastly, it sets the title of the tab in Terminal to the last two portions of the current working directory (<code>pwd</code>) string, meaning the current directory and its parent directory.</li>
+</ul>
+
+<p><img class="aligncenter size-full wp-image-165" title="TerminalPromptFullMonty" src="http://brettterpstra.dev/wp-content/uploads/2009/11/TerminalPromptFullMonty.jpg" alt="TerminalPromptFullMonty" width="536" height="133" /></p>
+
+<p>All of the colors used in the prompt are defined as shell variables. In the final line of the <code>prompt_command</code> function, you can modify the colors just by replacing the color names in the line. That should be pretty self-explanatory.</p>
+
+<pre lang="bash" filename="bashprompt.sh">
+prompt_command () {
+    if [ $? -eq 0 ]; then # set an error string for the prompt, if applicable
+        ERRPROMPT=" "
+    else
+        ERRPROMPT='-&gt;($?) '
+    fi
+    if [ "\$(type -t __git_ps1)" ]; then # if we're in a Git repo, show current branch
+        BRANCH="\$(__git_ps1 '[ %s ] ')"
+    fi
+    local TIME=`fmt_time` # format time for prompt string
+    local LOAD=`uptime|awk '{min=NF-2;print $min}'`
+    local GREEN="\[\033[0;32m\]"
+    local CYAN="\[\033[0;36m\]"
+    local BCYAN="\[\033[1;36m\]"
+    local BLUE="\[\033[0;34m\]"
+    local GRAY="\[\033[0;37m\]"
+    local DKGRAY="\[\033[1;30m\]"
+    local WHITE="\[\033[1;37m\]"
+    local RED="\[\033[0;31m\]"
+    # return color to Terminal setting for text color
+    local DEFAULT="\[\033[0;39m\]"
+    # set the titlebar to the last 2 fields of pwd
+    local TITLEBAR='\[\e]2;`pwdtail`\a'
+    export PS1="\[${TITLEBAR}\]${CYAN}[ ${BCYAN}\u${GREEN}@${BCYAN}\
+\h${DKGRAY}(${LOAD}) ${WHITE}${TIME} ${CYAN}]${RED}$ERRPROMPT${GRAY}\
+\w\n${GREEN}${BRANCH}${DEFAULT}$ "
+}
+PROMPT_COMMAND=prompt_command
+
+fmt_time () { #format time just the way I likes it
+    if [ `date +%p` = "PM" ]; then
+        meridiem="pm"
+    else
+        meridiem="am"
+    fi
+    date +"%l:%M:%S$meridiem"|sed 's/ //g'
+}
+pwdtail () { #returns the last 2 fields of the working directory
+    pwd|awk -F/ '{nlast = NF -1;print $nlast"/"$NF}'
+}
+chkload () { #gets the current 1m avg CPU load
+    local CURRLOAD=`uptime|awk '{print $8}'`
+    if [ "$CURRLOAD" &gt; "1" ]; then
+        local OUTP="HIGH"
+    elif [ "$CURRLOAD" &lt; "1" ]; then
+        local OUTP="NORMAL"
+    else
+        local OUTP="UNKNOWN"
+    fi
+    echo $CURRLOAD
+}
+</pre>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/fk-a-useful-bash-function"><span>fk: a useful bash function</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/designing-draw"><span>Designing Draw</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/bash" name="bash">bash</a></li>
+		
+			<li><a href="/tags/prompt" name="prompt">prompt</a></li>
+		
+			<li><a href="/tags/terminal" name="terminal">terminal</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/my-new-favorite-bash-prompt';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

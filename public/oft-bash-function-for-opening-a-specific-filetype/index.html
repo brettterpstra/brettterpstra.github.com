@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>oft: Bash function for opening a specific filetype</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p>Here&rsquo;s another simple Bash function that I&rsquo;ve used so much recently I thought I should share. It&rsquo;s called <code>oft</code>, which stands for Open File Type, and can be used as a standalone shell script or as a function in your <code>.bash_profile</code>. When run, it looks in the current directory for files with extensions that match (or partially match) the first argument and opens them.</p>
+
+<p>My most obvious use case is Xcode projects, where I may have dozens (and dozens) of files, but there&rsquo;s only one <code>.xcodeproj</code> file (folder). I don&rsquo;t always know the name of the project in the folder, but if I run <code>oft xco</code> it will open it without my having to search. If there is more than one result, it gives you a numeric menu to select the file you want to open. You can cancel, select a single file or &ldquo;Open ALL&rdquo; from that menu. If you run <code>oft</code> with no arguments, it will read a (partial) extension from a prompt.</p>
+
+<p>This is a script born of laziness (so many good ones are, though). You can accomplish the same with an <code>ls *.ext</code>, spot the file and <code>open filename.ext</code>. This is just faster and better for me when I&rsquo;m working with less-than-optimal amounts of sleep.</p>
+
+<pre lang="bash" filename="oft.sh">
+# Open filetype
+# Finds every file in folder whose extension starts with the first parameter passed
+# if more than one file of given type is found, it offers a menu
+oft () {
+  if [[ $# == 0 ]]; then
+    echo -n "Enter an extension or partial extension: "
+    read extension
+  fi
+  if [[ $# &gt; 1 ]]; then
+    echo "Usage: oft [(partial) file extension]"
+    return
+  fi
+  extension=$1
+
+  ls *.*$extension* &gt; /dev/null
+  if [[ $? == 1 ]]; then
+    echo "No files matching \"$extension\" found."
+    return
+  fi
+  declare -a fileList=( *\.*$extension* )
+
+  if [[ ${#fileList[*]} -gt 1 ]]; then
+    IFS=$'\n'
+    PS3='Open which file? '
+    select OPT in "Cancel" ${fileList[*]} "Open ALL"; do
+      if [ $OPT == "Open ALL" ]; then
+        read -n1 -p "Open all matching files? (y/N): "
+        [[ $REPLY = [Yy] ]] &amp;&amp; $(/usr/bin/open ${fileList[*]})
+      elif [ $OPT != "Cancel" ]; then
+        $(/usr/bin/open "$OPT")
+      fi
+      unset IFS
+      break
+    done
+  else
+    $(/usr/bin/open "${fileList[0]}")
+  fi
+}
+</pre>
+
+</div>
+
+</body>
+</html>

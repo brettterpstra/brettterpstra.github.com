@@ -1,0 +1,352 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>SMS from the command line with Google Voice</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">19 Nov 2010 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">SMS from the command line with Google Voice</a></h1>
+		<p>I needed a script send an SMS today, and I found a very <a href="http://sudocode.net/article/66/sending-a-google-voice-sms-using-php/">handy post at sudocode</a> to send one via <a href="https://www.google.com/voice/">Google Voice</a>, using PHP. I wanted to make it a little more command-line-friendly, so I rewrote it (ham-handedly) in Ruby and added some options parsing to it. It&rsquo;s designed forâ€”and only tested onâ€”OS X, but may work fine elsewhere.</p>
+
+<!--more-->
+
+<h3 id="the-code">The code</h3>
+
+<p>To use it, copy the code below into a text file, save it as voicesms.rb (or download it directly using the link at the top of the code), and run <code>chmod a+x voicesms.rb</code> from the command line to make it executable.</p>
+
+<div class="collapse">
+<pre lang="ruby" escaped="true" filename="voicesms.rb">
+#!/usr/bin/env ruby -rjcode -Ku
+
+require 'net/http'
+require 'net/https'
+require 'open-uri'
+require 'cgi'
+require 'optparse'
+
+ACCOUNT = '' # Set to Google Voice account email for default account
+PASSWORD = '' # Set to Google Voice account password for default account
+NUMBERS = ['+1555444333','+1555444222'] # Set one or more numbers for default destination(s)
+
+options = {}
+optparse = OptionParser.new do|opts|
+  opts.banner = &quot;Usage: voicesms.rb -n +15554443333[,+15554442222] -m \&quot;Message to send\&quot; [-u Username:Password]&quot;
+
+  options[:numbers] = NUMBERS
+  opts.on( '-n', '--numbers NUM[,NUM]', 'Phone numbers to SMS (separate multiples with comma)' ) do|numbers|
+    options[:numbers] = numbers.split(',')
+  end
+
+  options[:message] = false
+  opts.on( '-m', '--message MESSAGE', 'Message to send' ) do|msg|
+    options[:message] = msg
+  end
+   
+   options[:username] = ACCOUNT
+   options[:password] = PASSWORD
+   opts.on( '-u', '--user USERNAME:PASSWORD', 'Google Voice username and password' ) do|creds|
+     parts = creds.split(':')
+     options[:username] = parts[0]
+     options[:password] = parts[1]
+   end
+ 
+  opts.on( '-h', '--help', 'Display this screen' ) do
+    puts opts
+    exit
+  end
+end
+
+optparse.parse!
+
+unless options[:message]
+  puts &quot;Message required. Use -m \&quot;MESSAGE\&quot;.&quot;
+  puts &quot;Enter `voicesms.rb -h` for help.&quot;
+  exit
+end
+
+def postit(uri_str, data, header = nil, limit = 3)
+    raise ArgumentError, 'HTTP redirect too deep' if limit == 0
+    url = URI.parse(uri_str)
+    http = Net::HTTP.new(url.host,443)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    response,content = http.post(url.path,data,header)
+    case response
+      when Net::HTTPSuccess     then content
+      when Net::HTTPRedirection then postit(response['location'],data,header, limit - 1)
+      else
+        puts response.inspect
+        response.error!
+    end
+end
+
+def getit(uri_str, header, limit = 3)
+    raise ArgumentError, 'HTTP redirect too deep' if limit == 0
+    url = URI.parse(uri_str)
+    http = Net::HTTP.new(url.host,url.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    response,content = http.get(url.path,header)
+    case response
+      when Net::HTTPSuccess     then content
+      when Net::HTTPRedirection then getit(response['location'],header, limit - 1)
+      else
+        response.error!
+    end
+end
+
+data = &quot;accountType=GOOGLE&amp;Email=#{options[:username]}&amp;Passwd=#{options[:password]}&amp;service=grandcentral&amp;source=brettterpstra-CLISMS-2.0&quot;
+res = postit('https://www.google.com/accounts/ClientLogin',data)
+if res
+  authcode = res.match(/Auth=(.+)/)[1]
+  header = {'Authorization' =&gt; &quot;GoogleLogin auth=#{authcode.strip}&quot;,'Content-Length' =&gt; '0'}
+  newres = getit('https://www.google.com/voice',header)
+  if newres
+    rnrse = newres.match(/'_rnr_se': '([^']+)'/)[1]
+    options[:numbers].each {|num|
+      data = &quot;_rnr_se=#{rnrse}&amp;phoneNumber=#{num.strip}&amp;text=#{CGI.escape(options[:message])}&amp;id=&quot;
+      finalres = postit('https://www.google.com/voice/sms/send/',data,header)
+      if finalres[&quot;ok&quot;]
+        puts &quot;Message sent to #{num}&quot;
+      else
+        puts &quot;Error sending to #{num}&quot;
+      end
+    }
+  else
+    newres.error!
+  end
+else
+  res.error!
+end
+</pre>
+</div>
+
+<h3 id="usage">Usage</h3>
+
+<p>You can set default account name, password and send-to numbers at the top of the script. These can be overridden by command line options at runtime. The standard syntax is:</p>
+
+<pre><code>voicesms.rb -n +15552525543,+15554342221 -m "The message to send" -u GVoiceUsername:GVoicePassword
+</code></pre>
+
+<p>Parameters can be in any order. The -n parameter takes one or more phone numbers in international format (+XX country code at the beginning, +1 for US numbers), separated by commas (no spaces).</p>
+
+<p>The -m option (message) is required and can&rsquo;t be set by default in the script. Just use -m &ldquo;and a quoted message&rdquo; and it will handle the rest.</p>
+
+<p>-u defines a username/password combination for Google Voice. It&rsquo;s probably most convenient to set these at the top of the script and ignore this parameter, but the option is there.</p>
+
+<p>-h will provide the help information.</p>
+
+<h4 id="aliasing">Aliasing</h4>
+
+<p>The point of the script is to let me automate SMS messages from my system, so its primary invocation will be from other scripts. However, it will function just fine as a command line texting utility, in which case you&rsquo;d probably want to alias the core functions in your <code>.bash_profile</code>. Set your default username and password in the script, and maybe a default destination number. If you want to send to a different numbers, you might want to make several aliases which include different <code>-n #</code> parameters, one for each destination. The alias will look something like:</p>
+
+<pre><code>alias sms="~/scripts/voicesms.rb -m"
+</code></pre>
+
+<p>Or, maybe:</p>
+
+<pre><code>alias smsjohn="~/scripts/voicesms.rb -n +15554443333 -m"
+</code></pre>
+
+<p>Get it? Then you can just type <code>smsjohn "And your message"</code> to send the message straight to John. Whoever that is.</p>
+
+<h3 id="what-it-does">What it does</h3>
+
+<p>It&rsquo;s pretty simple, just a series of POST and GET requests to the Google API. It uses Google&rsquo;s client authentication to get an initial auth code. Then it uses the auth code to get an auth token. Then, it posts your information to the API with the proper headers (the auth token) to complete the call. All of your data is sent securely over SSL (https) connections.</p>
+
+<p>Have fun!</p>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/web-excursions-november-12-november-17"><span>Web excursions: November 12 - November 17</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/web-excursions-november-18-november-19"><span>Web excursions: November 18 - November 19</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/terminal" name="terminal">terminal</a></li>
+		
+			<li><a href="/tags/ruby" name="ruby">ruby</a></li>
+		
+			<li><a href="/tags/hacks" name="hacks">hacks</a></li>
+		
+			<li><a href="/tags/google-voice" name="google-voice">google voice</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/sms-from-the-command-line-with-google-voice';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

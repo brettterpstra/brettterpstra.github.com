@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Quick Tip: fixing the "other account" Mac App Store issue</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p>I like the Mac App Store. I&rsquo;ve purchased a <em>lot</em> of apps since it opened, and I dig the centralized update system. I&rsquo;ve been having this issue on my MacBook Air, though, where trying to update an installed app would trigger a dialog which says &ldquo;You have updates available for other accounts&hellip;&rdquo; and suggest that I log in with that account to update my software. Thing is, I only have one Apple ID, one account.</p>
+
+<p>After digging around and trying various things, I found <a href="https://discussions.apple.com/thread/2718993?start=0&amp;tstart=0">this thread</a> in the Apple Support Communities. The solution, buried in there somewhere, was to both repair disk permissions in Disk Utility and rebuild my Spotlight index. You can rebuild your index simply by adding your entire hard drive to the Privacy settings in Spotlight&rsquo;s System Preferences panel and then removing it. You can do it from the command line or from a utility such as Cocktail<sup id="fnref:cocktail"><a href="#fn:cocktail" rel="footnote">1</a></sup>, too, but don&rsquo;t make it complicated.</p>
+
+<p>After doing both (in that order), I&rsquo;ve been able to update without hassle. Somehow, it made LaunchBar stop indexing my applications, but I&rsquo;ll figure that out when I have time&hellip;</p>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:cocktail">
+      <p>Cocktail&rsquo;s a great utility app for cleaning up log files, caches, etc. and handling a gazillion system tasks and maintenance. Plus, it doesn&rsquo;t mess up apps like 1Password the way that other &ldquo;cleaning&rdquo; apps tend to. <a href="http://www.maintain.se/cocktail/index.php">Check it out</a>.<a href="#fnref:cocktail" rev="footnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+</div>
+
+</body>
+</html>

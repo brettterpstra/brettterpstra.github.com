@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Automating HTML5 video encodes</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  
+<p>I spent an inordinate amount of time <em>not</em> doing useful things today. During this non-productivity bender, I got a little obsessed with making the HTML5 video encoding process easier. I&rsquo;ve been working on a <a href="http://bundle.weblogzinc.com/video">tutorial site</a> for the Blogsmith Bundle, so this whole deal needed to be sped up. I came out with a script which, when combined with the right command line utilities, takes 90% of the manual labor out of creating the multiple formats needed.</p>
+
+<p>HTML5 video, if you&rsquo;re not familiar, provides a means to supply modern browsers with high-quality video <em>without</em> using Flash. It works across iOS devices beautifully, and the markup is highly semantic. The problem is that every browser has chosen a different format to promote, and using HTML5 video effectively means providing the same video in three formats (OGV, MP4, WEBM). Then, you need to code in a Flash fallback for older browsers. This would all be fine if my usual video conversion tools had a multiple-encode feature. They don&rsquo;t. The only one that comes close is <a href="http://thelittleappfactory.com/evom/">Evom</a>, which has an HTML5 preset to encode OGV and MP4 at the same time, but the OGV files won&rsquo;t play in Firefox and it can&rsquo;t do WEBM at <em>all</em> right now.</p>
+
+<p>So, taking matters into my own hands&hellip;</p>
+
+<!--more-->
+
+<h3 id="the-workflow">The workflow</h3>
+
+<p>Here&rsquo;s the workflow I&rsquo;m using now:</p>
+
+<ol>
+  <li>Export a screencast as an MP4 file to a bucket folder</li>
+  <li>Hazel detects a new MP4 file and runs a shell script on it which:
+    <ol>
+      <li>Creates a new folder based on the file&rsquo;s base name and moves the file into it</li>
+      <li>Runs an ffmpeg sequence to create a webm version</li>
+      <li>Runs an ffmpeg2theora command to create an ogv</li>
+      <li>Uses ffmpeg to create a poster image from the first frame of the mp4</li>
+      <li>Uses rsync to put the finished folder on my server</li>
+    </ol>
+  </li>
+  <li>I get a growl notification from Hazel that files are converted and uploaded</li>
+  <li>I insert the ungodly-long &ldquo;shortcode&rdquo; for the <a href="http://wordpress.org/extend/plugins/videojs-html5-video-player-for-wordpress/installation/">VideoJS plugin</a> using TextExpander into a new WordPress post.</li>
+</ol>
+
+<p>Four steps, and I only have to interact with two of them. The script is pretty hardcoded for my setup, but I moved some of the config up to the top for convenience. You&rsquo;ll need ffmpeg and ffmpeg2theora installed, both of which are really easy to set up with <a href="https://github.com/mxcl/homebrew">homebrew</a>. You can probably find binaries, too, but I just used <code>brew</code> for these.</p>
+
+<h3 id="the-script">The script</h3>
+
+<p>Here&rsquo;s the script, hope it helps someone else, too:</p>
+
+<pre lang="bash" filename="html5encode.sh" escaped="true">
+#!/bin/bash
+# html5encode.sh
+# Brett Terpstra, 2011 - http://brettterpstra.dev/automating-html5-video-encodes
+# Requires ffmpeg and ffmpeg2theora
+##################
+### CONFIG #######
+MAXSIZE=&quot;960x540&quot;
+SSHURL=&quot;username@your.webserver.com&quot;
+SSHDIR=&quot;/www/video/media/&quot;
+### END CONFIG ###
+
+INPUT=$1
+DIRNAME=`dirname &quot;$INPUT&quot;`
+FILENAME=`basename &quot;$INPUT&quot;`
+BASENAME=${FILENAME%%.*}
+
+cd &quot;$DIRNAME&quot;
+if [ -d &quot;$BASENAME&quot; ]; then
+  # /usr/local/bin/growlnotify -s -i &quot;Terminal.app&quot; -m &quot;Found $FILENAME, but directory $BASENAME already exists. Aborting&quot;
+  exit 1
+fi
+mkdir &quot;$BASENAME&quot;
+mv &quot;$FILENAME&quot; &quot;$BASENAME/&quot;
+cd &quot;$BASENAME&quot;
+
+/usr/local/bin/ffmpeg -pass 1 -passlogfile &quot;$FILENAME&quot; -threads 16  -keyint_min 0 \
+-g 250 -skip_threshold 0 -qmin 1 -qmax 51 -i &quot;$FILENAME&quot; -vcodec libvpx -b 614400 \
+-s $MAXSIZE -aspect 16:9 -an -y temp.webm
+
+/usr/local/bin/ffmpeg -pass 2 -passlogfile &quot;$FILENAME&quot; -threads 16  -keyint_min 0 \
+-g 250 -skip_threshold 0 -qmin 1 -qmax 51 -i &quot;$FILENAME&quot; -vcodec libvpx -b 614400 \
+-s $MAXSIZE -aspect 16:9 -acodec libvorbis -y &quot;$BASENAME&quot;.webm
+
+rm temp.webm
+rm *.log
+
+/usr/local/bin/ffmpeg2theora --videoquality 5 --audioquality 1 --max_size $MAXSIZE &quot;$FILENAME&quot; -o &quot;$BASENAME.ogv&quot;
+/usr/local/bin/ffmpeg -i &quot;$FILENAME&quot; -ss 0 -vframes 1 -vcodec mjpeg -f image2 &quot;${BASENAME}Poster.jpg&quot;
+cd ..
+rsync -v -r -e ssh &quot;`pwd`/$BASENAME&quot; $SSHURL:$SSHDIR
+</pre>
+
+<p>The Hazel rule I&rsquo;m running simply looks for files in the bucket folder with the <code>.mp4</code> extension and passes them to the shell script.</p>
+
+<p>Let me know if you have a better way to automate this. Also, let me know if you&rsquo;ve found a good way to encode h.264 from the command line on a Mac. I haven&rsquo;t been able to get ffmpeg to compile with x/h.264 support yet, but it was irrelevant as I had to output <em>some</em> format to begin with. Might as well save to the one format I can&rsquo;t encode properly from a shell script&hellip;</p>
+
+</div>
+
+</body>
+</html>

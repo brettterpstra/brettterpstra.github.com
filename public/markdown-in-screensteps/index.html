@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Markdown in ScreenSteps</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  
+<p><a href="http://brettterpstra.dev/wp-content/uploads/2011/02/ScreenStepsLessonScreenShot.jpg"><img src="http://brettterpstra.dev/wp-content/uploads/2011/02/ScreenStepsLessonScreenShot-300x224.jpg" alt="" title="ScreenStepsLessonScreenShot" width="300" height="224" class="alignright size-medium wp-image-1934" /></a>I love <a href="http://www.bluemangolearning.com/screensteps/">ScreenSteps</a>, the app from Blue Mango which makes creating documentation for screen-based applications as fast and easy as making documentation can possibly be. It&rsquo;s a little clunky sometimes, but the features outweigh the cons by far, at least for me.</p>
+
+<p>In recent versions they&rsquo;ve added the ability to post directly to WordPress, which has been pretty cool. I always got a little frustrated with the amount of extra markup included in the templates, though. Today I asked them if they could add a Markdown export feature. Their response? It&rsquo;s already there.</p>
+
+<!--more-->
+
+<p>It doesn&rsquo;t process Markdown to HTML, but that&rsquo;s great for me as I do that server-side. It uploads the images in your lesson, inserts the resulting urls in your page, and uploads the plain old Markdown straight to your blog as either a post or a page. I re-created a couple of my older how-to&rsquo;s using this new template, and they came out great. Check them out in the new <a href="http://brettterpstra.dev/howtos/">How-To section</a>.</p>
+
+<p>Creating the template is quite simple, and everything you need to know is detailed in <a href="http://help.bluemangolearning.com/spaces/screensteps/manuals/customizing_templates/lessons/1332-The-Anatomy-of-the-Template-File#TheConfigurationSection">Blue Mango&rsquo;s help system</a>. I&rsquo;m not going to go into a lot of detail, but here&rsquo;s a copy of the <a href="http://abyss.designheresy.com/ScreenSteps-BTMarkdown.zip">template I&rsquo;m using</a>. Just unzip the file into <code>~/Library/Application Support/ScreenSteps/2.0/Templates/HTML/Blog</code> and edit the index.html file inside.</p>
+
+<p>Here&rsquo;s where I went a little crazy. I have a custom post type in WordPress for the How-To&rsquo;s, and I have plans to expand that section over time. I can&rsquo;t post directly to WordPress as a How-To, and it was a little annoying to post it as a page and copy it over just to get the images uploaded. So&hellip; here&rsquo;s a service called <a href="http://abyss.designheresy.com/UploadImagesToBlog.zip">Upload Images to Blog</a>. You can export as HTML in ScreenSteps using the above template and save it to a local folder. Run the service on the html file created, and it will upload all of the images to your blog and create a new <code>filename-out.html</code> file with the new image urls. You can render that to HTML or paste the Markdown directly to your post page, if your blog supports that.</p>
+
+<p>The service requires a configuration file to be located at <code>~/.imguploader</code>. The content of the file is just one line, like this:</p>
+
+<pre><code>username:password@http://yourblogname.com/xmlrpc.php
+</code></pre>
+
+<p>It also requires that you&rsquo;re using an image output format like the one found in the template above. It just scans the file for <code>![](filename.jpg "alt text")</code> lines for the uploadable images. I can&rsquo;t guarantee the service will work for everybody. It&rsquo;s a quick and dirty solution, but it works really well for me. It even has Growl notifications, if you have Growl installed.</p>
+
+<p>That&rsquo;s it. Back to work on more serious things.</p>
+
+</div>
+
+</body>
+</html>

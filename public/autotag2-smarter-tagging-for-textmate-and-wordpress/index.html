@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>AutoTag2: smarter tagging for TextMate and WordPress</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p><img src="http://brettterpstra.dev/wp-content/uploads/2011/04/autotag_add_tags_panel.jpg" alt="Autotag Add Tags panel" height="469" width="349" class="alignright" />I was tooling around the <a href="http://www.vim.org">Vim website</a> looking at blogging plugins this morning. I noticed that one of them, <a href="http://www.vim.org/scripts/script.php?script_id=1953">Vimpress</a>, had linked to an old <a href="http://blog.circlesixdesign.com/download/utw-rpc-autotag/">project of mine</a> that allowed you to work with Ultimate Tag Warrior tags through <a href="http://en.wikipedia.org/wiki/XML-RPC">XML-RPC</a>. Since the inclusion of tagging support in WordPress, Ultimate Tag Warrior has been defunct, and so have the UTW-RPC plugin and associated AutoTag TextMate bundle.</p>
+
+<p>Thinking about it for a minute, I realized I really did miss the functionality that AutoTag had given me. While I&rsquo;ve toyed around with blogging from Vim, I still primarily use TextMate, not least because of the <a href="http://bundle.weblogzinc.com/docs/index.php">Blogsmith Blogging Bundle</a>. Until that kind of functionality is ported to Vim, I&rsquo;m happy right here. Thus, I spent my Sunday afternoon reviving the AutoTag bundle.</p>
+
+<p>If you use <a href="http://blog.macromates.com/2006/blogging-from-textmate/">TextMate to blog on a WordPress site</a>, you&rsquo;ll want to see this.</p>
+
+<!--more-->
+
+<p>There are two parts to this: a WordPress plugin that adds an XML-RPC call for getting all of the tags in use on the blog, and a small TextMate bundle for making good use of it. The TextMate bundle cribs off of my previous AutoTag project, and borrows most of the remote functionality from the original TextMate blogging bundle. Why reinvent the wheel? I&rsquo;m bundling both together in the download, so if you want to use the WordPress plugin to port the functionality elsewhere (say, Vim?), you can just pull out the parts you need.</p>
+
+<p>[<a href="#download">Skip to download</a>]</p>
+
+<h2 id="autotagging-in-textmate">AutoTagging in TextMate</h2>
+
+<p>What the bundle does (short version) is find the most appropriate tags for your content based on <em>tags you&rsquo;ve already used</em> before. This helps you easily keep your tag collection trim and <em>useful</em>. No disparate tags because of inconsistent capitalization, plurals or conjugation. Things that are related stay related. This can be especially difficult blogging from TextMate because you can&rsquo;t quickly see &ldquo;all tags&rdquo; the way you can from the WordPress editor. This solves the problem.</p>
+
+<h3 id="install-the-wordpress-plugin">Install the WordPress plugin</h3>
+
+<p>Standard install, like any other (manually-installed) plugin: </p>
+
+<ul>
+  <li>Upload the gettags-rpc folder from the zip download to your <code>wp-content/plugins</code> folder on your server.</li>
+  <li>Open your admin page and go to the Plugins panel.</li>
+  <li>Activate the GetTags-RPC plugin in the plugin list.</li>
+</ul>
+
+<p>If the plugin activates without error, you should be ready to go. It&rsquo;s a very simple plugin without a lot of error checking, so let me know if you have any trouble with it.</p>
+
+<h3 id="install-the-autotag-bundle">Install the AutoTag bundle</h3>
+
+<p>To install AutoTag in TextMate, double click on the bundle in the download zip file. It should open TextMate, pop up the Bundle Editor and show you the installed bundle and its commands. Done.</p>
+
+<p>Assuming you have AutoTag installed in TextMate and the GetTags-RPC plugin installed in WordPress, you&rsquo;re ready to go. Well, you&rsquo;ll need to have your blog set up (Bundles &gt; Blogging &gt; Setup Blogs) in TextMate, but we&rsquo;ll assume you&rsquo;ve done that by now.</p>
+
+<h3 id="using-the-commands">Using the commands</h3>
+
+<p><img src="http://brettterpstra.dev/wp-content/uploads/2011/04/autotag_tab_trigger.jpg" alt="AutoTag Tab Trigger" height="166" width="287" class="alignright shadow" />The AutoTag commands can be triggered in two ways. First, you can just put your cursor one space after the colon in the &ldquo;Keywords:&rdquo; line of the template headers. If you don&rsquo;t have that line in your template, you can just type &ldquo;Keywords: &ldquo; on a line before the end of the headers, or add it permanently by editing the template in the Bundle Editor. Hit tab from there and you&rsquo;ll get a menu of the three commands in the bundle. You can trigger that from the same point even if you already have tags on the line; it will add appropriate commas automatically. Second, you can use Control-Option-T to get the same menu at any point in the file, although I&rsquo;m not sure why you&rsquo;d call it from anywhere <em>other</em> than the &ldquo;Keywords&rdquo; line.</p>
+
+<h4 id="commands">Commands</h4>
+
+<p><strong>AutoTag:</strong> This is the primary command, or at least my favorite in the bundle. It&rsquo;s only good when you run it <em>after</em> you write your post; it doesn&rsquo;t have anything to work with on a blank template. Finish your post (or open an existing one) and trigger the command. It will grab all existing tags on your blog and compare them to your text, resulting in a dialog with a list of the best matches ranked by relevance. If you&rsquo;re curious, here&rsquo;s what it does when processing:</p>
+
+<ul>
+  <li>Strips out all punctuation from the content of your post and creates an array of words</li>
+  <li>Uses the Porter Stemming algorithm to get the stem of each word. This makes plurals, adjective, adverb and verb forms all represent the same word.</li>
+  <li>Compares the list of stemmed words to the stems of each tag returned by your blog, keeping matches.</li>
+  <li>Measures the frequency of each match in the content and sorts the list accordingly.</li>
+</ul>
+
+<p><strong>Common Words:</strong> This command ignores the tags on your blog and just gives you the most common words from your post for selection as tags. It&rsquo;s a good way to figure out what new tags might be worth adding. Again, it&rsquo;s not very useful if you don&rsquo;t have your content written yet.</p>
+
+<p><strong>All Tags:</strong> If you&rsquo;re not finding the AutoTag results satisfactory on a given post, or you want to tag before you have any content, this command will simply return your entire list of available tags. You can use it to check what form or casing you used on an existing tag, and it can be run at any time.</p>
+
+<p>That&rsquo;s it. If you use WordPress and TextMate together, I know you&rsquo;re going to love this. Let me know how it goes! By the way, I&rsquo;ll probably (eventually) build similar functionality right into the WordPress editor, and I&rsquo;d love to see this ported to Vim, too. Any Vim plugin writers want a challenge?</p>
+
+<h2 id="download">Download</h2>
+
+<p>[download id=&rdquo;35&rdquo;]</p>
+
+</div>
+
+</body>
+</html>

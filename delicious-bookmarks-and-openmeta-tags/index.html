@@ -1,0 +1,314 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>Delicious bookmarks and OpenMeta tags</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">11 May 2010 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">Delicious bookmarks and OpenMeta tags</a></h1>
+		<p>There are quite a few things I love when it comes to my Mac. I love <a href="http://www.apple.com/macosx/what-is-macosx/spotlight.html">Spotlight</a>. I love <a href="http://code.google.com/p/openmeta/">OpenMeta</a> tagging. I <a href="http://brettterpstra.dev/tag/evernote/">love Evernote</a>. I love being able to collect information from any source, and find anything I&rsquo;ve saved, anywhere, no matter what program I used to create it. I especially love programs that allow me to accomplish that. </p>
+
+<p>Unfortunately, one of my favorite apps right now, <a href="http://www.delibarapp.com/">Delibar</a>, doesn&rsquo;t integrate with Spotlight or OpenMeta, despite the fact that it would be relatively easy to do. Delibar is an excellent (and sexy) menubar application for creating and searching <a href="http://delicious.com/">Delicious</a> (and <a href="http://pinboard.in/">Pinboard</a>) bookmarks. A similar app, <a href="http://codesorcery.net/pukka">Pukka</a>, pulls off the Spotlight part, but I still wanted OpenMeta tags that matched my Delicious tags for local searching.</p>
+
+<p>I also use <a href="http://www.gravityapps.com/tags/index.html">Tags.app</a> for most of my tagging. OpenMeta tags allow you to group and classify files with simple tags, and provide a Spotlight-compatible way to search more intelligently. When you tag a website with Tags, it creates a <a href="http://www.downloadatoz.com/file-extensions/webloc-file-extension.html">webloc</a> file in your metadata cache and applies the OpenMeta tags to it. I figured a similar approach would be feasible using AppleScript, and it seems to be working out great. Read on to see the script I&rsquo;m using, and be sure to let me know if you improve on it!</p>
+
+<!--more-->
+<p>What I&rsquo;m doing is using curl with the <a href="http://delicious.com/help/api#posts_all">Delicious API</a>, and downloading everything that&rsquo;s been bookmarked within the last hour. I&rsquo;m running it with <a href="http://en.wikipedia.org/wiki/Launchd">launchd</a> every hour, so I don&rsquo;t want to grab more than that every time it runs. It parses out the title, tags and url for the bookmark, saves it to a .webloc file, and tags it using Tags.app&rsquo;s AppleScript commands. If you&rsquo;re not running Tags, it could be modified pretty easily to work with the <code>openmeta</code> command line application.</p>
+
+<p>I&rsquo;m leaving the target folder up to the user, so when you define it in the CONFIG section, make sure it&rsquo;s pointing to an existing folder. The only other config properties are your Delicious username and password (sent securely). As noted in the comments in the script, you can adjust the time/date it retrieves from in the first line after the CONFIG section.</p>
+
+<p>The script is pretty well commented, so I won&rsquo;t rewrite the whole thing here. Take a look, and then I&rsquo;ll show you how I installed it.</p>
+
+<p>&lt;div markdown=0&gt;</p>
+<pre><code>
+-- CONFIG
+property _user : &quot;username&quot; -- delicious username
+property _pass : &quot;password&quot; -- delicious password
+property targetFolder : &quot;/Users/ttscoff/Library/Caches/Metadata/Delicious&quot; -- POSIX path to existing folder
+-- END CONFIG
+
+set _date to do shell script &quot;date -v-1d &#x27;+%Y-%m-%dT%H:%M:%SZ&#x27;&quot;
+-- returns a date 1 day ago in the format required by the twitter API.
+-- you can adjust the date based on the frequency that you run the script
+-- by editing the -v-1d part of the date command (-v-1H for 1 hour)
+-- Note that the Delicious dates run on GMT, so you have to account for your time offset
+-- For me, this means -v+4H if I want to go back one hour
+
+set bookmarks to do shell script &quot;curl https://&quot; &amp; _user &amp; &quot;:&quot; &amp; _pass &amp; &quot;@api.del.icio.us/v1/posts/all?fromdt=&quot; &amp; _date
+-- gets the bookmarks starting with the date specified in _date
+
+set _folder to POSIX file targetFolder as alias
+-- turns the POSIX path in CONFIG into an AppleScript alias
+
+tell application &quot;System Events&quot;
+	set xmlDocument to make new XML data with data bookmarks
+	-- create the XML object
+	set {astid, AppleScript&#x27;s text item delimiters} to {AppleScript&#x27;s text item delimiters, &quot; &quot;}
+	-- store the current delimiter and set the new one to a space for breaking up the tags
+	repeat with _post in XML elements of XML element 1 of xmlDocument
+		set _url to value of XML attribute &quot;href&quot; of _post as string
+		set _tags to text items of (value of XML attribute &quot;tag&quot; of _post as string)
+		set end of _tags to &quot;delicious&quot;
+		set _title to value of XML attribute &quot;description&quot; of _post as string
+		try -- it fails on some files, the try block lets us keep moving if we hit a problem
+			tell application &quot;Finder&quot; to set webloc to make new internet location file to _url at _folder with properties {name:_title}
+			-- makes a .webloc file in our target folder
+			tell application &quot;Tags&quot; to apply tags _tags to files {POSIX path of (webloc as string)}
+			-- adds OpenMeta tags to our newly created file
+		end try
+	end repeat
+	set AppleScript&#x27;s text item delimiters to astid
+	-- restore the delimiters
+end tell
+</code></pre>
+<p>&lt;/div&gt;</p>
+
+<p><a href="applescript://com.apple.scripteditor?action=new&amp;script=%2D%2D%20CONFIG%0Aproperty%20_user%20%3A%20%22username%22%20%2D%2D%20delicious%20username%0Aproperty%20_pass%20%3A%20%22password%22%20%2D%2D%20delicious%20password%0Aproperty%20targetFolder%20%3A%20%22%2FUsers%2Fttscoff%2FLibrary%2FCaches%2FMetadata%2FDelicious%22%20%2D%2D%20POSIX%20path%20to%20existing%20folder%0A%2D%2D%20END%20CONFIG%0A%0Aset%20_date%20to%20do%20shell%20script%20%22date%20%2Dv%2D1d%20%27%2B%25Y%2D%25m%2D%25dT%25H%3A%25M%3A%25SZ%27%22%0A%2D%2D%20returns%20a%20date%201%20day%20ago%20in%20the%20format%20required%20by%20the%20twitter%20API%2E%0A%2D%2D%20you%20can%20adjust%20the%20date%20based%20on%20the%20frequency%20that%20you%20run%20the%20script%0A%2D%2D%20by%20editing%20the%20%2Dv%2D1d%20part%20of%20the%20date%20command%20%28%2Dv%2D1H%20for%201%20hour%29%0A%0Aset%20bookmarks%20to%20do%20shell%20script%20%22curl%20https%3A%2F%2F%22%20%26%20_user%20%26%20%22%3A%22%20%26%20_pass%20%26%20%22%40api%2Edel%2Eicio%2Eus%2Fv1%2Fposts%2Fall%3Ffromdt%3D%22%20%26%20_date%0A%2D%2D%20gets%20the%20bookmarks%20starting%20with%20the%20date%20specified%20in%20_date%0A%0Aset%20_folder%20to%20POSIX%20file%20targetFolder%20as%20alias%0A%2D%2D%20turns%20the%20POSIX%20path%20in%20CONFIG%20into%20an%20AppleScript%20alias%0A%0Atell%20application%20%22System%20Events%22%0A%09set%20xmlDocument%20to%20make%20new%20XML%20data%20with%20data%20bookmarks%0A%09%2D%2D%20create%20the%20XML%20object%0A%09set%20%7Bastid%2C%20AppleScript%27s%20text%20item%20delimiters%7D%20to%20%7BAppleScript%27s%20text%20item%20delimiters%2C%20%22%20%22%7D%0A%09%2D%2D%20store%20the%20current%20delimiter%20and%20set%20the%20new%20one%20to%20a%20space%20for%20breaking%20up%20the%20tags%0A%09repeat%20with%20_post%20in%20XML%20elements%20of%20XML%20element%201%20of%20xmlDocument%0A%09%09set%20_url%20to%20value%20of%20XML%20attribute%20%22href%22%20of%20_post%20as%20string%0A%09%09set%20_tags%20to%20text%20items%20of%20%28value%20of%20XML%20attribute%20%22tag%22%20of%20_post%20as%20string%29%0A%09%09set%20end%20of%20_tags%20to%20%22delicious%22%0A%09%09set%20_title%20to%20value%20of%20XML%20attribute%20%22description%22%20of%20_post%20as%20string%0A%09%09try%20%2D%2D%20it%20fails%20on%20some%20files%2C%20the%20try%20block%20lets%20us%20keep%20moving%20if%20we%20hit%20a%20problem%0A%09%09%09tell%20application%20%22Finder%22%20to%20set%20webloc%20to%20make%20new%20internet%20location%20file%20to%20_url%20at%20_folder%20with%20properties%20%7Bname%3A_title%7D%0A%09%09%09%2D%2D%20makes%20a%20%2Ewebloc%20file%20in%20our%20target%20folder%0A%09%09%09tell%20application%20%22Tags%22%20to%20apply%20tags%20_tags%20to%20files%20%7BPOSIX%20path%20of%20%28webloc%20as%20string%29%7D%0A%09%09%09%2D%2D%20adds%20OpenMeta%20tags%20to%20our%20newly%20created%20file%0A%09%09end%20try%0A%09end%20repeat%0A%09set%20AppleScript%27s%20text%20item%20delimiters%20to%20astid%0A%09%2D%2D%20restore%20the%20delimiters%0Aend%20tell">Open this script in your Script Editor</a></p>
+
+<h3 id="installing">Installing</h3>
+
+<p>The first thing I did was make a version of the script that excluded the date parameter (fromdt) in the curl call in order to download my entire history and process it so I was up-to-date. This took a while, but didn&rsquo;t seem to cause any problems. The Delicious API is pretty quick to throttle you, so download the whole bunch in one API call or you&rsquo;ll be in trouble.</p>
+
+<p>After editing the config options, I saved the file as an <del datetime="2010-05-11T14:25:06+00:00">Application Bundle</del> <ins datetime="2010-05-11T14:25:06+00:00">(see addendum below)</ins> in my own apps directory (~/Applications). It doesn&rsquo;t matter where you put it (or what you name it), as long as you know the path to get there. Then I set up a launchd plist to run it every 3600 seconds (hour). I highly recommend <a href="http://sourceforge.net/projects/lingon/">Lingon</a>  for editing all things launchd. It will make sense when you get there.</p>
+
+<h3 id="addendum">Addendum</h3>
+
+<p>In reference to the install procedure above, I&rsquo;ve actually had more luck saving it as a text file to a scripts folder and running it with osascript through launchd. Here&rsquo;s my launchd plist, which you can edit and load through the &ldquo;Expert&rdquo; section of Lingon&rsquo;s editor.</p>
+
+<p>Also, as I just added into the code comments above, I didn&rsquo;t originally account for the fact that Delicious dates are in GMT, and my offset is -5 right now, so I have to use -v+4H to get 1 hour back, not -v-1H.</p>
+
+<p>&lt;div markdown=0&gt;</p>
+<pre><code>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
+&lt;plist version=&quot;1.0&quot;&gt;
+&lt;dict&gt;
+	&lt;key&gt;Label&lt;/key&gt;
+	&lt;string&gt;org.brettterpstra.GetDelicious&lt;/string&gt;
+	&lt;key&gt;Nice&lt;/key&gt;
+	&lt;integer&gt;8&lt;/integer&gt;
+	&lt;key&gt;ProgramArguments&lt;/key&gt;
+	&lt;array&gt;
+		&lt;string&gt;/usr/bin/osascript&lt;/string&gt;
+		&lt;string&gt;/Users/ttscoff/scripts/getdelicious&lt;/string&gt;
+	&lt;/array&gt;
+	&lt;key&gt;RunAtLoad&lt;/key&gt;
+	&lt;true/&gt;
+	&lt;key&gt;StartInterval&lt;/key&gt;
+	&lt;integer&gt;3600&lt;/integer&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
+</code></pre>
+<p>&lt;/div&gt;</p>
+
+<p>Areas for improvement:</p>
+
+<ul>
+  <li>Currently errors out on some bookmarks for unknown reasons</li>
+  <li>Could have a first-run setting to automatically download and tag ALL bookmarks</li>
+  <li>Could set the created date of the webloc file based on the date of the bookmark from Delicious</li>
+  <li>Could provide more feedback or logging</li>
+</ul>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/a-few-scripts-for-taskpaper-users"><span>A few scripts for TaskPaper users</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/targeting-and-filtering-ie-with-relative-ease-2"><span>Targeting and filtering IE with relative ease</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/bookmarking" name="bookmarking">bookmarking</a></li>
+		
+			<li><a href="/tags/tagging" name="tagging">tagging</a></li>
+		
+			<li><a href="/tags/openmeta" name="openmeta">openmeta</a></li>
+		
+			<li><a href="/tags/experiments" name="experiments">experiments</a></li>
+		
+			<li><a href="/tags/utilities" name="utilities">utilities</a></li>
+		
+			<li><a href="/tags/os-x" name="os-x">os x</a></li>
+		
+			<li><a href="/tags/applescript" name="applescript">applescript</a></li>
+		
+			<li><a href="/tags/delicious" name="delicious">delicious</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/delicious-bookmarks-and-openmeta-tags';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

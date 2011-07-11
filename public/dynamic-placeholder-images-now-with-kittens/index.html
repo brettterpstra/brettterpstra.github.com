@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Dynamic placeholder images, now with kittens</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  
+<p><img src="http://placekitten.com/300/250" alt="KITTEH 300x250" width="300" height="250" class="alignright shadow" />Thanks to <a href="https://twitter.com/#!/TuxToaster">Michael Jones</a> for brightening an otherwise dull day for me. He pointed me to <a href="http://placekitten.com/">placekitten</a>, a site that mimics <a href="http://placehold.it">placehold.it</a> and inserts dummy images into HTML mockups for you. The difference being that placekitten does it with pictures of, yes, kittens.</p>
+
+<p>While you might not ever show a design filled with kittens to the average client, you can keep yourself feeling warm and fuzzy while you code out the details. You were going to put the client&rsquo;s images into those placeholders anyway, right?</p>
+
+<p>For whatever you&rsquo;d actually use it for, I threw snippets into the Tools group (<a href="http://brettterpstra.dev/textexpander-experiments/">started here</a>) in my TextExpander snippets. If you&rsquo;re curious, just install them from my <a href="http://brettterpstra.dev/code/textexpander/">TextExpander project page</a>, or update your existing group if you&rsquo;ve installed via the urls.</p>
+
+<p>For reference, the snippet is simply this:</p>
+
+<pre lang="html">
+<img src="http://placekitten.com/g/%fill:width%/%fill:height%" alt="KITTEH %fill:width%x%fill:height%" width="%fill:width%" height="%fill:height%" />
+</pre>
+
+<p>The <code>g/</code> in there makes it greyscale, just pull it out of the url to make it color instead. Both versions are in the Tools snippets.</p>
+
+<p>Hey, lighten up. <a href="http://placekitten.com/">Try some kittens</a>.</p>
+
+</div>
+
+</body>
+</html>

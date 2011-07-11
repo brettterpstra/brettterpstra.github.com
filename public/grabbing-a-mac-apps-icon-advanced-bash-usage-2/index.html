@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Grabbing a Mac app's icon: advanced Bash usage</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p>In the <a href="http://brettterpstra.dev/?p=2028">previous post</a> in this series, we looked at the basic Terminal commands we&rsquo;d use to grab a Mac application&rsquo;s icon from the command line. In this post, we&rsquo;ll flesh out the script a little and turn it into a Bash function with some added features:</p>
+
+<ul>
+  <li>Logic to locate the app if it exists outside of /Applications</li>
+  <li>A check using <code>sips</code> to find the maximum available image size</li>
+  <li>Allow user input to set the final output size</li>
+  <li>Allow the user to decide whether to open the result in Preview.app</li>
+</ul>
+
+<p>We&rsquo;ll also look at a very, very cool trick for adding tab-completion for application names to the <code>open -a</code> command, as well as our <code>geticon()</code> function. Yes, it&rsquo;s that nerdy.</p>
+
+<p>In the next post, we&rsquo;ll use Automator to make this into a droplet we can drag apps onto from Finder. If you don&rsquo;t give a flying fire truck about Terminal, you can skip straight there and create something useful without touching the command line. This one&rsquo;s for the nerds (and wannabe nerds).<!--more-->### A for loop directory search ###</p>
+
+<p>We&rsquo;ll use a bash <code>for</code> loop to search some predefined locations. You could also use <code>mdfind</code><sup id="fnref:mdfind"><a href="#fn:mdfind" rel="footnote">1</a></sup> to let Spotlight locate the app, but we&rsquo;ll keep it simple for now. I&rsquo;ve set it up to look in some standard locations for the file:</p>
+
+<pre lang="bash" escaped="true">
+APPDIR=''
+ for dir in &quot;/Applications/&quot; &quot;/Applications/Utilities/&quot; &quot;/Developer/Applications/&quot; &quot;/Developer/Applications/Utilties/&quot;; do
+   if [[ -d ${dir}$APP.app ]]; then 
+       APPDIR=$dir
+       break
+   fi
+ done
+</pre>
+
+<p>$APPDIR is now set to the location that $APP was found, or to &lsquo;&rsquo; (blank) if it wasn&rsquo;t found in any of the specified folders. We can check for that in the next part and fail gracefully if we didn&rsquo;t find the specified app.</p>
+
+<h3 id="getting-the-maximum-image-size">Getting the maximum image size</h3>
+
+<p>Modern Mac icons generally have a pixel width of 512 or greater, but some legacy applications&rsquo; icons are 256px or smaller. Finding the maximum pixel width of the image allows us to avoid creating a distorted image as a result of sizing up beyond the largest image in the .icns file. The <code>sips</code> command can do this with a little help from <code>awk</code><sup id="fnref:awk"><a href="#fn:awk" rel="footnote">2</a></sup> to clean up the output. The following command gets the <code>pixelWidth</code> property from the icon file, grabs the last line of output and removes extraneous text to leave us with just a number:</p>
+
+<pre><code>MAXAVAIL=`sips -g pixelWidth "${APPDIR}$APP.app/Contents/Resources/$ICON.icns"|tail -1|awk '{print $2}'`
+</code></pre>
+
+<p>We could use the number we found to output a file with the maximum dimensions, but since we&rsquo;re making a general-purpose function, we&rsquo;ll ask the user what they want.</p>
+
+<h3 id="getting-user-input">Getting user input</h3>
+
+<p>There are a few ways to offer options in Bash. This is the simplest route I know. It doesn&rsquo;t innately allow for a lot of error checking; the user could enter letters instead of numbers or an unattainable dimension, for example. We&rsquo;ll add some basic checks, but we&rsquo;ll assume that you can properly enter a number when asked. You&rsquo;re smart like that.</p>
+
+<pre lang="bash" escaped="true">
+echo -n &quot;Enter max pixel width ($MAXAVAIL): &quot;
+read MAX
+if [[ $MAX == '' || $MAX -gt $MAXAVAIL ]]; then
+  MAX=$MAXAVAIL
+fi
+</pre>
+
+<p>We echo the prompt (the -n keeps it from echoing a newline), and we use our previously determined $MAXAVAIL variable to set a cap. If the user&rsquo;s answer is empty or larger than $MAXAVAIL, we default to $MAXAVAIL.</p>
+
+<h3 id="the-whole-shebang">The whole shebang</h3>
+
+<p>Here&rsquo;s a complete Bash function that you can paste at the end of your <code>~/.bash_profile</code>. It offers to open the resulting image in Preview.app, but you can easily modify that to whatever app makes sense in your workflow.</p>
+
+<pre lang="bash" escaped="true">
+function geticon() {
+  APP=`echo $1|sed -e 's/\.app$//'`
+  APPDIR=''
+  for dir in &quot;/Applications/&quot; &quot;/Applications/Utilities/&quot; &quot;/Developer/Applications/&quot; &quot;/Developer/Applications/Utilties/&quot;; do
+    if [[ -d ${dir}$APP.app ]]; then 
+        APPDIR=$dir
+        break
+    fi
+  done
+  if [[ $APPDIR == '' ]]; then
+    echo &quot;App not found&quot;
+  else
+    ICON=`defaults read &quot;${APPDIR}$APP.app/Contents/Info&quot; CFBundleIconFile|sed -e 's/\.icns$//'`
+    OUTFILE=&quot;$HOME/Desktop/${APP}_icon.jpg&quot;
+    MAXAVAIL=`sips -g pixelWidth &quot;${APPDIR}$APP.app/Contents/Resources/$ICON.icns&quot;|tail -1|awk '{print $2}'`
+    echo -n &quot;Enter max pixel width ($MAXAVAIL): &quot;
+  	read MAX
+  	if [[ $MAX == '' || $MAX -gt $MAXAVAIL ]]; then
+  	  MAX=$MAXAVAIL
+  	fi
+    /usr/bin/sips -s format jpeg --resampleHeightWidthMax $MAX &quot;${APPDIR}$APP.app/Contents/Resources/$ICON.icns&quot; --out &quot;$OUTFILE&quot; &gt; /dev/null 2&gt;&amp;1
+    echo &quot;Wrote JPEG to $OUTFILE.&quot;
+  	echo -n 'Open in Preview? (y/N): '
+  	read ANSWER
+  	if [[ $ANSWER == 'y' ]]; then
+  	  open -a &quot;Preview.app&quot; &quot;$OUTFILE&quot;
+  	fi
+  fi
+}
+</pre>
+
+<h3 id="extra-credit-tab-completion-for-app-names">Extra credit: tab completion for app names</h3>
+
+<p>Before we get into making this into a GUI using Automator, wouldn&rsquo;t it be cool if you could autocomplete an app name from the command line when you use this? This is where you find out that I can nerd anything to death, but let&rsquo;s do it.</p>
+
+<p>First, we need some functions to build a list of all of our available applications and provide them to Bash&rsquo;s completion command. I&rsquo;m modifying a script from <a href="http://www.holburn.net/">Kim Holburn</a> for this, updated to work on 10.6 and provide case-insensitive completion. Just put the file in your user&rsquo;s home directory for now. When we&rsquo;re done, it will also provide application name tab completion for <code>open -a</code> (and <code>o</code> if you alias o=&rdquo;open -a&rdquo; in your .bash_profile). Click the link below to open the script, then save it to your home folder as &ldquo;.app_completions&rdquo;.</p>
+
+<p><a href="/share/app_completions"><strong>Download .app_completions</strong></a></p>
+
+<p>Once you have that file located in <code>~/.app_completions</code>, we just need to reference it in <code>.bash_profile</code> and add a few settings. Put this near the top of <code>~/.bash_profile</code>:</p>
+
+<pre><code>source ~/.app_completions
+bind "set completion-ignore-case on"
+set show-all-if-ambiguous on
+alias o="open -a"
+</code></pre>
+
+<p>At the command line, run <code>source ~/.bash_profile</code>. Now, assuming you&rsquo;ve also added the previous <code>geticon</code> function to <code>.bash_profile</code>, you should be able to type <code>geticon term</code> and hit tab right after the &lsquo;m&rsquo; to have it complete to &ldquo;Terminal.app&rdquo; automatically. This makes it a lot easier to get the app&rsquo;s name, spacing and capitalization exactly right. You&rsquo;ve also aliased &ldquo;o&rdquo; to launch an app in the process. Type <code>o auto</code> to complete to &ldquo;Automator.app&rdquo; and launch it.</p>
+
+<p>We&rsquo;ll <a href="http://brettterpstra.dev/grabbing-a-mac-apps-icon-automator-style/">dig into Automator next</a> and turn this whole thing into something pretty.</p>
+<div class="footnotes">
+  <ol>
+    <li id="fn:mdfind">
+      <p><a href="http://developer.apple.com/library/mac/#documentation/Darwin/Reference/ManPages/man1/mdfind.1.html">mdfind man page</a><a href="#fnref:mdfind" rev="footnote">&#8617;</a></p>
+    </li>
+    <li id="fn:awk">
+      <p><a href="http://developer.apple.com/library/mac/#documentation/Darwin/Reference/ManPages/man1/awk.1.html">awk man page</a><a href="#fnref:awk" rev="footnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+</div>
+
+</body>
+</html>

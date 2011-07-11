@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>nvALT 1.0.7</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p>A small update to fix a few problems I consider critical while I work on larger features. The big two changes are:</p>
+
+<ul>
+  <li>Fix for typing delay when editing long notes with the Preview window open</li>
+  <li>Preserve scroll position in Preview window when editing with Preview window open</li>
+</ul>
+
+<p>It records its scroll position in the preview window before it updates the content of it. If the note has already been previewed (you didn&rsquo;t just switch notes), it injects a script into the updated content to restore the scroll position when the window finishes loading. The result should be a completely transparent way to hold the scroll position despite the frequent updates.</p>
+
+<p>I also greatly reduced the frequency with which it reads the template files from your support directory, which removed the delay that sometimes occurred when typing inside of longer notes with the preview window open.</p>
+
+<p>Let me know if you find any new bugs that these changes cause!</p>
+
+<p>By the way, I&rsquo;ve added a donate button to the site which appears in the sidebar and on certain project pages and updates. It&rsquo;s not specifically for nvALT, but if you enjoy the work I publish here for free, send me a little coffee/beer money. Thanks!</p>
+
+<p>[donate]</p>
+
+<p>[download id=&rdquo;28&rdquo;]</p>
+
+</div>
+
+</body>
+</html>

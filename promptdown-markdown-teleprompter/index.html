@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>Look, I made you a Markdown teleprompter</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">07 Oct 2010 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">Look, I made you a Markdown teleprompter</a></h1>
+		
+<p>[caption id=&rdquo;attachment<em>1072&rdquo; align=&rdquo;alignleft&rdquo; width=&rdquo;150&rdquo; caption=&rdquo;PromptDown Edit Screen&rdquo;]<a href="http://brettterpstra.dev/wp-content/uploads/2010/10/PromptDownEditScreen.jpg"><img src="http://brettterpstra.dev/wp-content/uploads/2010/10/PromptDownEditScreen-150x150.jpg" alt="PromptDown Edit Screen" title="PromptDown Edit Screen" width="150" height="150" class="size-thumbnail wp-image-1072" /></a>[/caption]
+[caption id=&rdquo;attachment</em>1074&rdquo; align=&rdquo;alignleft&rdquo; width=&rdquo;150&rdquo; caption=&rdquo;PromptDown Prompt Screen&rdquo;]<a href="http://brettterpstra.dev/wp-content/uploads/2010/10/PromptDownPromptScreen.jpg"><img src="http://brettterpstra.dev/wp-content/uploads/2010/10/PromptDownPromptScreen-150x150.jpg" alt="PromptDown Prompt Screen" title="PromptDown Prompt Screen" width="150" height="150" class="size-thumbnail wp-image-1074" /></a>[/caption]</p>
+
+<p><strong><em>Be sure to <a href="http://brettterpstra.dev/promptdown-for-ios-mobile-markdown-teleprompter/">check out version 2</a>, with iOS support (iPhone/iPad)!</em></strong></p>
+
+<p>Here&rsquo;s my stupid trick of the day: a Markdown teleprompter called <a href="http://brettterpstra.dev/share/promptdown/">PromptDown</a> (I see what you did there&hellip;). The idea was to create a teleprompter for recording screencast voiceovers that was cheap, fast and worked on plain text. I wanted to provide a non-WYSIWYG form field for typing or pasting which still preserved paragraph breaks, so <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> (via <a href="http://attacklab.net/showdown/">Showdown</a>) was an ideal solution. I also included the <a href="http://teddevito.com/demos/textarea.html">jQuery &ldquo;tabby&rdquo; plugin</a> so you could use tabs in the textarea without jumping out of it, which is nice when editing Markdown, depending on your formatting habits. The rest is just CSS and quick-and-dirty tricks.</p>
+
+<!--more-->
+
+<h3 id="how-to-use-it">How to use it</h3>
+
+<p>It takes input in standard Markdown format and, when you press the &ldquo;Prompt&rdquo; button or hit Shift-Enter, it blacks the screen and renders your Markdown in large, contrasting text. Then you can hit Spacebar or Enter to start and stop scrolling. Stopping auto-scroll and using your mouse&rsquo;s scroll wheel will allow you to navigate. Escape (or a click on the background) will take you back to the editor.</p>
+
+<p>There are a few more tricks listed in the text that initially populates the text area when the page loads. Among them is a note that entering a horizontal rule in Markdown syntax will give you a bright yellow marker at that point in your script, which is handy for longer work. The easiest format for a horizontal rule, for me, is <code>- - -</code>, three dashes with spaces between them on their own line.</p>
+
+<h3 id="why-i-made-it">Why I made it</h3>
+
+<p>Why did I spend an hour and a half making a cheap teleprompter with very few features? Because I just wanted to scroll some text, and the market for Mac-based teleprompters seemed to start around $65 and go up from there. I&rsquo;m not one to complain about a price when there&rsquo;s appropriate value, but I&rsquo;m assuming that those $65-250 apps were doing magical things I just didn&rsquo;t need. This is my solution, as hackish as it may be. As an aside, I used to have a license for <a href="http://www.telestream.net/video-cue/overview.htm">VideoCue</a>, which I loved, but I never upgraded it and now I&rsquo;ve lost both it and my older version of VideoCue. Drat.</p>
+
+<h3 id="do-it-yourself">Do it yourself</h3>
+
+<p>Feel free to use it online, or feel free to borrow the code and build your own locally. It doesn&rsquo;t require anything unusual, and will run right from a folder on your desktop if you point your browser there. I should note that it works much better in Safari 5 than in Firefox, at least in my quick testing (and hopefully not-at-all in Internet Explorer&hellip; I&rsquo;m still carrying a grudge). I&rsquo;m not really going for a fully cross-browser, all-purpose solution here. It fills a need for me, and if someone wants it to do something else, they can have at it. Here&rsquo;s a zip of the code as of this evening: <a href="http://brettterpstra.dev/share/promptdown.zip">PromptDown.zip</a>. Try out the online version at <a href="http://brettterpstra.dev/share/promptdown">http://brettterpstra.dev/share/promptdown</a>.</p>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/ten-dollars-and-the-app-store"><span>Ten dollars and the App Store</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/promptdown-for-ios-mobile-markdown-teleprompter"><span>PromptDown for iOS: Mobile Markdown Teleprompter</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/javascript" name="javascript">javascript</a></li>
+		
+			<li><a href="/tags/markdown" name="markdown">markdown</a></li>
+		
+			<li><a href="/tags/experiments" name="experiments">experiments</a></li>
+		
+			<li><a href="/tags/jquery" name="jquery">jquery</a></li>
+		
+			<li><a href="/tags/webdev" name="webdev">webdev</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/promptdown-markdown-teleprompter';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

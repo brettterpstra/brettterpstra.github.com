@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>nvALT 2.1 progress report</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p>Development on the next version of nvALT is going more slowly than I&rsquo;d like, but some very cool changes are happening. In addition to implementing the latest changes and fixes from <a href="https://github.com/scrod/nv">the main branch of Notational Velocity</a>, I&rsquo;ve also worked in a few new features and a small bucket of fixes.</p>
+
+<!--more-->
+
+<dl>
+  <dt><strong>Usability fixes</strong></dt>
+  <dd>I&rsquo;m waiting for input from elasticthreads on this one, but for now I&rsquo;m removing the hold-control-for-temporary-preview feature. It&rsquo;s baffling for people who like to use Cocoa&rsquo;s Emacs emulation when typing. Understandable, especially since it was undocumented.</dd>
+  <dd>I&rsquo;m still working on a fix for the Spaces behavior, but that&rsquo;s definitely a bug that will be squashed before the 2.1 release.</dd>
+  <dd>I&rsquo;ve updated the External Editor feature to use scrod&rsquo;s ODBEditor solution. Yes, this one consistently provides TextMate as an editing option.</dd>
+  <dt><strong>MultiMarkdown 3</strong></dt>
+  <dd>While I haven&rsquo;t implemented the fully live preview that Fletcher is hoping I will, I have made nvALT compatible with <a href="https://github.com/fletcher/peg-multimarkdown">MultiMarkdown 3</a>, if you have it installed. It&rsquo;s fast. nvALT will also check for metadata headers in your note, and if they exist it will export the straight MMD-rendered document (no custom CSS<sup id="fnref:fn1"><a href="#fn:fn1" rel="footnote">1</a></sup>).</dd>
+  <dt><strong>Tag Sync</strong></dt>
+  <dd>Totally not my doing. <a href="https://github.com/darrylhthomas">Darryl H. Thomas</a> has been hard at work revamping the Simplenote sync and adding Tag Syncing to NV. I&rsquo;ve incorporated his changes for testing, and things are looking really good.</dd>
+  <dt><strong>Preview Window</strong></dt>
+  <dd>The preview window is no longer a HUD, but rather a utility panel. This change was needed to add some additional features:
+
+    <ul>
+      <li>Lock the preview on a note so you can edit other notes and use it as a reference</li>
+      <li>Print the preview. This can easily be used to save rendered Markdown as a PDF</li>
+      <li>Icons for all features beyond the View Source button</li>
+    </ul>
+  </dd>
+  <dt><strong>Display preferences</strong></dt>
+  <dd>You can now remove the grid lines and/or add alternating row colors to the notes list. It&rsquo;s still one color across the whole window, but I may change it to allow a separate edit field color before release.</dd>
+</dl>
+
+<p>There&rsquo;s more, but my primary goal for the next week is to work with scrod to implement all of the things he&rsquo;s already fixed and bring nvALT up to parity with the trunk. It&rsquo;ll be worth it. The source is back up <a href="https://github.com/ttscoff/nv">on GitHub</a> now, so if you want to see any of these changes in action (and have Developer Tools installed), feel free. Pull requests are welcome as well.</p>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:fn1">
+      <p>This is because MMD 3 doesn&rsquo;t have any override for &ldquo;snippet&rdquo; vs. &ldquo;complete.&rdquo; If you add headers, you&rsquo;re getting a complete document. So&hellip; nvALT simply detects that and avoids outputting an HTML document with an <code>&lt;html&gt;</code> tag inside of the <code>&lt;body&gt;</code>. It&rsquo;s not beautiful, but it&rsquo;s the only sensible solution I&rsquo;ve found thus far.<a href="#fnref:fn1" rev="footnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+</div>
+
+</body>
+</html>

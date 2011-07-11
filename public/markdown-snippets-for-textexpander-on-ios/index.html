@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Markdown snippets for TextExpander touch</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p><img src="http://brettterpstra.dev/wp-content/uploads/2011/02/TextExpanderiOSIcon-1.jpg" alt="" title="TextExpanderiOSIcon-1" width="186" height="187" class="alignright size-full wp-image-1837" />It may come as a surprise to some (many), but I&rsquo;ve never really made effective use of <a href="http://smilesoftware.com/TextExpander/">TextExpander</a> on my iPad or iPhone (<a href="http://smilesoftware.com/TextExpander/touch/index.html">TextExpander touch</a>). I don&rsquo;t do a lot of the things on my iPad which I do on my desktop, and the things that are similar often don&rsquo;t support TE. When I want to write some Markdown quickly, I use <a href="http://itunes.apple.com/us/app/nebulous-notes-for-dropbox/id375006422?mt=8">Nebulous Notes</a> with my custom macros. Lastly, my shell scripts don&rsquo;t work on iOS, and most of my favorite snippets are, <a href="http://brettterpstra.dev/tag/textexpander/">as you&rsquo;ve seen</a>, shell scripts.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Early this morning, though, I decided to figure out how TextExpander was going to speed up what I do on iOS. The fact that %clipboard (insert contents of clipboard) and $</td>
+      <td>(position the cursor after inserting) still work on iOS is a big deal. I built quick snippets for auto-pairing characters and placing the cursor in the middle, and accompanying snippets for doing the same with the contents of the clipboard.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!--more-->
+
+<ul>
+  <li><code>[[</code> inserts &ldquo;[]&rdquo; and places the cursor between</li>
+  <li><code>((</code> inserts &ldquo;()&rdquo; and places the cursor between</li>
+  <li><code>""</code>, <code>&lt;&lt;</code>, same thing</li>
+  <li><code>c"</code>,<code>c[</code>,<code>c(</code> and <code>c&lt;</code> insert pairs surrounding the contents of the clipboard</li>
+  <li><code>/cl</code> creates an inline markdown link (<code>[](http://www.bla.com)</code>), assumes clipboard is the link and places cursor in the square brackets after insertion </li>
+</ul>
+
+<p>The biggest downside is the innate inability of TextExpander to act on selected text. To use the <code>c*</code> snippets effectively, you have to cut the text and then run the snippet. Not my favorite thing to do, but combined with the <code>$sel</code> macro in Nebulous Notes, they make for pretty snappy typing.</p>
+
+<p>Here&rsquo;s the current set of the ones that actually worked out. Let me know what you&rsquo;re doing with TE in iOS and how you&rsquo;re making it useful. I don&rsquo;t need to know about your signoffs and abbreviations, of course, but general workflow enhancements would be awesome to hear about!</p>
+
+<p><strong>Note:</strong> You can now install these using &ldquo;Add group from URL&rdquo; in TextExpander with this url:</p>
+
+<p><code>http://brettterpstra.dev/share/te-snippets/iOSMarkdown.textexpander</code></p>
+
+<p>Then you can auto-update if I expand the set in the future. I&rsquo;ll be adding urls for my other TE groups soon as well. </p>
+
+<p><em>Both the above url and the download below have been updated to fix a typo in the <code>''</code> snippet.</em></p>
+
+<p>[download id=&rdquo;31&rdquo;]</p>
+
+</div>
+
+</body>
+</html>

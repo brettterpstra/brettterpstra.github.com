@@ -1,0 +1,300 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>Grabbing a Mac app's icon: building blocks</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">05 Mar 2011 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">Grabbing a Mac app's icon: building blocks</a></h1>
+		<p>I spent a few hours last night nerding out over an easy way to grab a Mac application&rsquo;s icon. I sent the basic Bash script and an example Automator action off to the other writers at TUAW. Then there was dinner, a movie, drinks and dessert. I found myself back at it when I got home. I am Jack&rsquo;s complete inability to leave well enough alone<sup id="fnref:fightclub"><a href="#fn:fightclub" rel="footnote">1</a></sup>.</p>
+
+<p>My solution ended up having some tricks in it that I thought were worth sharing, so I&rsquo;m going to write it up here. This is the first post in a three-part series; an epic tribute to obsessive nerdery. It will probably eventually be summarized into the <a href="http://brettterpstra.dev/howtos/">how-to section</a>, but this is the ever-so-informative longhand version.</p>
+
+<!--more-->
+
+<h2 id="introductionexcusatory-verbage">Introduction/excusatory verbage</h2>
+
+<p>I use application icons quite a bit in my <a href="http://www.tuaw.com/bloggers/brett-terpstra/">writing for TUAW</a>, so having a quick way to do this is worthwhile. You may never need an application icon as a ready-to-post JPEG, but it&rsquo;s worthwhile to know tricks such as how to grab, resize and convert images from the command line or how to build an Automator action which combines Finder dialogs, shell scripts and Automator variables.</p>
+
+<p>I&rsquo;ll start with the basic Terminal commands to lay a foundation.</p>
+
+<h3 id="finding-an-apps-icon-with-the-defaults-command">Finding an app&rsquo;s icon with the defaults command</h3>
+
+<p>On a Mac, every application is actually a folder, referred to as a &ldquo;bundle&rdquo;. Within that folder are libraries, executables and resources (like images and icons). There&rsquo;s also an important file called Info.plist which stores information like the application&rsquo;s name, identifiers, file types and&ndash;most relevant right now&ndash;the name of the file containing the application&rsquo;s icon. The application icon is an an <code>.icns</code> file, stored in <code>AppName.app/Contents/Resources</code>. Its title does not have to be the same as the app&rsquo;s, so&ndash;before we can extract and convert it&ndash;we need to get its actual filename from Info.plist.</p>
+
+<p>Info.plist is stored as an XML file (as opposed to a binary plist). As such, we could grep for the filename and run a bunch of Unix commands to parse out the filename, but there&rsquo;s an easier and more reliable way to do it using the <code>defaults</code><sup id="fnref:defaults"><a href="#fn:defaults" rel="footnote">2</a></sup> command built into OS X. <code>defaults</code> reads plist files and can output the value of specific keys. The key we want is <code>CFBundleIconFile</code>, which holds the icon&rsquo;s filename. We&rsquo;ll assume that we&rsquo;ve already retrieved the name of the app and stored it in a variable called <code>$APP</code>. Here&rsquo;s what you would run on the command line:</p>
+
+<pre><code>defaults read "/Applications/$APP.app/Contents/Info" CFBundleIconFile
+</code></pre>
+
+<p>The response may or may not have a file extension (.icns). We want to trim the extension if it exists so that we have a clean foundation to build on. You can do this with several different Unix utilities, including basic bash substitution; we&rsquo;ll stick with <code>sed</code><sup id="fnref:sed"><a href="#fn:sed" rel="footnote">3</a></sup> for now. We pipe (<code>|</code>) the output of the <code>defaults</code> command into <code>sed</code>, and remove &ldquo;.icns&rdquo; if it exists:</p>
+
+<pre><code>defaults read "/Applications/$APP.app/Contents/Info" CFBundleIconFile|sed -e 's/\.icns$//'
+</code></pre>
+
+<h3 id="converting-the-icon-file-to-an-image-format">Converting the icon file to an image format</h3>
+
+<p>The .icns format holds multiple versions of the icon, and doesn&rsquo;t do us much good if we want an image file for the web. Fortunately, the built-in command <code>sips</code> can do some neat tricks with it, including converting it to various formats<sup id="fnref:macworld1"><a href="#fn:macworld1" rel="footnote">4</a></sup>. We know what the icon file is titled now, and we know where to look for it. We just build a <code>sips</code> command to read it, convert it and output the result. </p>
+
+<p>The <code>-s format</code> parameter sets an output format in sips. This can be one of many formats, but we&rsquo;ll use the JPEG format for this example. This will compress the result to a web jpeg with a solid, white background. Using the PNG format instead would preserve the transparency, so if you need to do other image manipulation, you can substitute &ldquo;png&rdquo; for &ldquo;jpeg&rdquo;.</p>
+
+<p>Let&rsquo;s use the $APP variable we&rsquo;ve created to set a default output filename on the Desktop. For now, we&rsquo;re assuming the app exists in the standard /Applications folder (I&rsquo;ll show a more complex workflow for locating the app in a bit). We&rsquo;re also assuming that we&rsquo;ve stored the result of the above <code>defaults</code> command in <code>$ICON</code>.</p>
+
+<pre><code>OUTFILE="$HOME/Desktop/${APP}_icon.jpg"
+sips -s format jpeg "/Applications/$APP.app/Contents/Resources/$ICON.icns" --out $OUTFILE
+</code></pre>
+
+<p>Now we have the basic pieces we can use to build a script to automate this from the command line. Here&rsquo;s an example which expects the application name as the only argument, properly cased:</p>
+
+<pre lang="bash" filename="grabicon.sh" escaped="true">
+#!/bin/bash
+
+APP=`echo $1|sed -e 's/\.app$//'`
+# Removes &quot;.app&quot; if it was passed
+
+ICON=`defaults read /Applications/$APP.app/Contents/Info CFBundleIconFile|sed -e 's/\.icns$//'`
+# Removes &quot;.icns&quot; if the Info.plist value includes it
+# Harcoded for /Applications, needs to be rewritten for other locations or droplets
+
+## Save icon on Desktop in JPEG format, resized to 256 max width/height
+OUTFILE=&quot;$HOME/Desktop/${APP}_icon.jpg&quot;
+/usr/bin/sips -s format jpeg &quot;/Applications/$APP.app/Contents/Resources/$ICON.icns&quot; --out $OUTFILE
+</pre>
+
+<h2 id="extra-credit-image-optimization">Extra credit: image optimization</h2>
+
+<p>Since we&rsquo;re automating, we can add a final step to the script to handle whatever steps we would normally take next. For example, we could open it in <a href="http://skitch.com/">Skitch</a> for quick resizing, or in <a href="http://flyingmeat.com/acorn/">Acorn</a> for more complex manipulation. If we saved a JPEG to a size we already know is correct for our purposes, we could open it straight in an optimizer such as <a href="http://imageoptim.pornel.net/">ImageOptim</a> to quickly improve the compression. We could also make use of a command line utility like ImageMagick, jpegtran or pngcrush, all of which require some installation and extra work. If you have them, great, if not, that&rsquo;s an article for another time.</p>
+
+<p><em>For the record, Skitch saves horribly large JPEGs, whereas Acorn saves amazingly well-compressed images. If you resize with Skitch, you&rsquo;ll want to compress it with something else as well.</em></p>
+
+<p>Assuming we&rsquo;re using an application and not a CLI utility, we can use the <code>open</code> command to send the resulting file to the app. We can also avoid some confusion by initially saving the converted icon file to a default temporary directory and then opening it from there. Here&rsquo;s a revised script that does that, then opens the final image in Acorn for quick resizing and saving to any location. We&rsquo;ll use the PNG format to preserve the original transparency, and you can substitute any graphics application for Acorn:</p>
+
+<pre lang="bash" filename="grabiconpng.sh" escaped="true">
+#!/bin/bash
+
+APP=`echo $1|sed -e 's/\.app$//'`
+# Removes &quot;.app&quot; if it was passed
+
+ICON=`defaults read /Applications/$APP.app/Contents/Info CFBundleIconFile|sed -e 's/\.icns$//'`
+# Removes &quot;.icns&quot; if the Info.plist has it
+# Harcoded for /Applications, needs to be rewritten for other locations or droplets
+
+## Output file to a temp directory (TMPDIR) as a PNG and open in Acorn for resizing and conversion
+
+OUTFILE=&quot;$TMPDIR${APP}_icon.png&quot;
+sips -s format png &quot;/Applications/$APP.app/Contents/Resources/$ICON.icns&quot; --out $OUTFILE
+open -a &quot;Acorn.app&quot; $OUTFILE
+</pre>
+
+<p>I think you get the idea. You can take this script and easily adjust the output format and destination application. In the <a href="http://brettterpstra.dev/grabbing-a-mac-apps-icon-advanced-bash-usage-2/">next post</a>, we&rsquo;ll cover making this into a fully customized Bash function, with some extra goodies.</p>
+<div class="footnotes">
+  <ol>
+    <li id="fn:fightclub">
+      <p>Oh, you got the Fight Club reference, huh? You&rsquo;re still not a snowflake.<a href="#fnref:fightclub" rev="footnote">&#8617;</a></p>
+    </li>
+    <li id="fn:defaults">
+      <p><a href="http://developer.apple.com/library/mac/#documentation/Darwin/Reference/ManPages/man1/defaults.1.html">defaults man page</a><a href="#fnref:defaults" rev="footnote">&#8617;</a></p>
+    </li>
+    <li id="fn:sed">
+      <p><a href="http://developer.apple.com/library/mac/#documentation/Darwin/Reference/ManPages/man1/sed.1.html">sed man page</a><a href="#fnref:sed" rev="footnote">&#8617;</a></p>
+    </li>
+    <li id="fn:macworld1">
+      <p><a href="http://www.macworld.com/article/60156/2007/09/sipsicns.html">&ldquo;Convert ICNS files with sips&rdquo;</a> via Macworld.<a href="#fnref:macworld1" rev="footnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/grabbing-a-mac-apps-icon-automator-style"><span>Grabbing a Mac app's icon: Automator style</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/watch-for-file-changes-and-refresh-your-browser-automatically"><span>Watch for file changes and refresh your browser automatically</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/bash" name="bash">bash</a></li>
+		
+			<li><a href="/tags/os-x" name="os-x">os x</a></li>
+		
+			<li><a href="/tags/mac" name="mac">mac</a></li>
+		
+			<li><a href="/tags/unix" name="unix">unix</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/grabbing-a-mac-apps-icon-building-blocks';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

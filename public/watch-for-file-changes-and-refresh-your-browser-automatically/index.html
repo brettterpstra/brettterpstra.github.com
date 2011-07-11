@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Watch for file changes and refresh your browser automatically</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p><img src="http://brettterpstra.dev/wp-content/uploads/2011/03/magcodepic.jpg" alt="Post image for Watcher Service" title="Code Watcher" width="288" height="263" class="alignright size-full wp-image-2062" />After my epic three-part post on Saturday, I spent the rest of the weekend doing more &ldquo;useful&rdquo; things. Now it&rsquo;s Sunday night (Monday morning, I think), and I&rsquo;ve got some kind of minor food poisoning which is currently keeping me awake. Thus a &ldquo;hey, cool trick&rdquo; post.</p>
+
+<p>I actually already own an app which can do this to some extent, and I know there are more available. I like to do things the hard way once in a while. What I wanted was a basic script which could execute arbitrary code whenever a file of a certain type changed within a directory. The use case is web development: whenever I change a site-related file (html, php, css, less, rb, erb, etc.), I want Safari to refresh the related page. </p>
+
+<p>Folder Actions don&rsquo;t work well on my system (do they work for anyone?). Hazel would work, but I needed something more immediate. I had a version that used <code>launchd</code>, but it was difficult to consistently start and stop from a script. Here&rsquo;s the final solution I came up with.</p>
+
+<!--more-->
+
+<p>At the top, let me say that the heavy lifting in my script was taken from a SASS file-watching script by <a href="https://github.com/carlo/haml-sass-file-watcher">Carlo Zottman</a>. It uses Ruby to poll a file collection for modification date variations, and keeps a pretty low profile. I wanted to avoid compiled code for this, as I eventually do want to go to bed tonight.</p>
+
+<p>The basic goals:</p>
+
+<ul>
+  <li>Watch only files of a specific type</li>
+  <li>Refresh my primary browser when a change occurs</li>
+  <li>Refresh across windows and tabs, but limit by user-specified keyword in URL</li>
+</ul>
+
+<p>I built both a command line script and a System Service to do this, and both work as standalone solutions. The Automator action makes it possible to right click a folder in Finder and choose &ldquo;Watcher&rdquo; to start watching it, and it asks you for the tab keyword in a nice popup dialog. Beyond that, it really just wraps the command line script. You can modify either with the following instructions.</p>
+
+<p>Here&rsquo;s the command line version:</p>
+
+<pre lang="ruby" filename="watch.rb" escaped="true">
+#!/usr/bin/env ruby
+# watch.rb by Brett Terpstra, 2011 &lt;http://brettterpstra.dev&gt;
+# with credit to Carlo Zottmann &lt;https://github.com/carlo/haml-sass-file-watcher&gt;
+
+trap(&quot;SIGINT&quot;) { exit }
+
+if ARGV.length &lt; 2
+  puts &quot;Usage: #{$0} watch_folder keyword&quot;
+  puts &quot;Example: #{$0} . mywebproject&quot;
+  exit
+end
+
+dev_extension = 'dev'
+filetypes = ['css','html','htm','php','rb','erb','less','js']
+watch_folder = ARGV[0]
+keyword = ARGV[1]
+puts &quot;Watching #{watch_folder} and subfolders for changes in project files...&quot;
+
+while true do
+  files = []
+  filetypes.each {|type|
+    files += Dir.glob( File.join( watch_folder, &quot;**&quot;, &quot;*.#{type}&quot; ) )
+  }
+  new_hash = files.collect {|f| [ f, File.stat(f).mtime.to_i ] }
+  hash ||= new_hash
+  diff_hash = new_hash - hash
+
+  unless diff_hash.empty?
+    hash = new_hash
+
+    diff_hash.each do |df|
+      puts &quot;Detected change in #{df[0]}, refreshing&quot;
+      %x{osascript&lt;&lt;ENDGAME
+        	tell application &quot;Safari&quot;
+          	set windowList to every window
+          	repeat with aWindow in windowList
+          		set tabList to every tab of aWindow
+          		repeat with atab in tabList
+          			if (URL of atab contains &quot;#{keyword}&quot;) then
+          			  tell atab to do javascript &quot;window.location.reload()&quot;
+          			end if
+          		end repeat
+          	end repeat
+        	end tell
+ENDGAME
+}
+    end
+  end
+
+  sleep 1
+end
+</pre>
+
+<h2 id="installing">Installing</h2>
+
+<p>If you want to use the above script from Terminal, just put it in a directory in your path and run <code>chmod a+x watch.rb</code> on it. Then you can call it with <code>watch.rb folder/to/watch keyword</code>. The keyword you pass will determine which tabs will refresh in your browser. For example, if I&rsquo;m working on dev.heckyesmarkdown.com (my local development version), I would use &ldquo;dev.heckyes&rdquo; to limit the refresh to only associated tabs. Once the script is running, you can stop it any time by typing Control-C in that Terminal. If you&rsquo;ve run it in the background, you&rsquo;ll either need to foreground it or kill it manually.</p>
+
+<p>To install the System Service, <a href="#download">download the workflow</a>, unzip it and place it in <code>~/Library/Services</code> (where &lsquo;~&rsquo; is your home folder). It will now show up when you right click on one or more selected folders in the Finder. Choose &ldquo;Watcher,&rdquo; enter a URL-matching keyword and let it go. You should see the spinning gear icon in your menubar. When you want to stop watching the folder, click that icon and choose &ldquo;Stop Watcher&rdquo;.</p>
+
+<h2 id="customizing">Customizing</h2>
+
+<p>In the standalone Ruby script (above), you can easily modify the watched filetypes in line 14, and you can replace the AppleScript with your own starting on line 34. I&rsquo;ll offer some examples for other browsers below.</p>
+
+<p>The Service contains pretty much the same script, but modified to work with an Automator workflow. If you open it in Automator and skip to the last action, you&rsquo;ll see the script and you can make your filetype and AppleScript modifications in there.</p>
+
+<h3 id="using-other-browsers">Using other browsers</h3>
+
+<p>Chrome has decent AppleScript support these days, so changing this script to work with it is trivial. Just replace the AppleScript portion (beginning with &ldquo;tell application&hellip;&rdquo;) with the following:</p>
+
+<pre lang="applescript" escaped="true">
+tell application &quot;Google Chrome&quot;
+	set windowList to every window
+	repeat with aWindow in windowList
+		set tabList to every tab of aWindow
+		repeat with atab in tabList
+			if (URL of atab contains &quot;#{keyword}&quot;) then
+				tell atab to reload
+			end if
+		end repeat
+	end repeat
+end tell
+</pre>
+
+<p>Firefox is a little less elegant, as far as I know, and requires System Events scripting to refresh a page. If you know a better way, I&rsquo;d love to hear it, but here&rsquo;s a basic script for reloading the front page. You might as well delete the keyword portions of the script/workflow if you go this route, they won&rsquo;t be applicable:</p>
+
+<pre lang="applescript" escaped="true">
+ tell app &quot;Firefox&quot; to activate
+ tell app &quot;System Events&quot;
+   keystroke &quot;r&quot; using command down
+ end tell
+</pre>
+
+<p>I won&rsquo;t detail any other browsers; if you&rsquo;re doing web development in something more exotic, I&rsquo;ll assume you know how to script it.</p>
+
+<h3 id="executing-arbitrary-code">Executing arbitrary code</h3>
+
+<p>You don&rsquo;t have to refresh browsers with this. You don&rsquo;t even have to use it for web development. Have it watch text files for changes and run an iCal script when one is modified. It&rsquo;s basically a hyperactive Folder Action.</p>
+
+<p>If you want to have the script do something new every time you use it, you might want to externalize the action code. Just modify the <code>diff_hash.each do |df|</code> block to run an outside script. If it&rsquo;s shell code, just make it executable and call it with <code>%x{path/to/script}</code>, and if it&rsquo;s AppleScript, call it with <code>%x{/usr/bin/osascript path/to/script}</code>. Then you can modify the action script each time without changing the watch.rb file.</p>
+
+<p>If you want to get really crazy, you could pass the script to execute as a command line parameter, or request it in the Automator workflow and pass it in. I don&rsquo;t have a need for that right now, but if you build it, let me know!</p>
+
+<p>I hope folks find this useful. Now, excuse me while I go retch for a little bit.</p>
+
+<h2 id="download">Download</h2>
+
+<p>[download id=&rdquo;33&rdquo;]</p>
+
+
+</div>
+
+</body>
+</html>

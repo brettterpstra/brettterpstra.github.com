@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Mirror your Pinboard bookmarks with OpenMeta tags</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  
+<p><strong>Update [April 3rd, 2011]:</strong> The current version, 1.0.4 at the moment, has bugfixes for running without Tags.app installed, more error handling and a new setting for locations where the date format is <code>dd-mm-yyy</code>. If you had a previous version and run into trouble, please replace the script with the <a href="#download">latest</a> and delete your <code>~/getpinboard.yaml</code> file to regenerate a new one with the additional localization setting.</p>
+
+<p>The download is at the end of this post, but I highly suggest reading at least the setup section before you get all crazy with it.</p>
+
+<p><img src="http://brettterpstra.dev/wp-content/uploads/2011/04/pinboardbookmark.jpg" alt="" title="pinboardbookmark" width="300" height="220" class="alignright size-full wp-image-2147" />I wrote a script a while back that would watch for changes in my Delicious bookmarks and mirror new ones to .webloc files on my drive, applying <a href="http://code.google.com/p/openmeta/">OpenMeta</a> tags so that they were locally searchable with Spotlight and other <a href="http://code.google.com/p/openmeta/wiki/OpenMetaApplications">OpenMeta applications</a>. I stopped using Delicious, though, and started using <a href="http://pinboard.in/">Pinboard</a>, which I mentioned recently <a href="http://brettterpstra.dev/i-adore-pinboard/">that I adore</a>. In the process of revamping the script it became a little more &ldquo;involved&rdquo; than the original.</p>
+
+<p>This script is for people who want to take advantage of Pinboard&ndash;with its full text search, easy privacy settings, accessible API, etc.&ndash;yet still want to be able to search their bookmarks in local Spotlight (and similar) searches. While it has the option to save bookmarks with a certain tag as searchable PDF files, it doesn&rsquo;t attempt to replicate the full spectrum of Pinboard features. It&rsquo;s just a way to make your remote bookmarks locally searchable, available system-wide and OpenMeta compatible.</p>
+
+<p>I toyed around for a long time with using safaribookmark files instead of webloc files. They let you store a larger preview image, and you can include full text from websites within the XML of the file. Lots of possibilities there. For many reasons, I decided to stick with these little webloc files. If I want fancier images and web text, I&rsquo;ll use <a href="http://www.celmaro.com/webbla/">Webbla</a>, and if I want comprehensive full text search I&rsquo;ll use <a href="http://www.stclairsoft.com/HistoryHound/">HistoryHound</a>, both excellent programs in their own right. I want OpenMeta and simplicity, though. If I know I&rsquo;m looking for a bookmark from Pinboard, I can just go to Delibar and do some searching. The goal is to be able to include my web discoveries in larger searches on my Mac.</p>
+
+<!--more-->
+
+<h3 id="setup-and-features">Setup and Features</h3>
+
+<p>First, put the script (download below) somewhere you can leave it, preferably somewhere in your system path. That&rsquo;s not a huge deal, though, because you&rsquo;ll be supplying an absolute path in most automation cases anyway. Once you have it situated, open Terminal and run <code>chmod a+x /path/to/your/script.rb</code>. Now you can run the script from the command line to configure and test.</p>
+
+<p>When you run the script the first time (do it from the command line with <code>/path/to/script/getpinboard.rb</code>), it puts a configuration file at <code>~/getpinboard.yaml</code>. It will let you know exactly where it is, and will automatically open it in your text editor. You <em>must</em> edit the configuration settings before you&rsquo;re ready to run it again. The configuration has options for all of the main features of the script, so these instructions are also going to be the tour. You can edit any of these options at any time. Note that the next time you run the script it will pull in up to 500 of your bookmarks, starting with the oldest. If you decide you didn&rsquo;t like a setting, you may want to trash those files and the database and start over. Try not to let that happen.</p>
+
+<h4 id="configuration-options">Configuration options</h4>
+
+<dl>
+  <dt>user and password (string)</dt>
+  <dd>Set these to your Pinboard credentials</dd>
+  <dt>dateformat (string)</dt>
+  <dd>Leave this as &lsquo;US&rsquo; if your local date format is <code>mm-dd-yyyy</code>. Set it to &lsquo;UK&rsquo; if your date format is <code>dd-mm-yyyy</code>.</dd>
+  <dt>target (absolute path)</dt>
+  <dd>This is where the webloc files will be collected. It works great with a Dropbox folder, but put it anywhere you like. On my system, I have my <code>~/Library/Caches/Metadata/Tags/Bookmark</code> folder (where Tags.app stores its tagged bookmarks) symlinked to <code>~/Dropbox/Sync/Bookmark</code>. That Dropbox folder is my target for the script, so I&rsquo;m saving my Pinboard bookmarks to my Tags folder and still syncing them (and their OpenMeta tags) to my other computers. Further Tags integration will be covered at the end of the options.</dd>
+  <dd>If a folder specified in the config is missing, the script will attempt to create it.</dd>
+  <dt>db_location (absolute path)</dt>
+  <dd>This is the location of the bookmarks database. The filename will be <code>bookmarks.stash</code>, and it&rsquo;s perfectly fine for it to exist in the same folder as you set for your TARGET.</dd>
+  <dt>pdf_location (absolute path)</dt>
+  <dd>If the PDF_TAG below isn&rsquo;t set to false, this is where PDFs of bookmarks with that tag will be created. This requires the latest version of <a href="http://derailer.org/paparazzi/">Paparazzi!</a> (which does run fine on Snow Leopard).</dd>
+  <dt>tag_method (integer 0-2)</dt>
+  <dd>This determines how the OpenMeta tags will be applied. Use 0 to disable, 1 for <a href="http://www.caseapps.com/tags/">Tags.app</a> or 2 for the <a href="http://code.google.com/p/openmeta/downloads/list">OpenMeta CLI utility</a>.</dd>
+  <dt>always_tag (string)</dt>
+  <dd>I like to mark my tags which come from bookmark services for top-level grouping. This setting defaults to &ldquo;pinboard&rdquo;, but you can change it to anything (or leave it blank).</dd>
+  <dt>update_tags_db (boolean)</dt>
+  <dd>If you&rsquo;re using Tags.app, you know you can tag a web page with it and it will remember the tags next time you visit that address. That doesn&rsquo;t work with external tools, though, because Tags keeps a separate database for those links. Setting this to true will let the script update the Tags database and keep everything in sync.</dd>
+  <dt>create_thumbs (boolean)</dt>
+  <dd>If set to true, this feature will add custom icons to your webloc files using a screengrab of the website and the website&rsquo;s favicon. It looks great in icon and CoverFlow views.</dd>
+  <dd>This is another external requirement. To get thumbnails, you must have <a href="http://hasseg.org/setWeblocThumb/">setWeblocThumb</a>, a free utility for doing just that. The utility must be located at <code>/usr/local/bin/setWeblocThumb</code>.</dd>
+  <dd>Note that creating thumbs takes a typical 4-8k webloc file and makes it around 160k average. My bookmarks folder has nearly 200MB of bookmarks in it, tagged and thumbnailed. That&rsquo;s ok with me, but if you want to keep it small and agile, skip the thumbs.</dd>
+  <dt>pdf_tag (string)</dt>
+  <dd>The string defined here will determine which bookmarks, if any, are also saved as searchable PDF files. Just use it as a tag and Paparazzi! will download the url in the background to the location you set above.</dd>
+  <dt>debug (boolean)</dt>
+  <dd>Leave this off (false), unless you need a little more info about what&rsquo;s going on. It will use Growl and STDOUT to display progress if enabled.</dd>
+  <dt>gzip_db (boolean)</dt>
+  <dd>I can&rsquo;t imagine the database file that this generates being large enough to worry about size, but this option will cut the disk space it requires significantly. I leave it off, but it&rsquo;s your choice.</dd>
+</dl>
+
+<h3 id="optional-additions">Optional additions</h3>
+
+<p>As mentioned above, if you want to create thumbnails for your webloc files from screenshots of the web page, you&rsquo;ll need <a href="http://hasseg.org/setWeblocThumb/">setWeblocThumb</a>, a free utility for doing just that. Its functionality is included in the script, just install the utility and make sure thumbnailing is enabled in the config. The script expects the utility to be located at <code>/usr/local/bin/setWeblocThumb</code>.</p>
+
+<p>If you want the option to save bookmarks with a certain tag as fully-searchable PDF files, you&rsquo;ll need the latest (I use the term loosely) version of <a href="http://derailer.org/paparazzi/">Paparazzi!</a>.</p>
+
+<p>You&rsquo;ll also probably want <a href="http://growl.info/">Growl</a> installed. I can&rsquo;t recall if the command line utility <code>growlnotify</code> is set up by default, but that&rsquo;s what the script uses to send notifications. It will live if you don&rsquo;t have it, but it generally won&rsquo;t try to communicate by any other channels when debugging is turned off.</p>
+
+<h2 id="running-the-script">Running the script</h2>
+
+<p>There are a couple of options for automating the script. You can have it run at regular intervals; it stores its last update time and compares it with the Pinboard server before it bothers downloading anything. Once you&rsquo;re up-to-date on your sync, you could run it every 15-30 minutes without any trouble. The easiest way to do that is with <code>launchd</code>, and the easiest way to do <em>that</em> is with Lingon. If you don&rsquo;t already have it, grab it <a href="http://itunes.apple.com/us/app/lingon/id411211026?mt=12">from the Mac App Store</a>. It&rsquo;s worth the five bucks. Use the wizard to set up a schedule and run the script.</p>
+
+<p>What <em>I</em> do is set up <a href="http://www.noodlesoft.com/hazel.php">Hazel</a> to watch the database file for <a href="http://www.delibarapp.com/">Delibar</a>. Delibar is my favorite app for bookmarking and searching my online bookmarks. It works wonderfully with Pinboard, and I can&rsquo;t recommend it highly enough. I can hit a key when I&rsquo;m on a website in any browser and be able to quickly comment, tag and save the page (either privately or publicly) using the same Cocoa interface every time. Anyway, Delibar keeps its database in <code>~/Library/Application Support/Delibar</code> and the file is named <code>DelibarDB.xml</code>. I simply watch for changes since the last match, and then run the script when one is found. I&rsquo;m sure you could accomplish something similar with Webbla, or even one of the browser plugins if it modified a local store at all when you add the bookmark.</p>
+
+<p>You could resort to <code>cron</code>, or run it manually once in a while, I suppose. It&rsquo;s far handier to have it out of mind, though, and just have your bookmarks show up in OpenMeta and Spotlight searches within minutes of bookmarking them.</p>
+
+<h2 id="tips">Tips</h2>
+
+<ol>
+  <li>If you imported a ton of bookmarks from Delicious and haven&rsquo;t spent a lot of time &ldquo;weeding&rdquo; them, you&rsquo;ve probably got a lot of dead links that you&rsquo;d be better off <em>not</em> downloading. Here&rsquo;s a great solution: <a href="https://github.com/jparise/stale">stale.py</a>. It&rsquo;s a Python script that you run locally, and it will traverse your entire collection of links and test them for error responses. You can run it in test mode first, and then turn on the delete mode to get rid of the dead ones. Instructions are at the <a href="https://github.com/jparise/stale">bottom of the GitHub page</a>.</li>
+  <li>Use descriptions <em>and</em> tags on things you want to make sure you can find. Clip some text out of the web page or write yourself a note in the description field. These notes are transferred by the script to your Spotlight Comments for the webloc file, making them instantly searchable, in addition to the convenience of tag search.</li>
+  <li>Don&rsquo;t be shy about saving PDFs. If a page is a tutorial that you know you&rsquo;ll need to reference, just go for it. They don&rsquo;t take up much space, they can be annotated easily (seriously, have you tried <a href="http://skim-app.sourceforge.net/">Skim</a>?), and they allow for full text search locally.</li>
+  <li>Use <a href="http://www.choosyosx.com/">Choosy</a>. With a local store of Spotlight-searchable bookmarks synced with Dropbox, and Choosy to determine what browser you open them in, you have cross-browser, cross-machine support for your entire bookmark collection.</li>
+  <li>The timestamp of the last check is stored in your user&rsquo;s preference files using the <code>defaults</code> command. For the purposes of debugging, it&rsquo;s sometimes useful to set that back a bit and force it to update. Just use <code>getpinboard.rb -r</code> to set it back 24 hours, or use a number after the -r to specify a number of days to revert.</li>
+</ol>
+
+<h2 id="notes">Notes</h2>
+
+<p>The script is a one-way sync. All of the pieces are there to start working on a system that would update Pinboard with local deletions and insertions, but I just don&rsquo;t have a need for it. At that point, I might as well make a dedicated application with an SQLite database to do all of this, and that gets way outside the scope of what I started here. Anyway, the only reason I&rsquo;m not using Webbla for more of this is that it&rsquo;s sandboxed from the rest of the system, and this script can work in tandem with Webbla to fix that.</p>
+
+<p>Also, the local database created by this script is essentially a text dump, and it can be easily read into a Ruby script and manipulated. It serves as a good backup of all of your Pinboard info, and has some other possibilities as well. Here&rsquo;s a quick <a href="https://gist.github.com/899757">demo script</a> for outputting an HTML file, and a little tweaking could make it output a format that Safari, Firefox and Chrome can read to import bookmarks. All of the keys and values are there, so you can sift and sort any way you want. Lots of fun to be had, for the adventurous (or easily distracted).</p>
+
+<h2 id="uninstalling">Uninstalling</h2>
+
+<p>If you need to uninstall the script, remove it from whatever you&rsquo;re using to schedule its activity, delete the script and locate two files:</p>
+
+<ul>
+  <li><code>~/getpinboard.yaml</code> (in your User&rsquo;s home folder)</li>
+  <li><code>~/Library/Preferences/com.brettterpstra.PinboardTagger.plist</code> (in your User&rsquo;s Library/Preferences folder)</li>
+</ul>
+
+<p>Hope the script comes in useful for somebody, feel free to let me know if you have any trouble with it.</p>
+
+<h2 id="download">Download</h2>
+
+<p>There is a <a href="https://github.com/ttscoff/Pinboard-to-OpenMeta">repo on GitHub</a>, feel free to fork and send pull requests.</p>
+
+<p>[download id=&rdquo;34&rdquo;]</p>
+
+</div>
+
+</body>
+</html>

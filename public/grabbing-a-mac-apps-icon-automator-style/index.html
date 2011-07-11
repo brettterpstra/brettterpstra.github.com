@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Grabbing a Mac app's icon: Automator style</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p>We&rsquo;ve covered a small truckload of Bash scripting ideas for Mac and OS X in the previous <a href="http://brettterpstra.dev/?p=2028">two</a> <a href="http://brettterpstra.dev/?p=2029">posts</a>. It&rsquo;s time to put them to use and create an Automator app that we can use as a droplet in Finder. If you skipped straight here, it probably means you don&rsquo;t really want to know about the messy details of the scripts, so this post won&rsquo;t go into a lot of Unix mumbo jumbo. </p>
+
+<p>You can download ready-to-go versions of the workflows covered in this post here: <a href="/share/GrabIconWorkflows.zip"><strong>GrabIconWorkflows.zip</strong></a>.</p>
+
+<p>If you want to customize these workflows, you&rsquo;ll need to know a little bit about the inner Bash workings, but nothing an up-and-coming nerd can&rsquo;t figure out. To get started, open up Automator.app and create a new file with the &ldquo;Application&rdquo; preset.<!--more--><img src="http://brettterpstra.dev/wp-content/uploads/2011/03/automator_application_workflow.jpg" alt="Automator Application Workflow" /></p>
+
+<h3 id="a-basic-workflow">A basic workflow</h3>
+
+<p>We&rsquo;ll start with a really simple Automator application that you can drop an application onto to extract its icon at 512px and save it as a JPEG to the Desktop. One step, no interaction.</p>
+
+<p>In your new Automator workflow, find &ldquo;Run Shell Script&rdquo; in the Library on the left. You can use the filter at the top to quickly narrow down the choices. Drag the action into your workflow editor on the right, and paste the following code into it:</p>
+
+<pre><code>APPDIR=$1
+ICON=`defaults read "$APPDIR/Contents/Info" CFBundleIconFile|sed -e 's/\.icns$//'`
+ICONFILE="$APPDIR/Contents/Resources/$ICON.icns"
+APPNAME=`basename "$APPDIR" .app`
+OUTFILE="$HOME/Desktop/${APPNAME}_icon.jpg"
+/usr/bin/sips -s format jpeg --resampleHeightWidthMax 512 "$ICONFILE" --out "$OUTFILE"
+</code></pre>
+
+<p>Make sure the shell is set to &ldquo;/bin/bash&rdquo; and change &ldquo;Pass input&rdquo; to &ldquo;as arguments&rdquo;. Save the workflow. You&rsquo;ll probably want to name it something creative and put it somewhere useful, such as <code>~/Applications/512Desktop.app</code>. I have the utmost faith that you&rsquo;ll come up with something brilliant. Here&rsquo;s what your workflow should look like:</p>
+
+<p><img src="http://brettterpstra.dev/wp-content/uploads/2011/03/512desktopapp.jpg" alt="512desktop.app" /></p>
+
+<p>Now, you can just drop an application onto the icon for 512Desktop.app and the extracted icon will show up on your Desktop, named based on the name of the application you dropped on the workflow, with &ldquo;_icon.jpg&rdquo; appended to it. That was easy, right?</p>
+
+<h3 id="a-complete-workflow-with-user-interaction">A complete workflow with user interaction</h3>
+
+<p>To make something more universally useful, we&rsquo;ll create a workflow that asks the user where to save it. This time, we&rsquo;ll output a PNG file and use the maximum available icon size. We covered how to do both of these in the last post, so I won&rsquo;t go into all of the details in this one. Page back if you&rsquo;re curious (or confused).</p>
+
+<p>We&rsquo;ll also need to store variables and pass multiple arguments to shell scripts in the workflow to pull this off. This is the stuff that makes Automator both awesome and frustrating, but once you get the hang of it, new possibilities open up. In this example it may seem like a lot of work just to ask a user where to save a file, but the concept allows you to get user input (without using AppleScript) in shell scripts. It&rsquo;s worth knowing.</p>
+
+<p>Create a new Automator application, just like above. Since this is going to be a droplet, the path of the Application will be passed to the first action when you run it (by dragging an app onto it). We need to store that as a variable for later, and then pass it on to the first shell script. To do so, drag the &ldquo;Set Value of Variable&rdquo; action from the library into your workflow. Click the dropdown for &ldquo;Variable:&rdquo; and choose &ldquo;New variable&rdquo;. Title the variable &ldquo;appname&rdquo;.</p>
+
+<p>Next, drag the &ldquo;Run Shell Script&rdquo; action in after the variable action. Paste the following code into it:</p>
+
+<pre><code>ICON=`defaults read "$1/Contents/Info" CFBundleIconFile|sed -e 's/\.icns$//'`
+echo "$1/Contents/Resources/$ICON.icns"
+</code></pre>
+
+<p>This gets the icon file&rsquo;s name and hands it back to Automator. We&rsquo;ve got the application name and location, as well as the name and path of the icon file we need. We just need to know where the user wants to save it to. Add the &ldquo;Ask for Finder Items&rdquo; action in next, and set the prompt to &ldquo;Save to:&rdquo;. &ldquo;Start at:&rdquo; should be set to Desktop by default, but you can modify that to open the dialog to whatever directory makes sense for you. Change &ldquo;Type:&rdquo; to &ldquo;Folders&rdquo; and make sure that &ldquo;Allow Multiple Section&rdquo; is unchecked.</p>
+
+<p>Now we need our <code>appname</code> variable back, so drag &ldquo;Get Value of Variable&rdquo; in as the next action. Set &ldquo;Variable:&rdquo; to &ldquo;appname&rdquo; (which will be available in the dropdown). The outputs of each command stack up, so now we have the icon file path, the user&rsquo;s destination selection and the Application&rsquo;s name (appname) all ready to pass to the final shell script as arguments ($1 $2 $3).</p>
+
+<p>Drag in a &ldquo;Run Shell Script&rdquo; action as the last command. Again, set it to &ldquo;/bin/bash&rdquo; and pass input as arguments. Then, paste this code into it:</p>
+
+<pre><code>APPNAME=`basename "$3" .app`
+OUTFILE="$2/${APPNAME}_icon.png"
+MAX=`sips -g pixelWidth "$1"|tail -1|awk '{print $2}'`
+/usr/bin/sips -s format png --resampleHeightWidthMax $MAX "$1" --out "$OUTFILE"
+</code></pre>
+
+<p>Here&rsquo;s what it should look like now:</p>
+
+<p><img src="http://brettterpstra.dev/wp-content/uploads/2011/03/max_png_to_user_loc.jpg" alt="Max PNG to User loc" /></p>
+
+<p>Done. Save the workflow to a file such as <code>~/Applications/SaveMaxIcon.app</code>. Try dragging an application directly onto it. You&rsquo;ll be asked to choose a folder. Click &ldquo;OK&rdquo; and the resulting icon image file will show up in the selected location. You can stick this app on your Desktop (or alias it there) for easy access, add it to your Finder sidebar or even drag it into the toolbar of a Finder window.</p>
+
+<p>If you want to choose an app from a dialog instead, you can insert an &ldquo;Ask for Finder Items&rdquo; action at the beginning of the workflow. Set &ldquo;Start at:&rdquo; to &ldquo;/Applications&rdquo;, &ldquo;Type:&rdquo; to &ldquo;Files&rdquo; and uncheck &ldquo;Allow Multiple Selections&rdquo;. Running the workflow will pop up a file dialog asking you to select an application manually before requesting the destination and running the rest of the script. This might be faster than finding, dragging and dropping, in some cases.</p>
+
+<p><em>Bonus tip:</em> you can incorporate Automator workflows into shell scripts (and AppleScripts using <code>do shell script</code>) with the <code>automator</code> command line utility. You can call it directly on a workflow (<code>automator nameof.workflow</code>) or pass input to it using the -i parameter. The most practical application I can think of in this case would be to create an AppleScript application bundle containing both <code>on run</code> and <code>on open</code> handlers and both versions of the above workflow embedded in it. Then you could create a single application that would act on dropped files <em>or</em> offer a dialog if it was run directly. There&rsquo;s probably an easier way to do that, though.</p>
+
+<p>Grab copies of the workflows to get started (<a href="/share/GrabIconWorkflows.zip"><strong>GrabIconWorkflows.zip</strong></a>), and I&rsquo;d love to hear if you come up with other uses for them. That&rsquo;s a wrap, hope it gave you some ideas for your own nerdery.</p>
+
+</div>
+
+</body>
+</html>

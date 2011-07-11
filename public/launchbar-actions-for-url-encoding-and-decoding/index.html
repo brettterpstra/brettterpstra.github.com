@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>LaunchBar actions for url encoding andÂ decoding</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p>I usually get up an hour or two before I start my work day and &ldquo;play.&rdquo; Playtime usually results in half-finished scripts and deleted git branches, but sometimes I do something simple and useful (to me). Wednesday was <a href="http://brettterpstra.dev/quick-calculations-in-bash/">Bash fun</a>, and here&rsquo;s this morning&rsquo;s project: <a href="http://www.obdev.at/products/launchbar/index.html">LaunchBar</a> actions to url encode and decode strings<sup id="fnref:fn1"><a href="#fn:fn1" rel="footnote">1</a></sup>. If you run them outside of LaunchBar, they&rsquo;ll encode/decode your clipboard, replacing what&rsquo;s in your clipboard with the result, so they have multiple applications. These have probably been done before, but my quick DuckDuckGo search didn&rsquo;t yield any immediate results.</p>
+
+<p>I find it especially useful to be able to quickly encode and decode urls and strings when I&rsquo;m testing online APIs out, but there are many times when I find I need this. I usually use a shell function or the very handy <a href="http://www.apple.com/downloads/dashboard/developer/hashwidget.html">Hash Widget</a> for Dashboard, but as a LaunchBar user, this is faster.</p>
+
+<!--more-->
+
+<p>To use with LaunchBar, open the script in your Script Editor (instant-open links provided) and save it to <code>~/Library/Application Support/LaunchBar/Actions</code>, creating the folder if it doesn&rsquo;t already exist. Then, assuming you have Actions enabled in your indexing preferences, you can just type &ldquo;urle&rdquo; to get the action, then hit space to enter or paste the text to encode/decode. Alternatively, you can paste first or use Instant Send on a selection, then hit Tab and select the encode or decode action. To use elsewhere, such as in <a href="http://www.red-sweater.com/fastscripts/">FastScripts</a>, just save them as scripts in your <code>~/Library/Scripts</code> folder. Using them outside of LaunchBar won&rsquo;t be interactive; they will encode or decode your clipboard in place.</p>
+
+<p><strong>Side note:</strong> I decided to do the encoding/decoding in pure AppleScript, using functions I&rsquo;ve mentioned previously from <a href="http://harvey.nu/">http://harvey.nu/</a>. You can encode faster with Perl using a shell call, if you prefer. In a shell script for encoding, you&rsquo;d use <code>echo "string to encode"|perl -pe's/([^-_.~A-Za-z0-9])/sprintf("%%%02X", ord("$1"))/seg'</code>. In AppleScript, that would look like <code>set _res to do shell script "echo \"" &amp; ASTextVar &amp; "\"|perl -pe's/([^-_.~A-Za-z0-9])/sprintf(\"%%%02X\", ord(\"$1\"))/seg'"</code>, where ASTextVar is your string to encode.</p>
+
+<p>The LaunchBar actions copy the resulting text to the clipboard, but you may prefer to have it passed back to LaunchBar for subsequent processing. There are commented lines in the scripts for doing so, just comment out the last line in the handle_string function and uncomment the line above it. </p>
+
+<p>Here are the scripts/actions:</p>
+
+<h2 id="url-encode">URL Encode</h2>
+
+<p>Open this script in your AppleScript editor: <a href="applescript://com.apple.scripteditor?action=new&amp;script=on%20handle_string(lbText)%0A%09set%20_res%20to%20urlencode(lbText)%0A%09--%20to%20return%20the%20result%20to%20launchbar%20instead%20of%20copying%20it%20substitute%0A%09--%20the%20next%20line%20for%20the%20line%20after%20it%20(set%20the%20clipboard%20to%20_res)%0A%09--%20open%20location%20%22x-launchbar:select?string=%22%20&amp;%20urlencode(_res)%0A%09set%20the%20clipboard%20to%20_res%0Aend%20handle_string%0A%0Aon%20run%0A%09set%20the%20clipboard%20to%20urlencode(the%20clipboard%20as%20text)%0Aend%20run%0A%0Aon%20urlencode(theText)%20--%20http://harvey.nu/applescript_url_encode_routine.html%0A%09set%20theTextEnc%20to%20%22%22%0A%09repeat%20with%20eachChar%20in%20characters%20of%20theText%0A%09%09set%20useChar%20to%20eachChar%0A%09%09set%20eachCharNum%20to%20ASCII%20number%20of%20eachChar%0A%09%09if%20eachCharNum%20=%2032%20then%0A%09%09%09set%20useChar%20to%20%22+%22%0A%09%09else%20if%20(eachCharNum%20%E2%89%A0%2042)%20and%20(eachCharNum%20%E2%89%A0%2095)%20and%20(eachCharNum%20%3C%2045%20or%20eachCharNum%20%3E%2046)%20and%20(eachCharNum%20%3C%2048%20or%20eachCharNum%20%3E%2057)%20and%20(eachCharNum%20%3C%2065%20or%20eachCharNum%20%3E%2090)%20and%20(eachCharNum%20%3C%2097%20or%20eachCharNum%20%3E%20122)%20then%0A%09%09%09set%20firstDig%20to%20round%20(eachCharNum%20/%2016)%20rounding%20down%0A%09%09%09set%20secondDig%20to%20eachCharNum%20mod%2016%0A%09%09%09if%20firstDig%20%3E%209%20then%0A%09%09%09%09set%20aNum%20to%20firstDig%20+%2055%0A%09%09%09%09set%20firstDig%20to%20ASCII%20character%20aNum%0A%09%09%09end%20if%0A%09%09%09if%20secondDig%20%3E%209%20then%0A%09%09%09%09set%20aNum%20to%20secondDig%20+%2055%0A%09%09%09%09set%20secondDig%20to%20ASCII%20character%20aNum%0A%09%09%09end%20if%0A%09%09%09set%20numHex%20to%20(%22%25%22%20&amp;%20(firstDig%20as%20string)%20&amp;%20(secondDig%20as%20string))%20as%20string%0A%09%09%09set%20useChar%20to%20numHex%0A%09%09end%20if%0A%09%09set%20theTextEnc%20to%20theTextEnc%20&amp;%20useChar%20as%20string%0A%09end%20repeat%0A%09return%20theTextEnc%0Aend%20urlencode">URLEncode.applescript</a></p>
+
+<pre lang="applescript" escaped="true" filename="URLEncode.applescript">
+on handle_string(lbText)
+	set _res to urlencode(lbText)
+	-- to return the result to launchbar instead of copying it substitute
+	-- the next line for the line after it (set the clipboard to _res)
+	-- open location &quot;x-launchbar:select?string=&quot; &amp; urlencode(_res)
+	set the clipboard to _res
+end handle_string
+
+on run
+	set the clipboard to urlencode(the clipboard as text)
+end run
+
+on urlencode(theText) -- http://harvey.nu/applescript_url_encode_routine.html
+	set theTextEnc to &quot;&quot;
+	repeat with eachChar in characters of theText
+		set useChar to eachChar
+		set eachCharNum to ASCII number of eachChar
+		if eachCharNum = 32 then
+			set useChar to &quot;+&quot;
+		else if (eachCharNum &ne; 42) and (eachCharNum &ne; 95) and (eachCharNum &lt; 45 or eachCharNum &gt; 46) and (eachCharNum &lt; 48 or eachCharNum &gt; 57) and (eachCharNum &lt; 65 or eachCharNum &gt; 90) and (eachCharNum &lt; 97 or eachCharNum &gt; 122) then
+			set firstDig to round (eachCharNum / 16) rounding down
+			set secondDig to eachCharNum mod 16
+			if firstDig &gt; 9 then
+				set aNum to firstDig + 55
+				set firstDig to ASCII character aNum
+			end if
+			if secondDig &gt; 9 then
+				set aNum to secondDig + 55
+				set secondDig to ASCII character aNum
+			end if
+			set numHex to (&quot;%&quot; &amp; (firstDig as string) &amp; (secondDig as string)) as string
+			set useChar to numHex
+		end if
+		set theTextEnc to theTextEnc &amp; useChar as string
+	end repeat
+	return theTextEnc
+end urlencode
+</pre>
+
+<h2 id="url-decode">URL Decode</h2>
+
+<p>Open this script in your AppleScript editor: <a href="applescript://com.apple.scripteditor?action=new&amp;script=on%20handle_string(lbText)%0A%09set%20_res%20to%20urldecode(lbText)%0A%09--%20to%20return%20the%20result%20to%20launchbar%20instead%20of%20copying%20it%20substitute%0A%09--%20the%20next%20line%20for%20the%20line%20after%20it%20(set%20the%20clipboard%20to%20_res)%0A%09--%20open%20location%20%22x-launchbar:select?string=%22&amp;urldecode(_res)%0A%09set%20the%20clipboard%20to%20_res%0Aend%20handle_string%0A%0Aon%20run%0A%09set%20the%20clipboard%20to%20urldecode(the%20clipboard%20as%20text)%0Aend%20run%0A%0Aon%20urldecode(theText)%20--%20http://harvey.nu/applescript_url_decode_routine.html%0A%09set%20sDst%20to%20%22%22%0A%09set%20sHex%20to%20%220123456789ABCDEF%22%0A%09set%20i%20to%201%0A%09repeat%20while%20i%20%E2%89%A4%20length%20of%20theText%0A%09%09set%20c%20to%20character%20i%20of%20theText%0A%09%09if%20c%20=%20%22+%22%20then%0A%09%09%09set%20sDst%20to%20sDst%20&amp;%20%22%20%22%0A%09%09else%20if%20c%20=%20%22%25%22%20then%0A%09%09%09if%20i%20%3E%20((length%20of%20theText)%20-%202)%20then%0A%09%09%09%09display%20dialog%20(%22Invalid%20URL%20Encoded%20string%20-%20missing%20hex%20char%22)%20buttons%20%7B%22Crap...%22%7D%20with%20icon%20stop%0A%09%09%09%09return%20%22%22%0A%09%09%09end%20if%0A%09%09%09set%20iCVal1%20to%20(offset%20of%20(character%20(i%20+%201)%20of%20theText)%20in%20sHex)%20-%201%0A%09%09%09set%20iCVal2%20to%20(offset%20of%20(character%20(i%20+%202)%20of%20theText)%20in%20sHex)%20-%201%0A%09%09%09if%20iCVal1%20=%20-1%20or%20iCVal2%20=%20-1%20then%0A%09%09%09%09display%20dialog%20(%22Invalid%20URL%20Encoded%20string%20-%20not%202%20hex%20chars%20after%20%25%20sign%22)%20buttons%20%7B%22Crap...%22%7D%20with%20icon%20stop%0A%09%09%09%09return%20%22%22%0A%09%09%09end%20if%0A%09%09%09set%20sDst%20to%20sDst%20&amp;%20(ASCII%20character%20(iCVal1%20*%2016%20+%20iCVal2))%0A%09%09%09set%20i%20to%20i%20+%202%0A%09%09else%0A%09%09%09set%20sDst%20to%20sDst%20&amp;%20c%0A%09%09end%20if%0A%09%09set%20i%20to%20i%20+%201%0A%09end%20repeat%0A%09return%20sDst%0Aend%20urldecode">URLDecode.applescript</a></p>
+
+<pre lang="applescript" escaped="true" filename="URLDecode.applescript">
+on handle_string(lbText)
+	set _res to urldecode(lbText)
+	-- to return the result to launchbar instead of copying it substitute
+	-- the next line for the line after it (set the clipboard to _res)
+	-- open location &quot;x-launchbar:select?string=&quot;&amp;urldecode(_res)
+	set the clipboard to _res
+end handle_string
+
+on run
+	set the clipboard to urldecode(the clipboard as text)
+end run
+
+on urldecode(theText) -- http://harvey.nu/applescript_url_decode_routine.html
+	set sDst to &quot;&quot;
+	set sHex to &quot;0123456789ABCDEF&quot;
+	set i to 1
+	repeat while i &le; length of theText
+		set c to character i of theText
+		if c = &quot;+&quot; then
+			set sDst to sDst &amp; &quot; &quot;
+		else if c = &quot;%&quot; then
+			if i &gt; ((length of theText) - 2) then
+				display dialog (&quot;Invalid URL Encoded string - missing hex char&quot;) buttons {&quot;Crap...&quot;} with icon stop
+				return &quot;&quot;
+			end if
+			set iCVal1 to (offset of (character (i + 1) of theText) in sHex) - 1
+			set iCVal2 to (offset of (character (i + 2) of theText) in sHex) - 1
+			if iCVal1 = -1 or iCVal2 = -1 then
+				display dialog (&quot;Invalid URL Encoded string - not 2 hex chars after % sign&quot;) buttons {&quot;Crap...&quot;} with icon stop
+				return &quot;&quot;
+			end if
+			set sDst to sDst &amp; (ASCII character (iCVal1 * 16 + iCVal2))
+			set i to i + 2
+		else
+			set sDst to sDst &amp; c
+		end if
+		set i to i + 1
+	end repeat
+	return sDst
+end urldecode
+</pre>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:fn1">
+      <p>People may love <a href="http://www.alfredapp.com/">Alfred</a>, but this is another example of why I will probably always prefer LaunchBar. Extensibility. Also, QuickSilver is dead, just give up.<a href="#fnref:fn1" rev="footnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+</div>
+
+</body>
+</html>

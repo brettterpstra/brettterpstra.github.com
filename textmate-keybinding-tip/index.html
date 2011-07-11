@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>A quick TextMate KeyBindings tip</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">13 Aug 2010 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">A quick TextMate KeyBindings tip</a></h1>
+		
+<p><img src="http://brettterpstra.dev/wp-content/uploads/2010/08/keybindingstypewriter1.jpg" alt="Typewriter Image" border="0" width="318" height="301" class="alignright noshadow" />I love the keyboard, and I love keyboard shortcuts. It&rsquo;s one of the reasons TextMate and I get along so well. There&rsquo;s one thing that bothers me any time I&rsquo;m editing text (in any application), though: having to move my right hand <em>all</em> the way over to the arrow keys just to move forward a couple of characters, say, after an auto-paired set of parenthesis that I want to get out of. </p>
+
+<p>I know, it&rsquo;s stupid for two reasons: first, it&rsquo;s just not that big a deal, and second, I could just use the Emacs keybindings (^F,^B,^P,^N, etc.). Well, to that I say &ldquo;phooey&rdquo; on both counts. It <em>is</em> a big deal; I&rsquo;ve probably lost hours of my life to that motion. As to the latter, I didn&rsquo;t grow up on Emacs, and those shortcuts have just never nestled into my muscle memory. In related news, I already have some of those keys bound elsewhere.</p>
+
+<p>I used to use <a href="http://pqrs.org/macosx/keyremap4macbook/">KeyRemap4Macbook</a> to map control-j,i,l and m to the cursor keys, but haven&rsquo;t installed it since my last clean wipe (just in case it was part of the reason I had to do the clean wipe to begin with). I missed that convenience, though, so after 15 minutes of Googling, here&rsquo;s the answer&hellip;</p>
+
+<!--more-->
+
+<p>Allan Odgaard, creator of TextMate, offers the beginning of the solution <a href="http://blog.macromates.com/2005/key-bindings-for-switchers/">on the TextMate blog</a>. I found a little <a href="http://xahlee.org/emacs/osx_keybinding.html">more detailed information</a> around the net, too. Basically, you can add or edit a file called <code>DefaultKeyBinding.dict</code> in <code>~/Library/KeyBindings/</code> to add the keystrokes to all Cocoa applications. Mine looks like this now:</p>
+
+<p>&lt;div markdown=0&gt;</p>
+<pre><code>
+{
+  "^j" = "moveBackward:";
+  "^l" = "moveForward:";
+  "^m" = "moveDown:";
+  "^i" = "moveUp:";
+  "^E" = "\"editInTextMate:\"";
+}
+</code></pre>
+<p>&lt;/div&gt;</p>
+
+<p>The first part of each pair is the keystroke, and the second part is the action. To find a list of the available actions, I just looked at <code>/System/Library/Frameworks/AppKit.framework/Resources/StandardKeyBinding.dict</code>, which has all of the default OS X keybindings in it. You&rsquo;ll need Property List Editor to view the file in its default state. To view the file in a text editor, you have to convert it to an XML (old school and plain text) plist. If you&rsquo;re curious, copy the file to your Desktop and, in Terminal, run <code>plutil -convert xml1 ~/Desktop/StandardKeyBinding.dict</code>.</p>
+
+<p>After editing <code>DefaultKeyBinding.dict</code> and restarting your Cocoa apps, your new keyboard shortcuts will be available. That&rsquo;s when I found the next problem. TextMate has ^J mapped to &ldquo;Reformat and Justify&rdquo; under the Text menu. I never, ever use that command, so that was just annoying. I first tried to just override it in System Preferences-&gt;Keyboard-&gt;Application Shortcuts, but that didn&rsquo;t do anything. Next I found a <a href="http://www.macosxhints.com/article.php?story=20040618093419348">post on macosxhints</a> that offered a Terminal (<code>defaults</code>) command for changing default Application shortcuts. For example:</p>
+
+<p>&lt;div markdown=0&gt;</p>
+<pre><code>
+defaults write com.macromates.textmate NSUserKeyEquivalents -dict-add "Reformat and Justify" "nil"
+</code></pre>
+<p>&lt;/div&gt;</p>
+
+<p>Guess what? That didn&rsquo;t do it. TextMate was still pwning the ^J shortcut. Next stop, the Resources folder of the TextMate application. There I found <code>KeyBindings.dict</code>, where it was easy to locate the offending shortcut. I commented out the line (//) and restarted TextMate. Ta. Dum. My new keyboard shortcuts now function perfectly.</p>
+
+<p>By the way, the reason I didn&rsquo;t use &ldquo;k&rdquo; for down is I actually do regularly use the <code>kill</code> keybinding to delete to the end of the line (as well as ^a to move to beginning and ^e to the end). Also, you might skip mapping &ldquo;m&rdquo; to down, as &ldquo;n&rdquo; right next to it is already mapped to moveDown:, as mentioned while complaining about Emacs keybindings. I have them both mapped now, so I can have lazy fingers if I want to. Further, note that these keybindings will not work when selecting text; once you press the shift key, you&rsquo;re in a whole new world. You&rsquo;d have map those as well if you wanted that functionality.</p>
+
+<p>I&rsquo;m happy now, and so are my fingers. Have any other brilliant keybinding stories? I&rsquo;d love to hear them.</p>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/greader-instapaper-0-2"><span>GReader Instapaper 0.2</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/is-your-url-too-short-try-our-system-free"><span>Is your URL too short? Try our system, free!</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/textmate" name="textmate">textmate</a></li>
+		
+			<li><a href="/tags/terminal" name="terminal">terminal</a></li>
+		
+			<li><a href="/tags/keyboard" name="keyboard">keyboard</a></li>
+		
+			<li><a href="/tags/keybindings" name="keybindings">keybindings</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/textmate-keybinding-tip';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

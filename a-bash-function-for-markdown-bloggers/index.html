@@ -1,0 +1,251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>A Bash function for Markdown bloggers</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">24 Jun 2011 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">A Bash function for Markdown bloggers</a></h1>
+		<p><img src="http://brettterpstra.dev/wp-content/uploads/2011/06/markdowntypewriter.jpg" alt="Markdown Typewriter Image" class="alignright" />I store all of my writing as separate Markdown files. A basic tagging system<sup id="fnref:tag"><a href="#fn:tag" rel="footnote">1</a></sup> adds more &ldquo;searchability,&rdquo; and I can quickly locate any file with Spotlight<sup id="fnref:spot"><a href="#fn:spot" rel="footnote">2</a></sup>. Given the amount of time I spend in Terminal (well, <a href="http://www.iterm2.com/">iTerm 2</a> these days), I use <a href="http://osxdaily.com/2006/12/05/use-spotlight-from-the-command-line-with-mdfind/"><code>mdfind</code></a> quite a bit to do the Spotlight searching. This function just makes it a little more convenient to search for and quickly edit an existing document. </p>
+
+<p>By default, it looks in a Dropbox &ldquo;Writing&rdquo; folder, but you can adjust that to restrict to any folder at the top of the script. You can also set your edit command there (<code>mate</code>, <code>mvim</code>, <code>vim</code>, etc.). Then it takes all arguments and uses them as a Spotlight search, restricted to your writing folder and the Markdown filetype, and offers you a quick menu of matches. Selecting a match opens the file with your preferred editor. If there&rsquo;s only one match, it&rsquo;s opened automatically.</p>
+
+<p>It&rsquo;s written as a function to be included in your .bash_profile (or sourced from there). If you want to run it as a shell script, just remove the <code>edmd () {</code> at the top and the closing <code>}</code>, put it in your path and run <code>chmod a+x filename</code>.</p>
+
+<p>Once it&rsquo;s installed you can just type <code>edmd keyword</code> to find posts and drafts related to keyword. You can use multiple words (no quotes required) and prefixes like &ldquo;keyword:&rdquo; or &ldquo;tag:&rdquo;, just like a Spotlight query.</p>
+
+<pre lang="bash" filename="edmd.sh">
+# Edit Markdown File from Writing directory
+# Finds Markdown files matching a Spotlight-style search query
+# If there's more than one, you get a menu
+edmd () {
+  WRITINGDIR="~/Dropbox/Writing"
+  EDITCMD="mate"
+  filelist=$(mdfind -onlyin "$WRITINGDIR" "($@) AND kind:markdown")
+  listlength=$(mdfind -onlyin "$WRITINGDIR" -count "($@) AND kind:markdown")
+  if [[ $listlength &gt; 0 ]]; then
+    if [[ $listlength == 1 ]]; then
+      $EDITCMD $filelist
+    else
+      IFS=$'\n'
+      PS3='Edit which file? (1 to cancel): '
+      select OPT in "Cancel" $filelist; do
+        if [ $OPT != "Cancel" ]; then
+          $EDITCMD $OPT
+        fi
+        break
+      done
+    fi
+  else
+    return 1
+  fi
+  return 0
+}
+</pre>
+<div class="footnotes">
+  <ol>
+    <li id="fn:tag">
+      <p>I save drafts and posts to my desktop as <code>.md</code> files. During my daily review I use <a href="http://www.caseapps.com/tags/">Tags.app</a> or <a href="http://itunes.apple.com/us/app/filr/id402468144?mt=12">Filr</a> to quickly add target keywords (&lsquo;blogging&rsquo;, a tag for which blog it&rsquo;s for and one, maybe two topical tags). <a href="http://www.noodlesoft.com/hazel.php">Hazel</a> picks these up and stores them in my Dropbox &ldquo;Writing&rdquo; folder, in subfolders based on blog and filetype.<a href="#fnref:tag" rev="footnote">&#8617;</a></p>
+    </li>
+    <li id="fn:spot">
+      <p>I never realized it, but apparently Spotlight doesn&rsquo;t search these by default. My use of the <a href="https://github.com/toland/qlmarkdown">QLMarkdown Quick Look plugin</a> fixes that, I guess.<a href="#fnref:spot" rev="footnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/thanks-wwdc"><span>Thanks WWDC</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/web-excursions-june-15-2011-june-23-2011"><span>Web excursions: June 15, 2011 - June 23, 2011</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/thanks-wwdc">Thanks WWDC</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/bash" name="bash">bash</a></li>
+		
+			<li><a href="/tags/scripting" name="scripting">scripting</a></li>
+		
+			<li><a href="/tags/markdown" name="markdown">markdown</a></li>
+		
+			<li><a href="/tags/spotlight" name="spotlight">spotlight</a></li>
+		
+			<li><a href="/tags/mdfind" name="mdfind">mdfind</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/a-bash-function-for-markdown-bloggers';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

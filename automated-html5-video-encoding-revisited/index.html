@@ -1,0 +1,375 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>Automated HTML5 video encoding revisited</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">01 May 2011 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">Automated HTML5 video encoding revisited</a></h1>
+		
+<p><img src="http://brettterpstra.dev/wp-content/uploads/2011/05/html5automatorTV-small.jpg" alt="HTML5 Automator" title="HTML5 Automator" width="328" height="257" class="alignright size-full wp-image-2296" />A little while ago I approached the subject of scripting <a href="http://brettterpstra.dev/automating-html5-video-encodes/">automated encoding for HTML5 video formats</a>. I started using the process regularly as I built the <a href="http://bundle.weblogzinc.com/video/">Blogsmith Bundle video site</a>. Pretty soon I got some help from friend and TUAW editor <a href="http://www.tuaw.com/bloggers/michael-rose">Mike Rose</a>, and working together we refined the script and improved the speed tremendously. It was built for use on Mac OS X, but with just a few lines modified, it should work on any *NIX system.
+<!--more--></p>
+
+<h3 id="what-it-does">What it does</h3>
+
+<p>The script is specifically designed to take an MPEG-4, H.264 file, move it to a new folder based on the filename, create WEBM and OGV versions of it in the new folder, and upload the whole folder to a server using <code>rsync</code>. SSH information and target directories are specified in the config at the top of the script. At the end, it takes what it knows about the files and filenames and creates a TextMate Markdown blog template, inserts the video shortcode for the <a href="http://wordpress.org/extend/plugins/videojs-html5-video-player-for-wordpress/">VideoJS WordPress plugin</a> (which is common syntax for other plugins as well) and opens it for editing in TextMate. The <code>rsync</code> command really needs <a href="http://www.rootsilver.com/2007/10/keyless-ssh-sshkeygen-setup-an">keyless SSH login</a> for this to be considered fully-automated.</p>
+
+<p>If you run this script with <a href="http://www.noodlesoft.com/hazel.php">Hazel</a>, you can just render an <a href="http://en.wikipedia.org/wiki/H.264">H.264</a> video (<code>.mov</code> files that pass the H.264 test<sup id="fnref:fnh264"><a href="#fn:fnh264" rel="footnote">1</a></sup> will automatically be renamed to <code>.mp4</code>) to that folder from your screen-recording application of choice, sit back for a few minutes (or start writing the post) and wait for the pre-populated TextMate blog post to pop open. Then type or paste your text in, hit Control-Command-P (assuming you&rsquo;re set up for TextMate-&gt;WordPress blogging) and your video is posted.</p>
+
+<h3 id="improvements">Improvements</h3>
+
+<p>The first thing that happened in this rewrite was a major simplification of the WEBM encoding process, which now only takes a third of the time it did before and the files are not significantly larger in most cases. They may even look better. The old command involved two passes, one of them turning out to be unnecessary; <code>ffmpeg</code> is smarter than I thought. The new command (using the variables from the script) is just <code>/usr/local/bin/ffmpeg -i "$FILENAME" -b 614400 -s $MAXSIZE -aspect 16:9 "$BASENAME".webm</code>.</p>
+
+<p>I also added better logging, optional progress reports with <a href="http://growl.info/">Growl</a>, batch file handling and a few other refinements. The logging, if enabled in the config at the top, will output information including processing time for each file and total processing time to STDOUT (command line) and to the system log where you can watch it from Console. If you enable growl notifications, the messages at the beginning and end of each conversion will be &ldquo;growled&rdquo; on your screen. </p>
+
+<h3 id="using-the-script">Using the script</h3>
+
+<p>You&rsquo;ll need a couple of additional utilities to do the conversions.</p>
+
+<h4 id="requirements">Requirements</h4>
+
+<p>To run the script and do the encoding, you&rsquo;ll need <code>ffmpeg</code> and <code>ffmpeg2theora</code>. You can install <code>ffmpeg</code> from <a href="https://github.com/mxcl/homebrew">Homebrew</a> (<code>brew install ffmpeg</code>) quite easily, if you&rsquo;re set up for that. You can also pull the binary out of <a href="http://www.ffmpegx.com/">ffmpegX</a> with a <a href="http://hints.macworld.com/article.php?story=20061220082125312">few simple steps</a>. You can, of course, <a href="http://troykelly.com/2007/01/18/building-ffmpeg-on-os-x/">build your own</a> if you have the developer tools installed.</p>
+
+<p>ffmpeg2theora (needed for OGV conversion) no longer appears to be available from <code>brew</code>, but there are OS X binaries (and source) <a href="http://v2v.cc/~j/ffmpeg2theora/download.html">available for download</a>.</p>
+
+<p>The <a href="#thescript">script is below</a>. You&rsquo;ll want to modify the information in the configuration section at the top, and modify the template output at the bottom to suit your needs. Anything between <code>&lt;&lt;-POSTTEMPLATE</code> and <code>POSTTEMPLATE</code> is freeform text that you can edit in any way you like, including the use of $variables. If you&rsquo;d rather do something such as copy a shortcode to your clipboard and show a Growl message, just use <code>pbcopy</code> and <code>growlnotify</code>. You could also just comment out the template part and let Hazel tell you when it&rsquo;s done, if you want to handle things more manually. I&rsquo;ll let you work out the details on that.</p>
+
+<h4 id="command-line-usage">Command line usage</h4>
+
+<p>To use the script from the command line, save it as &ldquo;html5encode.sh&rdquo; somewhere in your path, change to its parent folder in Terminal and run <code>chmod a+x html5encode.sh</code>. The you can run it on any h.264 .mov or .mp4 file and it will handle the rest. It also handles batches, so you can specify multiple targets or use <code>*.mp4</code> to run it on all .mp4 files in a folder. It will process them one by one, creating new folders for each.</p>
+
+<h4 id="hazel">Hazel</h4>
+
+<p>If you want to run it with Hazel, you can follow the same procedure and set up a rule that runs a shell script when a .mov or .mp4 is detected in a watch folder. The script can then be run as a command or be pasted in its entirety into the Hazel script editor within the rule.</p>
+
+<p>You should be able to pull off using this with OS X Folder Actions, as well, but I haven&rsquo;t played with that yet.</p>
+
+<p><strong>Bonus tip:</strong> <em>If you name your original .mov or .mp4 file with a CamelCased name, it will break apart the filename and create the title of your post based on it. Not an essential feature, but kind of nifty. Well, I think so anyway.</em></p>
+
+<h3 id="thescript">The script</h3>
+
+<p><a href="http://brettterpstra.dev/share/html5encode.sh.txt">View Raw</a> - <a href="http://brettterpstra.dev/share/html5encode.sh">Download</a></p>
+
+<pre lang="bash">
+#!/bin/bash
+#################################################################
+### html5encode.sh by Brett Terpstra and Mike Rose
+### Published 05/01/2011
+### Freely distributed, modifications welcomed (with attribution)
+#################################################################
+### Configuration ###############################################
+#################################################################
+MAXSIZE="960x540"
+DISPLAYWIDTH="600"
+DISPLAYHEIGHT="338"
+SSHURL="username@ssh.host.name"
+SSHDIR="/server/folder/target/for/rsync/"
+WEBDIR="/front-end/url/path/video/" # used for blog template
+LOGGING=true # send status messages and times to STDOUT and syslog
+GROWLLOG=false # duplicate messages to growl, if installed
+##################################################################
+### END Configuration ############################################
+##################################################################
+
+# function to handle logging (if enabled) to STDOUT and STDERR 
+# as well as Growl (if enabled)
+function logit() {
+  if $LOGGING ; then
+    logger -st "HTML5 Encoder" "$1"
+    if $GROWLLOG ; then
+      /usr/local/bin/growlnotify -t "HTML5 Encoder" -a "Terminal" -m "$1"
+    fi
+  fi
+}
+
+# Count the inputs for log message
+if [[ $# -gt 1 ]]; then
+  logit "Starting batch conversion."
+  maintimer1=`date '+%s'`
+else
+  logit "Starting HTML5 Encoder"
+fi
+
+# Loop through each passed file
+for file in "$@"; do
+  timer1=`date '+%s'`
+  INPUT=$file
+  # Check that input file is H.264
+  isH264=`mdls -raw -name kMDItemCodecs $INPUT|grep H.264`
+
+  if [ !$isH264 ] ; then
+    logit "$INPUT is not h.264"
+    continue
+  fi
+
+  DIRNAME=`dirname "$INPUT"`
+  FILENAME=`basename "$INPUT"`
+  BASENAME=${FILENAME%%.*}
+  logit "Conversion of $FILENAME started on `date '+%D'` at `date '+%r'`"
+  bytesize=`stat -f '%z' $FILENAME`
+  filesize=`echo "scale = 2 ; $bytesize/1048576"|bc -lq`
+  cd "$DIRNAME"
+  if [ -d "$BASENAME" ]; then
+    logit "Found $FILENAME, but directory $BASENAME already exists. Aborting"
+    continue
+  fi
+  mkdir "$BASENAME"
+  mv "$FILENAME" "$BASENAME/"
+  cd "$BASENAME"
+  if [[ ${FILENAME#*.} -eq "mov" ]]; then mv $FILENAME ${BASENAME}.mp4; fi  
+  FILENAME=${BASENAME}.mp4
+  /usr/local/bin/ffmpeg -i "$FILENAME" -b 614400 -s $MAXSIZE -aspect 16:9 "$BASENAME".webm
+  logit "Completed webm conversion"
+  /usr/local/bin/ffmpeg2theora --videoquality 5 --audioquality 1 --max_size $MAXSIZE "$FILENAME" -o "$BASENAME.ogv"
+  logit "Completed ogv conversion"
+  /usr/local/bin/ffmpeg -i "$FILENAME" -ss 0 -vframes 1 -vcodec mjpeg -f image2 "${BASENAME}Poster.jpg"
+  logit "Created poster image"
+
+  # Create a title from camelcased filename
+  TITLE=`echo "$BASENAME"|sed 's/\([A-Z][^A-Z]*\)/&amp; /g'|sed 's/ $//'`
+  SERVER=`echo "$SSHURL"|sed 's/^.*\@//'`
+  logit "Uploading to $SERVER..."
+  cd ..
+  rsync -v -r -e ssh "`pwd`/$BASENAME" $SSHURL:$SSHDIR
+  logit "Finished Uploading"
+  # remove trailing slash from $WEBDIR
+  WEBDIR=`echo "$WEBDIR"|sed 's/\/$//'`
+  cat &gt; "$BASENAME/$BASENAME.blog.markdown" &lt;&lt;-POSTTEMPLATE
+Type: Blog Post (Markdown)
+Blog: BlogsmithVideo
+Title: $TITLE
+Keywords: 
+Status: draft
+Pings: On
+Comments: On
+Category: Tutorial
+
+Synopsis
+
+[video mp4="$WEBDIR/$BASENAME/$BASENAME.mp4" ogg="$WEBDIR/$BASENAME/$BASENAME.ogv" webm="$WEBDIR/$BASENAME/$BASENAME.webm" poster="$WEBDIR/$BASENAME/${BASENAME}Poster.jpg" preload="true" width="$DISPLAYWIDTH" height="$DISPLAYHEIGHT"]
+
+<!--more-->
+Transcript
+
+POSTTEMPLATE
+
+  open "$BASENAME/$BASENAME.blog.markdown" -a "TextMate.app"
+  timer2=`date '+%s'`
+  time=`echo "scale=2 ; ($timer2-$timer1)/60"|bc -lq`
+  logit "Conversion of $FILENAME complete"
+  logit "It took $time minutes to process a ${filesize}M MP4 to webm and ogv and upload to `echo "$SSHURL"|sed 's/^.*\@//'`."
+done
+if [[ $# -gt 1 ]]; then
+  maintimer2=`date '+%s'`
+  total=`echo "scale=2 ; ($maintimer2-$maintimer1)/60"|bc -lq`
+  logit "Batch conversion complete, total time $total minutes."
+fi
+</pre>
+
+<p>Hopefully this will make a few people&rsquo;s lives easier. Mike and I have battle tested it and it seems to be a pretty great fit for our needs. If you modify it for your own needs, please share (with credit) so that it can become as well-rounded as possible!</p>
+<div class="footnotes">
+  <ol>
+    <li id="fn:fnh264">
+      <p>The script runs a quick check using <code>mdls</code> to look for the h.264 codec. It will skip the file if it doesn&rsquo;t match the criteria. It doesn&rsquo;t check for AAC, but assumes that you know what you&rsquo;re doing to <em>some</em> extent. If you&rsquo;re running Hazel, just check for the specific extension you&rsquo;re rendering to (<code>.mov</code> or <code>.mp4</code>) to avoid any hassle from the start.<a href="#fnref:fnh264" rev="footnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/web-excursions-april-20-april-24"><span>Web excursions: April 20 - April 24</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/web-excursions-april-26-may-1"><span>Web excursions: April 26 - May 1</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/terminal" name="terminal">terminal</a></li>
+		
+			<li><a href="/tags/scripting" name="scripting">scripting</a></li>
+		
+			<li><a href="/tags/shell" name="shell">shell</a></li>
+		
+			<li><a href="/tags/video" name="video">video</a></li>
+		
+			<li><a href="/tags/html5" name="html5">html5</a></li>
+		
+			<li><a href="/tags/automation" name="automation">automation</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/automated-html5-video-encoding-revisited';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

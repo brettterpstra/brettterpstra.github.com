@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Markdown QuickTags makes 1000 people happier and more attractive</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p>I can&rsquo;t prove that anybody is happier, really, and attraction is entirely subjective. For all I know they were run off by the &ldquo;invalid header&rdquo; error<sup id="fnref:invalidheader"><a href="#fn:invalidheader" rel="footnote">1</a></sup> and never even tried it out, but <a href="http://wordpress.org/extend/plugins/markdown-quicktags/">Markdown QuickTags</a> <em>finally</em> passed the <a href="http://wordpress.org/extend/plugins/markdown-quicktags/stats/">1000 downloads mark</a> on the Wordpress Plugins site. I&rsquo;m celebrating by diving into nvALT for the weekend, but version 0.8 of <abbr title="Markdown QuickTags">MDQT</abbr> is in the works.</p>
+
+<p>I&rsquo;ve handled almost all of the bug reports for the plugin and it&rsquo;s a smooth-running machine for me now. If you like <a href="http://en.wikipedia.org/wiki/Markdown">Markdown</a> and use WordPress, you really should check it out. I&rsquo;m not making any money on it, but it makes my insides feel gooey to know I made your life that much easier. You&rsquo;re totally worth it.</p>
+
+<p>Here&rsquo;s a quick breakdown, if you&rsquo;ve previously never heard of Markdown QuickTags:</p>
+
+<!--more-->
+
+<p>[caption id=&rdquo;attachment_2228&rdquo; align=&rdquo;alignright&rdquo; width=&rdquo;300&rdquo; caption=&rdquo;Click for big.&rdquo;]<a href="http://brettterpstra.dev/wp-content/uploads/2011/04/MarkdownQuickTagsScreenshot4-23.jpg"><img src="http://brettterpstra.dev/wp-content/uploads/2011/04/MarkdownQuickTagsScreenshot4-23-300x213.jpg" alt="Markdown QuickTags Screenshot" title="Markdown QuickTags Screenshot" width="300" height="213" class="size-medium wp-image-2228" /></a>[/caption]</p>
+
+<p>It&rsquo;s a plugin with a powerful Markdown editor that replaces the WordPress HTML view. It provides auto-pairing, wrapping, link detection, smart list continuation, reference link title completion and much more. </p>
+
+<p>Auto-pairing and wrapping are my favorite features; select text and type the left character of a double or single quote, square, curly or angle brackets or a backtick and the appropriate pairing will surround your selection. If you type the left character without a selection, it will create the pair and place your cursor in the middle. If you finish typing and your cursor is to the immediate left of the right character in the pair, typing the right character will jump you out of the scope and not double the quote/bracket.</p>
+
+<p>If you have some reference-format links in your post (<code>[link title]: http://link.com</code>) and you select some text and hit the left square bracket twice, it will create a reference link (<code>[linked text][]</code>) and go into autocomplete mode with the list of all your reference titles ready to fill in as you type the first couple of characters. Pressing <code>[(</code> with text selected will start an inline link and fill in the &ldquo;http://&rdquo; for you, leaving it selected so you can just paste over it if you like. There&rsquo;s even a button that pops up a text field where you can paste <em>any</em> text containing links, even the full source code for a page, and it will parse them out, give them titles and insert a list of reference links into your post for you to work with.</p>
+
+<p>You can save your post as Markdown if you have a plugin installed to render it on the front end (<a href="http://wordpress.org/extend/plugins/markdown-for-wordpress-and-bbpress/">like this one</a>), or you can use the built-in Markdown (Extra) converter to turn it into clean HTML and switch back the the visual view. You can also go the other way, turning existing HTML posts into Markdown for editing using the Markdownify button at the bottom. It works <a href="http://markdownrules.com/">just like Marky</a>. There&rsquo;s also an overlay preview system (which can take custom styles) and a full-screen editing mode with customizable background color and transparency. You can even customize the font in the editor with built-in <a href="http://www.google.com/webfonts">Google fonts</a>. Whew.</p>
+
+<p>I could go on for a long, long time, but I just wanted to let people know that Markdown QuickTags is alive and kicking, and making some new strides soon. It&rsquo;s not perfect, but it definitely makes my life easier. Check it out <a href="http://wordpress.org/extend/plugins/markdown-quicktags/">at the Wordpress Plugins site</a>.</p>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:invalidheader">
+      <p>There&rsquo;s an error that&rsquo;s still plaguing the plugin where, when you first install it, it tells you it was unsuccessful because of an &ldquo;invalid header&rdquo;. I can <strong>not</strong> find the problem, but going back to your plugins page and activating it manually works fine. When it upgrades, it disables itself for the same reason, so you have to go back and enable it <em>again</em>. If you happen to know the answer to this problem, <em>please</em> let me know.<a href="#fnref:invalidheader" rev="footnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+</div>
+
+</body>
+</html>

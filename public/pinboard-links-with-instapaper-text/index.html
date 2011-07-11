@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Bookmarklet: Read Pinboard links with Instapaper Text</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p><img src="http://brettterpstra.dev/wp-content/uploads/2011/01/pinboardbookmarkletscreenshot.jpg" alt="" title="pinboardbookmarkletscreenshot" width="316" height="97" class="alignright shadow size-full wp-image-1565" />Here&rsquo;s a quick bookmarklet you can run on any <a href="http://pinboard.in/">Pinboard</a> page containing a list of bookmarks. It adds a &ldquo;Read&rdquo; link at the end of the edit links for each post, and clicking the link will open the post in Instapaper Text<sup id="fnref:fn1"><a href="#fn:fn1" rel="footnote">1</a></sup> view in a new page/tab. It also marks the post you click as &ldquo;read.&rdquo; Note that this happens whether you have that specified in the preferences or not (because it&rsquo;s a quick hack and I think it&rsquo;s weird to not mark an article as read when you read it).</p>
+
+<p>Just drag the link below into your bookmarks bar or right click and &ldquo;Add Bookmark&rdquo;. No promises, no guarantees, very little support. I love you all, but this is just something I wanted last night and it works for me. Hopefully it will for you, too.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>&lt;div style="text-align:center;margin-bottom:15px"&gt;&lt;a href=&rdquo;javascript:try%20{var%20els%20=%20document.getElementById(%27main_column%27).getElementsByTagName(%27a%27);for%20(i%20=%200;%20i%20&lt;%20els.length;%20i++)%20{if%20(%20/(^</td>
+      <td>\s)bookmark_title(\s</td>
+      <td>$)/.test(els[i].className)%20)%20{readlink%20=%20document.createElement(%27a%27);readlink.innerHTML%20=%20%27%20read%27;readlink.style.color%20=%20%27#666%27;readlink.href%20=%20%27http://www.instapaper.com/text?u=%27+encodeURIComponent(els[i].href);readlink.target%20=%20%27_blank%27;readlink.onmousedown%20=%20els[i].onmousedown;els[i].parentNode.appendChild(readlink);}}}%20catch(e)%20{alert(e);}&rdquo; class=&rdquo;bookmarklet&rdquo;&gt;Pinboard Instapaper&lt;/a&gt;&lt;/div&gt;</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Also, here&rsquo;s a quick side experiment which does the same thing, but uses an experiment I set up on my server to run Readability and pipe it into an Antique-style page. It&rsquo;s not as fast, and sometimes misses things that Instapaper Text picks up, so it&rsquo;s just for fun right now. Nonetheless, it&rsquo;s pretty cool. Looks best in Safari. Looks good in Firefox. Probably looks like garbage on IE.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>&lt;div style="text-align:center;margin-bottom:15px"&gt;&lt;a href=&rdquo;javascript:try%20{var%20els%20=%20document.getElementById(%27main_column%27).getElementsByTagName(%27a%27);for%20(i%20=%200;%20i%20&lt;%20els.length;%20i++)%20{if%20(%20/(^</td>
+      <td>\s)bookmark_title(\s</td>
+      <td>$)/.test(els[i].className)%20)%20{readlink%20=%20document.createElement(%27a%27);readlink.innerHTML%20=%20%27%20read%27;readlink.style.color%20=%20%27#666%27;readlink.href%20=%20%27http://brettterpstra.dev/reader/?u=%27+encodeURIComponent(els[i].href);readlink.target%20=%20%27_blank%27;readlink.onmousedown%20=%20els[i].onmousedown;els[i].parentNode.appendChild(readlink);}}}%20catch(e)%20{alert(e);}&rdquo; class=&rdquo;bookmarklet&rdquo;&gt;Pinboard Antique&lt;/a&gt;&lt;/div&gt;</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:fn1">
+      <p>See <a href="http://www.instapaper.com/extras">here</a> (near the bottom) for the original bookmarklet<a href="#fnref:fn1" rev="footnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+</div>
+
+</body>
+</html>

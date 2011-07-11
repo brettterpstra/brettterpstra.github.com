@@ -1,0 +1,314 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>HomeControl: Local Mac control for iPhone</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">02 Oct 2010 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">HomeControl: Local Mac control for iPhone</a></h1>
+		<p><img src="http://brettterpstra.dev/wp-content/uploads/2010/10/homecontrolpostimage.jpg" alt="" title="homecontrolpostimage" width="300" height="264" class="alignright size-full wp-image-1047" />I tried out <a href="http://dashdingo.org/post/1075781336/mute-mac-osx-from-iphone">a tip</a> recently for controlling a Mac via Mobile Safari on your iPhone, and it got me thinking, which is often dangerous. I put together this little web app today as a proof of concept (that got a little out of hand). It basically provides a full interface for volume control, application starting and stopping and many iTunes functions, including volume and EQ. All features provide interface feedback and update you with current info from your Mac.</p>
+
+<h3 id="video-preview">Video preview</h3>
+
+<p>httpv://www.youtube.com/watch?v=KTcISVU4Nf4</p>
+
+<p><a href="http://www.youtube.com/watch?v=KTcISVU4Nf4&amp;fmt=21">YouTube Link&hellip;</a></p>
+
+<!--more-->
+
+<h3 id="setting-up-your-web-server">Setting up your web server</h3>
+
+<p>To run it, you need to run your local web server as your own user. This is, of course, a major security risk and completely inadvisable if your local web server is open to outsiders in any way. Mine&rsquo;s not, so I didn&rsquo;t put too much time into figuring out a more secure way to do this. If you have any clues in that area, let me know and I&rsquo;ll post them.</p>
+
+<p>To run your local web server as a different user, you need to edit <code>/etc/apache2/httpd.conf</code>. You&rsquo;ll need to edit it as root, so use sudo to launch your text editor of choice (e.g. <code>sudo vi /etc/apache2/httpd.conf</code>). If you, like me, just use TextMate&rsquo;s <code>mate</code> command, you&rsquo;ll be prompted for a password when you save.</p>
+
+<p>Locate the lines:</p>
+
+<pre><code>User _www
+Group _www
+</code></pre>
+
+<p>Change them to:</p>
+
+<pre><code>User yourusername
+Group staff
+</code></pre>
+
+<p>You&rsquo;ll also need to enable PHP, if you haven&rsquo;t already. If you haven&rsquo;t, locate the line that starts with:</p>
+
+<pre><code>#LoadModule php5_module
+</code></pre>
+
+<p>Just remove the hashmark at the beginning (#) to turn PHP on.</p>
+
+<p>Now, at the command line, type <code>sudo apachectl graceful</code> to restart the server under the new user. If everything is in place, you&rsquo;ll be able to run HomeControl without a hitch now. Turn on Web Sharing in System Preferences &gt; Sharing to keep the web server running through reboots and logouts.</p>
+
+<h3 id="installing-homecontrol">Installing HomeControl</h3>
+
+<p>Just download the zip file at the end of this post and unzip it into your <code>~/Sites</code> folder. If you prefer to have it elsewhere, or have a custom folder set up for Apache, it will run just fine in any folder, as long as you can access it from a web browser on the local network.</p>
+
+<p>Next, point your web browser to the folder. If you put the &lsquo;homecontrol&rsquo; folder directly in <code>~/Sites</code>, you should be able to reach it at the url <code>http://computer_name.local/~Username/homecontrol</code>. You need to know the name of the computer it&rsquo;s on (set in System Preferences &gt; Sharing, at the top), and your username on that system, substituting each in the appropriate place in the url.</p>
+
+<p>Once you&rsquo;ve loaded the page and tested it out, use the &ldquo;+&rdquo; icon at the bottom of Mobile Safari&rsquo;s web browser to add an icon to your home screen which will take you directly there in the future, and will run the app full-screen.</p>
+
+<h3 id="customizing-homecontrol">Customizing HomeControl</h3>
+
+<p>Since I know not everybody who wants to try this out is going to be ready to hack into the jQuery and PHP, I made quite a few bits of the app modifiable with simple HTML edits. If you&rsquo;re comfortable with that, you can change the list of applications and add iTunes features quite easily.</p>
+
+<h4 id="application-launcher">Application launcher</h4>
+
+<ul>
+  <li>Locate the div with the id &ldquo;apps&rdquo;</li>
+  <li>Find the unordered list (<code>&lt;ul&gt;</code>) inside of it</li>
+  <li>Edit or copy and edit existing lines by changing only the name of the application in the first span</li>
+  <li>Use the exact displayed name of the application you want to control, and HomeControl will pass it to the PHP exec function</li>
+</ul>
+
+<h4 id="itunes-functions">iTunes functions</h4>
+
+<ul>
+  <li>Locate the div with the id &ldquo;itunes&rdquo;</li>
+  <li>Find the unordered list inside of it with the id &ldquo;itunescmd&rdquo;</li>
+  <li>Add new features by copying an existing line and changing the rel attribute and the text of the link
+    <ul>
+      <li>The rel attribute passes the actual iTunes AppleScript command, which will be appended to a &lsquo;<code>tell application "iTunes" to</code>&rsquo; line and passed to osascript</li>
+      <li>The text of the link is the title which will appear in the menu</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="itunes-eq-presets">iTunes EQ Presets</h4>
+
+<ul>
+  <li>Locate the div with the id &ldquo;ituneseq&rdquo;</li>
+  <li>Find the unordered list inside of it</li>
+  <li>Edit the text of the links in the list with the exact title of the preset you want to control</li>
+  <li>Add or remove list items as desired</li>
+</ul>
+
+<h4 id="startup-screen-and-icon">Startup screen and icon</h4>
+
+<ul>
+  <li>Edit <code>homecontrolicon.png</code> in the <code>homecontrol</code> folder to customize the app&rsquo;s icon on the homescreen.</li>
+  <li>Edit <code>hc_startup.png</code> in the <code>homecontrol</code> folder to customize the startup screen.</li>
+  <li>If you&rsquo;ve installed the web app, delete the icon and reinstall from Mobile Safari to see the new images.</li>
+</ul>
+
+<h4 id="advanced-customization">Advanced customization</h4>
+
+<p>If you&rsquo;re handy with the jQuery, the PHP and the HTML, you can do a lot with the examples in the code. It&rsquo;s very much a proof-of-concept, and intended to be a jumping point for more experimentation, so have at it.</p>
+
+<p>The app currently uses the <a href="http://www.jqtouch.com/">jQTouch</a> library, but mostly for the CSS. It has very few dependencies on the API, so it should be a relatively trivial matter to switch to a different library. It does rely quite heavily on jQuery, though.</p>
+
+<p>The main PHP/osascript calls are in <code>functions.php</code>. All functions are called using jQuery&rsquo;s $.get function, which makes Ajax calls to the <code>functions.php</code> file in the background and receives updates on completion.</p>
+
+<p>Have fun, hopefully my horrible waste of time will be someone else&rsquo;s inspiration&hellip;</p>
+
+<p>[caption id=&rdquo;attachment<em>1045&rdquo; align=&rdquo;alignleft&rdquo; width=&rdquo;150&rdquo; caption=&rdquo; Main Screen&rdquo;]<a href="http://brettterpstra.dev/wp-content/uploads/2010/10/homecontrolhomescreen.jpg"><img src="http://brettterpstra.dev/wp-content/uploads/2010/10/homecontrolhomescreen-150x150.jpg" alt="Screenshot of HomeControl Main Screen" title="HomeControl Main Screen" width="150" height="150" class="size-thumbnail wp-image-1045" /></a>[/caption]
+[caption id=&rdquo;attachment</em>1042&rdquo; align=&rdquo;alignleft&rdquo; width=&rdquo;150&rdquo; caption=&rdquo;Applications Screen&rdquo;]<a href="http://brettterpstra.dev/wp-content/uploads/2010/10/homecontrolapplications.jpg"><img src="http://brettterpstra.dev/wp-content/uploads/2010/10/homecontrolapplications-150x150.jpg" alt="Screenshot of HomeControl Applications Screen" title="HomeControl Applications Screen" width="150" height="150" class="size-thumbnail wp-image-1042" /></a>[/caption]
+[caption id=&rdquo;attachment_1046&rdquo; align=&rdquo;alignleft&rdquo; width=&rdquo;150&rdquo; caption=&rdquo;iTunes controls&rdquo;]<a href="http://brettterpstra.dev/wp-content/uploads/2010/10/homecontrolitunes.jpg"><img src="http://brettterpstra.dev/wp-content/uploads/2010/10/homecontrolitunes-150x150.jpg" alt="Screenshot of HomeControl iTunes controls" title="HomeControl iTunes controls" width="150" height="150" class="size-thumbnail wp-image-1046" /></a>[/caption]</p>
+
+<h3 id="download">Download</h3>
+
+<p>[download id=21]</p>
+
+<p>[donate]</p>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/a-little-hootsuite-userstyling"><span>A little HootSuite userstyling</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/answer-skype-with-a-hotkey"><span>Answer Skype with a hotkey</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/javascript" name="javascript">javascript</a></li>
+		
+			<li><a href="/tags/iphone" name="iphone">iphone</a></li>
+		
+			<li><a href="/tags/applescript" name="applescript">applescript</a></li>
+		
+			<li><a href="/tags/scripting" name="scripting">scripting</a></li>
+		
+			<li><a href="/tags/jquery" name="jquery">jquery</a></li>
+		
+			<li><a href="/tags/php" name="php">php</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/homecontrol-local-mac-control-for-iphone';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

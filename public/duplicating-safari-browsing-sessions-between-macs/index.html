@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Duplicating Safari browsing sessions between Macs</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p>Hey, you&rsquo;re just in time for another &ldquo;stupid trick of the day&rdquo; script. I have good reason for this one, and it only took me about 8 minutes to set up. It will take me longer to write about it than it&rsquo;s probably worth, but it might be of use to anyone in a similar situation. Here&rsquo;s the scenario:</p>
+
+<p>I bought a MacBook Air recently. I have never been this happy with an Apple hardware purchase before. Not to gush, but I&rsquo;ve bought and loved a lot of Macs and this one takes the cake. I&rsquo;m doing more and more of my everyday work and writing on it, but I still like to sit down at the dual-monitor setup of my Mac Pro fairly regularly. When I do that, the Air becomes an auxiliary machine and I offload most of my chat and social apps to it. The annoying side of this setup is that I end up with Safari tabs piling up on both Macs, and half of them really make more sense on the other machine.</p>
+
+<!--more-->
+
+<p>I wrote a pair of scripts that execute over SSH to pull in all of the browser tabs from the front window of Safari on the other Mac into new tabs on the one calling the script. They&rsquo;re designed to run on Macs on the same network, though they&rsquo;d work remotely if you could think of a reason to do it. I run it in both directions, and call it with a simple <code>do shell script</code> AppleScript in <code>~/Library/Scripts/Applications/Safari</code> so it&rsquo;s in my menubar when I&rsquo;m browsing. </p>
+
+<p>Just a few prerequisites:</p>
+
+<ol>
+  <li>You need keyless ssh set up between the two (or more) Macs. If you want a two-way sync, you need keys in both directions. <a href="http://www.rootsilver.com/2007/10/keyless-ssh-sshkeygen-setup-an">This article has everything you need</a>.</li>
+  <li>To keep things simple, set up a <code>~/.ssh/config</code> file on each machine you want to pull tabs to. Create the file if you don&rsquo;t have one, or add this at the bottom of an existing one, modifying it for your setup:</li>
+</ol>
+
+<pre lang="bash">
+host air
+  HostName computername.local
+  User remoteusername
+</pre>
+
+<p>Now you can just install the scripts, edit one line on each and start pulling tabs back and forth between computers.</p>
+
+<h3 id="remotetabsrb">remotetabs.rb</h3>
+
+<p>This goes on the machine you want to pull <em>from</em>. If you&rsquo;re going both directions, you&rsquo;ll want both scripts on both machines. Easy enough, right? Save this one as <code>remotetabs.rb</code> in <code>~/scripts/</code> and run <code>chmod a+x ~/scripts/remotetabs.rb</code>. Note that it doesn&rsquo;t attempt to do any error reporting, it just fails silently or times out if there&rsquo;s a problem. You&rsquo;ll know something went wrong, you just won&rsquo;t know what. It&rsquo;s mysterious, enjoy it.</p>
+
+<p>Because I often run <a href="http://www.webkit.org/">Webkit</a>, and because Webkit demands that it be addressed separately from Safari, there&rsquo;s a quick check in here to see which one is running at the time.</p>
+
+<pre lang="ruby" filename="remotetabs.rb">
+#!/usr/bin/ruby
+
+def app_running?(app)
+  not `ps ax|grep -i "#{app}.app"|grep -v grep`.empty?
+end
+
+def webkit_running?
+  return false if `ps ax|grep -i "Safari.app"|grep -v grep`.empty?
+  not `ps ax|grep -i "/Applications/Webkit.app"|grep -v grep`.empty?
+end
+
+if app_running?("Safari")
+  browser = webkit_running? ? "Webkit" : "Safari"
+  urllist = %x{osascript &lt;&lt;-APPLESCRIPT
+               tell application "#{browser}"
+               set _tabs to every tab of window 1
+               set _urls to {}
+               repeat with _tab in _tabs
+               set end of _urls to URL of _tab
+               end repeat
+               set {astid, AppleScript's text item delimiters} to {AppleScript's text item delimiters, " "}
+               set output to _urls as text
+               set AppleScript's text item delimiters to astid
+               return output
+               end tell
+               APPLESCRIPT }.chomp
+  puts urllist
+end
+</pre>
+
+<h3 id="getremotetabsrb">getremotetabs.rb</h3>
+
+<p>This goes on the machine that&rsquo;s doing the &ldquo;pulling.&rdquo; Save it as <code>getremotetabs.rb</code> in <code>~/scripts/</code> and run <code>chmod a+x ~/scripts/getremotetabs.rb</code>. You need to edit the <code>remote_host</code> variable in this script on each machine to match the hostname you set up in your <code>~/.ssh/config</code> file for the &lsquo;other&rsquo; Mac.</p>
+
+<pre lang="ruby" filename="getremotetabs.rb">
+#!/usr/bin/ruby
+# retrieves a list of urls from the front Safari window running on a remote machine
+
+remote_host = 'air' # as set up in ~/.ssh/config with nick and keyless login
+
+%x{ssh #{remote_host} ~/scripts/remotetabs.rb}.chomp.split(' ').each { |url|
+  %x{osascript -e 'tell application "Safari" to open location "#{url}"'}
+}
+</pre>
+
+<p>That&rsquo;s it. You can save an AppleScript with <code>do shell script "/Users/username/scripts/getremotetabs.rb"</code> anywhere you want to, or just call the script from the command line. Also, stop making fun of my <abbr title="Obsessive Scripting Disorder">OSD</abbr>. I mean it.</p>
+
+
+</div>
+
+</body>
+</html>

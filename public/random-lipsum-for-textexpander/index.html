@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Random Lipsum forÂ TextExpander</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p>I hate it when I get an idea for something simple and end up spending an hour figuring out how to do it. I figured I&rsquo;d make a post out of it to make myself feel better. It all started with my being disappointed that the <a href="http://loremipscream.com/api">Loripscream API</a> wasn&rsquo;t working. I did a little digging and found that <lipsum.com> had a not-well-publicized XML feed you can pull from. That's where the fun began.</lipsum.com></p>
+
+<p>The XML from lipsum.com must be malformed, although I only say that because System Events would <em>not</em> parse it in AppleScript. I resorted to Bash scripting, and probably did a pretty kludgy job of it, but it works.</p>
+
+<p>You can adjust the following script to return anything from 1 word to 20 paragraphs (or more) of random <a href="http://www.lipsum.com/">Lorem Ipsum</a>. Just change the query values in the curl call: what (words, paras, or bytes), amount (self-explanatory, I hope) and the &ldquo;start&rdquo; parameter tells it whether or not to begin the line with &ldquo;Lorem Ipsum dolor sit&hellip;&rdquo; or make it completely random. I&rsquo;m going with random.</p>
+
+<p>Sure, you could use this from the shell and pipe it to <code>pbcopy</code>, but a <a href="http://smilesoftware.com/TextExpander/">TextExpander</a> snippet seemed like just the thing. Just create a new snippet and set the type to &ldquo;Shell Script.&rdquo; Then, paste this code in, modifying as you see fit.</p>
+
+<pre lang="bash" escaped="true" filename="randomlipsum.sh">
+#!/bin/bash
+
+curl -s 'http://www.lipsum.com/feed/xml?amount=2&amp;what=paras&amp;start=0'| \
+xpath '//lipsum' 2&gt;/dev/null | \ 
+sed -e 's/&lt;lipsum&gt;//' -e 's/&lt;\/lipsum&gt;//'| \
+awk -F&quot;\n&quot; '{print $1&quot;\n&quot;}'
+</pre>
+
+<p>For whatever that&rsquo;s worth&hellip;</p>
+
+</div>
+
+</body>
+</html>

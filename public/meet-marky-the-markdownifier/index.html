@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Meet Marky, the Markdownifier</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  
+<p><a href="http://markdownrules.com"><img src="http://brettterpstra.dev/wp-content/uploads/2011/02/MarkdownRules-1.jpg" alt="The Markdown Rules Markdownifier" title="MarkdownRules-1" width="300" height="193" class="alignright size-full wp-image-1832" /></a>I was <a href="http://www.macsparky.com/blog/2011/2/10/home-screens-brett-terpstra.html">featured on MacSparky.com</a> today. Well, the home screen of my iPhone was, anyway. He mentioned a project of mine that I haven&rsquo;t actually had time to blog about yet, so here&rsquo;s a quick introduction. It&rsquo;s called <a href="http://markdownrules.com/">MarkdownRules</a>, and comes in two flavors: mild-mannered and salty. You can choose which you get from the main menu page at <a href="http://markdownrules.com">http://markdownrules.com</a>.</p>
+
+<p>The Markdownifier you&rsquo;ll find there (his name is Marky), will take a url you provide and do its best to clean up comments and ads (using <a href="http://www.keyvan.net/2010/08/php-readability/">PHP Readability</a>) and then convert it to <a href="http://daringfireball.net/projects/markdown/">Markdown</a> (using <a href="http://michelf.com/projects/php-markdown/">PHP Markdown</a>). It does a pretty decent job overall, and I&rsquo;ve been tweaking as I have time to handle edge cases.</p>
+
+<p>The fun is really in the bookmarklets, though, which you&rsquo;ll find toward the bottom of the page in either version. The &ldquo;API&rdquo; that I set up will take a series of query arguments and return different formats based on your request. You can tweak the URL in the bookmarklet to do more than the four provided do, including returning JSON-formatted output.</p>
+
+<p>Why? Web clipping mostly. I wanted to be able to quickly save articles and blog posts into nvALT in a format that would be workable. The next version of nvALT <em>will</em> include this capability internally, but this was something that everyone could, ostensibly, make use of.</p>
+
+<p>To see updates as they happen, and to be somewhat entertained on an infrequent basis, <a href="https://twitter.com/#!/i_marky">follow @i_marky</a> on Twitter.</p>
+
+</div>
+
+</body>
+</html>

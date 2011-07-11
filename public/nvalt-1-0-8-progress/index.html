@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>nvALT 1.0.8 progress</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p>I made a few breakthroughs on <a href="http://brettterpstra.dev/code/notational-velocity-alt/">nvALT</a> before bed last night, and I&rsquo;m excited, so I thought I&rsquo;d share. It&rsquo;s not ready for testing yet, but the following two features are working as initial implementations:</p>
+
+<ul>
+  <li>Full-screen editor. Hides the note list and toolbar, gives you just a full screen view of the current note. Background/font color will be customizable.</li>
+  <li>Markdown/Readability import for web pages. This currently works, but Readability is always hit or miss depending on the target site&rsquo;s markup. Right now, if you enable it in preferences and drag a URL to the notes list, it will retrieve the HTML source and convert it to clean Markdown. If you hold down the option key, it will run it through Readability first, hopefully cutting out comments, ads, etc. It&rsquo;s not perfect, but it&rsquo;s cool.</li>
+</ul>
+
+<p><strong>Ongoing:</strong></p>
+
+<p>Yes, I&rsquo;m still working on:</p>
+
+<ul>
+  <li>Simplenote Tag sync</li>
+  <li>Sticky notes (open notes in separate panels for reference while working on another note)</li>
+  <li>And an array of other ideas and requests</li>
+</ul>
+
+<p>By the way, the next version of nvALT removes the regular Markdown preview option. This is because I&rsquo;ve started to amp up the export features to allow full rendering of Textile or Markdown, with the option to include template files and CSS. Doing this work for both Markdown and MultiMarkdown seems redundant, given that regular Markdown will preview just fine in MultiMarkdown. If anyone has any major objections to this, sound off!</p>
+
+<p><em>Oh yeah, one other thing.</em> When you create a note from the clipboard, NV traditionally uses the first line as the title and then removes it from the note. I&rsquo;ve found that this rarely, if ever, makes sense for text clippings. That doesn&rsquo;t happen anymore, as of 1.0.8. You&rsquo;ll love it. I&rsquo;m planning to apply the same thing to Simplenote imports as well, so the Simplenote title remains, but so does the first line.</p>
+
+</div>
+
+</body>
+</html>

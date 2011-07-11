@@ -1,0 +1,302 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>Is your URL too short? Try our system, free!</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">14 Aug 2010 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">Is your URL too short? Try our system, free!</a></h1>
+		
+<p><img src="http://brettterpstra.dev/wp-content/uploads/2010/08/urlextender_system.jpg" alt="URL Extender System" border="0" width="300" height="260" class="alignright noshadow" />I was sifting through my <a href="http://blog.circlesixdesign.com">previous blog</a> after Jeffery Zeldman kindly <a href="http://www.zeldman.com/2010/08/13/how-to-use-textmate/">sent a lot of visitors</a> in that direction for some <a href="http://blog.circlesixdesign.com/2007/01/02/digging-in-to-textmate/">TextMate starter tips</a>. Whilst milling around, I stumbled upon an <a href="http://blog.circlesixdesign.com/2007/10/19/reverse-shortened-urls-with-quicksilver/">old trick I used to use</a> in <a href="http://www.blacktree.com/">Quicksilver</a> (before I gave up on it<sup id="fnref:quicksilver"><a href="#fn:quicksilver" rel="footnote">1</a></sup>), but had forgotten about since.</p>
+
+<p>It&rsquo;s a very simple little shell command which uses <code>curl</code> to track down the destination of a shortened url (or any link with a redirect). It works with an assortment of services, including bit.ly, tinyurl.com, ow.ly, etc. It returns the destination address (the original url), and you can pass that on to whatever you like!</p>
+
+<p><strong>Side note</strong>: I&rsquo;ve been working on a little site called <a href="http://justthelinks.com">JustTheLinks</a> which makes liberal use of url-lengthening. It grabs all of your tweets from your home timeline which contain links, and creates a live-updated list with expanded urls and titles. It uses PHP&rsquo;s curl to do the trick, so it&rsquo;s the same concept. It&rsquo;s &ldquo;in-progress,&rdquo; but feel free to check it out at <a href="http://justthelinks.com">http://justthelinks.com</a>!</p>
+
+<p>Anyway, I decided to update the Quicksilver action and adapt it for some other uses. I&rsquo;m happy to report that it&rsquo;s still quite useful as a command line script, a LaunchBar action or a System Service. This post has code for all three, so take your pick!</p>
+
+<!--more-->
+
+<p>The <code>curl</code> command in this script has two options specified, -I and -s. -I tells it to fetch only the headers of the requested URI, and the -s tells it to suppress error messages (silent). The result is a short response which contains the location of the redirect, which is piped to <code>awk</code>. We look for the line in the response containing &ldquo;Location&rdquo; and print the second field of that line, which is the destination url. Here are a few ways I thought of to put it to use:</p>
+
+<h3 id="terminal">Terminal</h3>
+
+<p>The first thing I did was whip up a shell script to run from the command line. Just create a text file wherever you keep scripts<sup id="fnref:scripts"><a href="#fn:scripts" rel="footnote">2</a></sup>, or make a new directory somewhere for it. Paste in the code below, and name it something that makes sense to you. I went with <code>follow</code>, because it&rsquo;s following the redirect path, and <code>expand</code> was taken (and lengthen didn&rsquo;t seem as much fun to type&hellip;). The script looks for a single argument, which would be the shortened url, and if it doesn&rsquo;t receive one it tries the clipboard. So, if you already have the url in your clipboard, which is a pretty safe bet in this case, you can just run the script with no arguments.</p>
+
+<p>&lt;div markdown=0&gt;</p>
+<pre><code class="bash">
+#!/bin/bash
+
+if [ $# -eq 0 ]; then
+  curl -Is `pbpaste` - awk &#x27;/Location/ { print $2 }&#x27;  
+else
+  curl -Is $1 - awk &#x27;/Location/ { print $2 }&#x27;
+fi
+</code></pre>
+<p>&lt;/div&gt;</p>
+
+<h3 id="launchbar">LaunchBar</h3>
+
+<p>I heart <a href="http://www.obdev.at/products/launchbar/index.html" title="LaunchBar 5">LaunchBar</a>. Like Quicksilver, you can easily build &ldquo;actions&rdquo; for it that act on different types of input. This one just acts on text you paste or send to it, and assumes it&rsquo;s going to be a shortened URL. After it lengthens it, it just displays the result as large popup text. If you wanted to, you could easily have it <code>open location</code> or whatever, but the whole point is just to see where you&rsquo;re going, right?</p>
+
+<p>This just goes into <code>~/Library/Application Support/LaunchBar/Actions</code> as a compiled AppleScript (scpt) file. Open AppleScript Editor and paste in the code below (or just <a href="applescript://com.apple.scripteditor?action=new&amp;script=on%20handle_string%28message%29%0A%09%0A%09tell%20application%20%22LaunchBar%22%0A%09%09set%20_res%20to%20do%20shell%20script%20%22curl%20%2DIs%20%22%20%26%20message%20%26%20%22%20%7C%20awk%20%27%2FLocation%2F%20%7B%20print%20%242%20%7D%27%22%0A%09%09display%20in%20large%20type%20_res%0A%09end%20tell%0A%09%0Aend%20handle_string">click here to open it automatically</a> in your editor). Save the file to the Actions folder and give it a name you&rsquo;ll recognize. Mine&rsquo;s called &lsquo;Expand Shortened URL.scpt&rsquo;. Clever, I know. Here&rsquo;s the code:</p>
+
+<p>&lt;div markdown=0&gt;</p>
+<pre><code class="as">
+on handle_string(message)
+
+	tell application &quot;LaunchBar&quot;
+		set _res to do shell script &quot;curl -Is &quot; &amp; message &amp; &quot; - awk &#x27;/Location/ { print $2 }&#x27;&quot;
+		display in large type _res
+	end tell
+
+end handle_string
+</code></pre>
+<p>&lt;/div&gt;</p>
+
+<h3 id="snow-leopard-service">Snow Leopard Service</h3>
+
+<p>Lastly, here&rsquo;s a System Service that you can run on selected text in any Cocoa application. I&rsquo;ve previously posted a <a href="http://brettterpstra.dev/a-system-service-for-to-url-shortening/">Service for shortening urls</a>, so here&rsquo;s the opposite. This one can actually take a whole block of text and will scan for any and all links in it, attempting to lengthen and replace any shortened urls in the text. Here&rsquo;s how to build it:</p>
+
+<ul>
+  <li>Open Automator.app</li>
+  <li>Select &ldquo;Service&rdquo; from the new file menu</li>
+  <li>Set &ldquo;Service receives selected&rdquo; to &ldquo;text&rdquo; in &ldquo;any application&rdquo;</li>
+  <li>Check the &ldquo;Replaces selected text&rdquo; box</li>
+  <li>Find the &ldquo;Run Shell Script&rdquo; action on the left and drag it into your workflow on the right</li>
+  <li>Set the Shell to Ruby (in this case)</li>
+  <li>Paste in the code below</li>
+  <li>Save the file to the <code>~/Library/Services</code> folder, named something like &ldquo;Expand shortened urls in selection&rdquo; (or something more interesting)</li>
+</ul>
+
+<p>Now, when you select text in any Cocoa application (Safari, Mail, TextEdit, etc.), you&rsquo;ll be able to find your Service in the Services submenu of either the application menu in the menubar, or in the contextual menu that comes up when you right click (ctrl-click) the selected text. When you run it, it will replace your text with a new version with any shortened urls in it expanded.</p>
+
+<p>&lt;div markdown=0&gt;</p>
+<pre><code class="ruby">
+#!/usr/bin/env ruby -rjcode -Ku
+
+require &#x27;open-uri&#x27;
+
+input = STDIN.read
+links = input.scan(/\b((?:https?:\/\/)(?:www\.)?([^\/]+)\/[a-zA-Z0-9]+[^\s`!()\[\]{};:&#x27;&quot;.,&lt;&gt;?&laquo;&raquo;&ldquo;&rdquo;&lsquo;&rsquo;])/im)
+links.each {|link|
+  result = %x{curl -Is #{link[0]} - awk &#x27;/Location/ { print $2 }&#x27;}
+  input = input.gsub(/#{link[0]}/,result.strip)
+}
+print input
+</code></pre>
+<p>&lt;/div&gt;</p>
+
+<p>How often will you need any of these little experiments? Probably not very often. Most of the time, I&rsquo;m more than happy to just follow a shortened link and trust that the description it came with will hold true. Every once in a while, though, I come across a link of unknown origin that I&rsquo;d prefer to run through something like this. Hopefully you&rsquo;ll be able to find a use for it, too. It&rsquo;s a cool little snippet.</p>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:quicksilver">
+      <p>Sorry, Quicksilver fans. It used to be my absolute, must-have, favorite thing in the world, but it got too crashy on Snow Leopard, and then development just kind of died. <a href="http://www.obdev.at/products/launchbar/index.html" title="LaunchBar 5">LaunchBar</a> is way better these days.<a href="#fnref:quicksilver" rev="footnote">&#8617;</a></p>
+    </li>
+    <li id="fn:scripts">
+      <p>I keep a &lsquo;scripts&rsquo; folder in my home directory (~/scripts) and put that in my PATH environment variable in my .bash_profile. Then, I can run my scripts from anywhere but don&rsquo;t have to muck around in <code>/usr/local/bin</code> or any such thing.<a href="#fnref:scripts" rev="footnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/textmate-keybinding-tip"><span>A quick TextMate KeyBindings tip</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/three-things-i-discovered-today"><span>Three things I discovered today</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/service" name="service">service</a></li>
+		
+			<li><a href="/tags/snow-leopard" name="snow-leopard">snow leopard</a></li>
+		
+			<li><a href="/tags/bash" name="bash">bash</a></li>
+		
+			<li><a href="/tags/terminal" name="terminal">terminal</a></li>
+		
+			<li><a href="/tags/url-shortener" name="url-shortener">url shortener</a></li>
+		
+			<li><a href="/tags/experiments" name="experiments">experiments</a></li>
+		
+			<li><a href="/tags/launchbar" name="launchbar">launchbar</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/is-your-url-too-short-try-our-system-free';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

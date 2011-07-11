@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>New: TextExpander downloads with custom prefixes</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p><img src="http://brettterpstra.dev/wp-content/uploads/2011/03/custom_textexpander_url_screenshot.jpg" alt="Custom TextExpander URL screenshot" /></p>
+
+<p>Hey, <a href="http://smilesoftware.com/TextExpander/">TextExpander</a> users! Wanna see something cool? I made a little tool this morning to allow any of my <a href="http://brettterpstra.dev/project/textexpander-tools/">TextExpander groups</a> to be installed with your own custom prefix. You can now use whatever is &ldquo;standard&rdquo; for your shortcuts. All of the group links on the project page now go to this tool, and you can <a href="http://brettterpstra.dev/share/te-snippets/">open it directly</a> for access to all of my groups.</p>
+
+<p>The tool lets you select the group and enter your prefix, then provides you with a download link, a URL for &ldquo;Add group from URL&rdquo; in TextExpander, as well as a preview of all of the snippets in the group and how their shortcuts will be modified. If you follow a link from the TextExpander project page into the tool, it will select the appropriate group and add a suggested prefix automatically.</p>
+
+<p>I&rsquo;m more than happy to share the process and code with anyone who wants to implement it. There are folks working to bring together a <a href="http://te-snippets.com">TE community site</a>, and I&rsquo;d love to see this kind of tool implemented there. I built it was a certain amount of scalability in mind, and made it as easy as possible for people to create compatible files for it.</p>
+
+<p>If you want to add your own groups to my tool, let me know. I&rsquo;ll come up with a way of providing attribution and possibly start a full repository here, to be mirrored or moved once a dedicated outlet becomes available.</p>
+
+<h4 id="addendum">Addendum</h4>
+
+<p>In case you&rsquo;re wondering how it works: you take a .textexpander file, run a search and replace on it to change your own standard prefix into &lsquo;[[PREFIX]]&rsquo; and rename the file with a <code>.tedist</code> extension. Drop it into a folder on the web server and it will automatically show up in the list of available groups, and the snippets preview is generated on the fly by parsing the plist via an Ajax call. No database for now, just globbing and parsing. I like it.</p>
+
+<p>The code is <a href="https://github.com/ttscoff/Brett-s-TextExpander-Snippets">available on GitHub</a> for anyone who wants to play. The next step is to turn it into a community site: add a means of attribution (which will either mean a database or metadata in the .tedist files) and an uploader for contributions. Then search and organization features, of course. That&rsquo;s the direction Poslavsky Alexander and I want to head with <a href="http://te-snippets.com">http://te-snippets.com</a>. We&rsquo;ll keep you posted.</p>
+
+</div>
+
+</body>
+</html>

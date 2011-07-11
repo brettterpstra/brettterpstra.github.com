@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>A couple of TextMate Macros for Markdown lists</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  
+<p><img src="http://brettterpstra.dev/wp-content/uploads/2011/04/getting_out_of_order.jpg" alt="That's funny. If you can't see this picture, you're missing out." class="alignright" />I was playing with the new <a href="http://macromates.com">TextMate</a> Markdown bundle for <a href="https://github.com/fletcher/peg-multimarkdown">MultiMarkdown 3</a> when I remembered an old nit I had with the list commands: no single-keystroke way to move list items up and down. Unless I&rsquo;m completely forgetting about a shortcut, moving list items around involves selecting the entire line and using Control-Command-Up/Down to move it. Obviously, not a big deal, but 5 minutes with the Macro recorder in TextMate saves the time.</p>
+
+<p>Control-Right and Control-Left are already set up in the Markdown bundle to indent and outdent lines within lists. These two macros just add Control-Up and Control-Down for quickly shifting the order of a list. They only work with single lines; if you want to move a chunk of lines, you&rsquo;ll want to use the old select and hit Control-Command-Up/Down method.</p>
+
+<p>You can <a href="http://brettterpstra.dev/downloads/MarkdownListMacros.zip">download the TextMate List Macros</a> from here, but for more details, check out the video I added to the <a href="http://bundle.weblogzinc.com/video/?p=123">Blogsmith Bundle Video Site</a>.</p>
+
+<p>Here&rsquo;s a quick, semi-related tip: TextMate&rsquo;s Web Preview running through MultiMarkdown 3 is wicked fast. There&rsquo;s no visible latency. It&rsquo;s practically an nvALT killer for people who primarily use nvALT for its MultiMarkdown preview. Definitely give it a shot. Fletcher Penney&rsquo;s <a href="http://fletcherpenney.net/2011/04/multimarkdown_in_textmate_preview">video on setup and usage</a> is all you need. Well, that and <a href="https://github.com/fletcher/peg-multimarkdown/downloads/">MultiMarkdown 3</a>. By the way, the next release of <a href="http://brettterpstra.dev/project/nvalt/">nvALT</a> deals much better with custom MultiMarkdown 3 installs. Coming soon.</p>
+
+</div>
+
+</body>
+</html>

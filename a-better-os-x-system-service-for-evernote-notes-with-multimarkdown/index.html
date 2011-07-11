@@ -1,0 +1,278 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>A better System Service for Evernote clipping - with MultiMarkdown</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">06 Mar 2010 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">A better System Service for Evernote clipping - with MultiMarkdown</a></h1>
+		<p><strong>Update:</strong> If you&rsquo;re looking for a Markdown -&gt; Evernote, <a href="http://brettterpstra.dev/taking-the-markdown-to-evernote-service-further/">check this out</a>.</p>
+
+<p>Another post, quickly and with less explanation&hellip;</p>
+
+<p><img src="http://brettterpstra.dev/wp-content/uploads/2010/03/EvernoteIcon-300x300.png" alt="Evernote Icon" title="EvernoteIcon" width="300" height="300" class="alignright size-medium wp-image-305" />The fact that Evernote processes HTML so much better than it does plain or rich text got me thinking and tinkering. I use <a href="http://daringfireball.net/projects/markdown/">Markdown</a> (actually, <a href="http://fletcherpenney.net/multimarkdown/">MultiMarkdown</a>) constantly, and it does a great job of turning plain text into valid markup. With (Multi)Markdown, even plain text becomes HTML that&ndash;when imported into Evernote&ndash;retains most of its formatting. To answer your question, no, I&rsquo;m not obsessed with Evernote, I&rsquo;m obsessed with problems I think I could solve. It&rsquo;s unhealthy.</p>
+
+<p><strong><em>Please note</em></strong>, this requires that you have <a href="http://fletcherpenney.net/">Fletcher Penney&rsquo;s</a> MultiMarkdown installed in <code>~/Library/Application Support/MultiMarkdown</code>, and that the Perl files (MultiMarkdown.pl and SmartyPants.pl) are located in a &lsquo;bin&rsquo; subdirectory (which is the default install). If you don&rsquo;t have MultiMarkdown, you should get it anyway (all the cool kids have it), so head over to the <a href="http://fletcher.github.com/MultiMarkdown/">download page</a> and grab a copy. Now, on with the show.</p>
+
+<p>I set this up originally as a <a href="http://macromates.com/">TextMate</a> command, intending just to be able to clip code snippets and free-form text to Evernote without thinking too much about it. That worked well, so I modified it to work as a System Service. Specifically, a Snow Leopard service, but I&rsquo;m providing the Ruby script here and it can be modified for any Mac setup you want.</p>
+
+<p>While it will work just fine on plain text with no markup, it does have a couple of &ldquo;special&rdquo; features. If you start a line with a <code>#</code> and a space (e.g.: # This is my header), which is a <a href="http://daringfireball.net/projects/markdown/syntax#header">Markdown convention</a> for a first-level heading, it will use that as the title for the note and strip it out of the text in processing. It only uses the first one it finds, but it will strip out any first-level headers in the selection. I&rsquo;ll probably modify that later, or just have it leave them in. Also, a line that begins with &ldquo;tags:&rdquo; followed by a space and a comma-separated list of words will be split up and used to tag the new note. This is also stripped before processing. It handles spaces in multi-word tags, and odd marks at the beginning or end of a tag, <em>but only one punctuation character, and only at the beginning or end of a tag</em>. The code follows&hellip;</p>
+
+<!--more-->
+
+<p>Here&rsquo;s the Ruby code, messy as it may be:</p>
+
+<p>&lt;div markdown=0&gt;</p>
+<pre><code>
+	#!/usr/bin/env ruby -rjcode -Ku
+	# requires that MultiMarkdown be installed in ~/Library/Application Support/MultiMarkdown
+	# That, or edit the script to point to yours :)
+
+	ARGF.each do |f|
+	input = f
+	contents = &#x27;&#x27;
+	tags = &#x27;&#x27;
+	title = nil
+
+	def e_as(str)
+		str.to_s.gsub(/(?=[&quot;\\])/, &#x27;\\&#x27;)
+	end
+	input.each_line { |line| 
+	  if line =~ /^# (.*?)/
+	    title = line[2..-1]
+	    break
+	  end
+	}
+	title = %x{date &#x27;+Clipped note: %A, %B %d, %Y at %l:%M %p&#x27;|tr -s &quot; &quot;} if title.nil?
+
+	input.each_line { |line| 
+	  if line =~ /^[Tt]ags: /
+	    tags = line[5..-1].split(&#x27;,&#x27;).map {|tag| tag = tag.strip.gsub(/^(.)?\b|\b(.)?$/,&quot;\\2\&quot;\\1&quot;) }
+	    break
+	  end
+	}
+
+	IO.popen(&#x27;&quot;$HOME/Library/Application Support/MultiMarkdown/bin/MultiMarkdown.pl&quot;|&quot;$HOME/Library/Application Support/MultiMarkdown/bin/SmartyPants.pl&quot;&#x27;, &quot;r+&quot;) do |io|
+	 input.each_line { |line| 
+		io &lt;&lt; line unless line =~ /^# |[Tt]ags\: /
+	 }; io.close_write
+	 io.each_line do |line|
+	   contents &lt;&lt; line
+	 end
+	end
+	tags = &quot; tags {#{tags.join(&quot;,&quot;)}}&quot; unless tags.empty?
+	%x{osascript -e &#x27;tell application &quot;Evernote&quot; to create note with html &quot;#{e_as contents}&quot; title &quot;#{title}&quot; notebook &quot;Unfiled&quot;#{tags}&#x27;}
+	end
+</code></pre>
+<p>&lt;/div&gt;</p>
+
+<p>You can create a System Service in Automator with it, set up a command in TextMate, or do whatever else you can think of. If you just want to download the service and try it out, I&rsquo;ve made it <a href="http://brettterpstra.dev/downloads/MarkdownToEvernote.zip">available here</a>. Unzip and copy it to ~/Library/Services (in your home folder). If you set it up as a System Service, assign a shortcut key in the Keyboard pane of System Preferences.</p>
+
+<p>It does choke once in a while, apparently on Markdown-generated code snippets, but I haven&rsquo;t quite narrowed down why, yet. I&rsquo;ll update the code if I figure that one out. Overall, though, it makes pretty clippings and allows you to use some Markdown syntax to spice up your text without having to touch the (regrettably abominable) Evernote editor.</p>
+
+<hr />
+
+<p>[download id=&rdquo;3&rdquo;]</p>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/clippable-updated-goes-mobile"><span>Clippable updated, goes mobile</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/fk-redux"><span>fk: redux</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/multimarkdown" name="multimarkdown">multimarkdown</a></li>
+		
+			<li><a href="/tags/markdown" name="markdown">markdown</a></li>
+		
+			<li><a href="/tags/ruby" name="ruby">ruby</a></li>
+		
+			<li><a href="/tags/code" name="code">Code</a></li>
+		
+			<li><a href="/tags/snow-leopard" name="snow-leopard">snow leopard</a></li>
+		
+			<li><a href="/tags/service" name="service">service</a></li>
+		
+			<li><a href="/tags/evernote" name="evernote">evernote</a></li>
+		
+			<li><a href="/tags/os-x" name="os-x">os x</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/a-better-os-x-system-service-for-evernote-notes-with-multimarkdown';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

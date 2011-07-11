@@ -1,0 +1,319 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>Dammit. Again with the Lipsum.</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">06 Feb 2011 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">Dammit. Again with the Lipsum.</a></h1>
+		
+<p>I know, I <a href="http://brettterpstra.dev/textexpander-lipsum-with-kwisatz-haderach/">said I was done</a> with the Lorem Ipsum generators. Then <a href="http://www.leancrew.com/all-this/2011/02/dissociated-darwin/">Dr. Drang responded</a> with a brilliant solution which doesn&rsquo;t require Internet access to generate some beautiful dummy text. I set it up and ran it myself, and loved the results. Then I found myself wanting to expand it to do more, such as multiple paragraphs, list items and other things I use regularly when making dummy layouts. The problem is that I&rsquo;m only good for one-liners in Perl, and didn&rsquo;t want to take take the time to learn what I needed to in order to make the modifications. So I redid it in Ruby.<sup id="fnref:fn1"><a href="#fn:fn1" rel="footnote">1</a></sup></p>
+
+<p>I used a Gem called <a href="https://github.com/postmodern/raingrams">Raingrams</a>, along with <a href="https://github.com/nex3/maruku">Maruku</a> for processing Markdown to HTML. See, if I had it output Markdown to begin with, I had the flexibility to do both easily. I&rsquo;m posting the main script, which you can modify to output various elements and amounts of text. Even if you don&rsquo;t know ruby, you can probably find your way around with a little guessing. In the section after the function definitions you can take any of the lines and output what you want by mixing or removing those elements.</p>
+
+<!--more-->
+<p>This script requires Rubygems, and the Raingrams and Maruku gems. If you have Rubygems installed, you can just type <code>sudo gem install raingrams</code> and <code>sudo gem install maruku</code> at the command line to quickly get both on your system. If you don&rsquo;t have Rubygems, you might want to skip this one, as you&rsquo;re in for more trouble than this will pay off&hellip;</p>
+
+<p>You&rsquo;ll also need a text file to pull from. I&rsquo;m using a chopped up version of 1984, with just enough paragraphs to get some good randomness. You can <a href="http://brettterpstra.dev/share/1984trunc.txt">find it here</a>, if you want it. Otherwise, choose your favorite text file and make it long enough to be random and short enough to be fast. That might take some experimentation. Put the text in a file called <code>inputtext.txt</code> in a directory called <code>words</code> in the root of your home folder. The final path should look like <code>/Users/[YOUR USER NAME]/words/inputtext.txt</code>.</p>
+
+<h3 id="the-big-script">The big script</h3>
+
+<p>The script should have enough comments to make it relatively easy to dissect and rebuild as a TextExpander snippet for any individual part of it.</p>
+
+<pre lang="ruby" escaped="true" filename="randomwords.rb">
+#!/usr/bin/env ruby -rjcode -Ku
+
+require 'rubygems'
+require 'raingrams'
+require 'maruku'
+
+include Raingrams
+
+# All (min,max) pairs need max &gt; min
+
+@model = BigramModel.build do |model|
+  model.train_with_text File.new(File.expand_path('~/words/inputtext.txt'),'r').read
+end
+
+@model.refresh
+
+# generates a paragraph with random sentences
+# min = minimum sentences
+# max = maximum sentences
+def graf(min,max) 
+  # grab the paragraph and split it into words
+  para = @model.random_paragraph({:min_sentences =&gt; min,:max_sentences =&gt; max }).split(' ')
+  # add a random italics element
+  em = (rand(para.count - 10) + 10)
+  para[em] = &quot;*#{para[em]}*&quot;
+  # add a random bold element
+  strong = (rand(para.count - 10) + 10)
+  # make sure they don't overlap
+  strong = strong - 2 if strong == em
+  para[strong] = &quot;**#{para[strong]}**&quot;
+  # add a multi-word link
+  link = (rand(para.count - 10) + 10)
+  linkend = link + (rand(6) + 2)
+  para[link] = &quot;[#{para[link]}&quot;
+  para[linkend] = &quot;#{para[linkend]}](http://dummy.com)&quot;
+  return para.join(' ')
+end
+
+# returns a random sentence, used in headlines
+# min = minumum words, max = max words
+def sentence(min,max) 
+  return @model.random_sentence.split(' ')[0..(rand(max - min)+min)].join(' ')
+end
+
+# returns a random list
+# type = ul or ol
+# min = minimum number of list items
+# max = maximum number of list items
+def list(type,min,max)
+  list = '';
+  prefix = type == &quot;ol&quot; ? &quot; 1. &quot; : &quot; * &quot;
+  (rand(max - min) + min).times do
+    list += prefix + @model.random_gram.to_s + &quot;\n&quot;
+  end
+  list += &quot;\n\n&quot;
+  return list
+end
+
+# Sequentially builds an output variable (o)
+# Chop this apart to make snippets as needed
+
+# Level 1 headline
+o = &quot;# &quot; + sentence(2,5) + &quot;\n\n&quot;
+# 2 medium paragraphs
+2.times do
+  o += &quot;#{graf(4,6)}\n\n&quot;
+end
+# Level 2 headline
+o += &quot;## &quot; + sentence(4,7) + &quot;\n\n&quot;
+# 1 short paragraph
+o += graf(2,4) + &quot;\n\n&quot;
+# an unordered list
+o += list('ul',5,8) + &quot;\n\n&quot;
+# 1 more long paragraph
+o += graf(6,8) + &quot;\n\n&quot;
+# Level 3 header
+o += &quot;### &quot; + sentence(5,9) + &quot;\n\n&quot;
+# medium paragraph
+o += graf(4,6) + &quot;\n\n&quot;
+# ordered list
+o += list('ol',5,8) + &quot;\n\n&quot;
+
+# Process Markdown to HTML
+
+# if you want just the Markdown
+# delete the two lines below
+# and replace with 'puts o'
+doc = Maruku.new(o)
+puts doc.to_html.gsub(/\/li&gt;\n/,'/li&gt;').gsub(/\/li&gt;&lt;\/([uo])l/,&quot;/li&gt;\n&lt;/\\1l&quot;)
+# the gsub is just to clean up maruku's double-spaced list output
+</pre>
+
+<p><a href="http://peg.gd/17Q">Here&rsquo;s some sample output</a>, generated in <a href="http://brettterpstra.dev/code/notational-velocity-alt/">nvALT</a>, using <a href="http://smilesoftware.com/TextExpander/">TextExpander</a> with this script as a shell Snippet, and posted to Peggd. As you can see, it needs some fine tuning. The list items, strong and em could be multi-word, the links could check to see if there was a period-space-capital and prevent overlapping sentences, etc. It&rsquo;s enough for my purposes, though, and between the script and this post, I&rsquo;ve lost over an hour of what was supposed to be a productive weekend. I&rsquo;m out!</p>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:fn1">
+      <p>This isn&rsquo;t a one-up on Dr. Drang; it&rsquo;s a rough script, and I&rsquo;m just posting what I wasted half an hour on last night.<a href="#fnref:fn1" rev="footnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/textexpander-lipsum-with-kwisatz-haderach"><span>One more time: TextExpander Lipsum snippets with kwisatz.hadera.ch</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/web-excursions-february-5-february-7"><span>Web excursions: February 5 - February 7</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/ruby" name="ruby">ruby</a></li>
+		
+			<li><a href="/tags/textexpander" name="textexpander">textexpander</a></li>
+		
+			<li><a href="/tags/experiments" name="experiments">experiments</a></li>
+		
+			<li><a href="/tags/lorem-ipsum" name="lorem-ipsum">lorem ipsum</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/dammit-again-with-the-lipsum';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>OTask: CLI for OmniFocus</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  
+<p><em>I&rsquo;ve been sitting on this one for a while, until I got a request from <a href="https://twitter.com/#!/pattulus">Patrick</a> regarding an OmniFocus CLI and LaunchBar. I thought it might be time to dig this up and post it.</em></p>
+
+<hr />
+
+<p>A reader named Tony <a href="http://brettterpstra.dev/duplicating-safari-browsing-sessions-between-macs/#comment-16853">left a comment</a> on my <a href="http://brettterpstra.dev/duplicating-safari-browsing-sessions-between-macs/">Duplicating Safari browsing sessions</a> post, recommending that I try out <a href="http://appscript.sourceforge.net/">appscript</a> for my AppleScript bridging needs. I frequently use system calls to <code>osascript</code> to do this, and I&rsquo;ve shied away from scripting bridges in the past because they make things much harder to share and distribute. I thought I&rsquo;d give it a try, though.</p>
+
+<p>I like it. I like it a lot. It&rsquo;s frustrating that I can&rsquo;t just hand you this script without a list of requirements and dependencies, but I&rsquo;m going share it anyway, just to show off some of the appscript&rsquo;s capabilities.</p>
+
+<p>What I built was a CLI for OmniFocus. I had an AppleScript/Ruby monstrosity that actually worked with TaskPaper, The Hit List, Things and OmniFocus, but that one got out of hand. I took the good parts of it, concentrated on OmniFocus and converted it to appscript in short time. The result is OTask.</p>
+
+<!--more-->
+
+<h3 id="requirements">Requirements</h3>
+
+<p>You need a few things before this will even think about running for you. RubyGems is a must. I still haven&rsquo;t figured out if that&rsquo;s part of the default OS X install or not, but if you have Developer tools, you&rsquo;ve got it. Then you need the &lsquo;rb-appscript&rsquo; gem. You also need the gems &lsquo;chronic&rsquo; and &lsquo;amatch&rsquo;. You can install each by using <code>gem install gemname</code>, and you may have to run the command with <code>sudo</code>, depending on your system&rsquo;s permissions. If you&rsquo;re still on board, here are the docs, and the script <a href="https://github.com/ttscoff/OTask">is on GitHub</a>.</p>
+
+<h4 id="documentation">Documentation</h4>
+
+<p>OTask uses a custom syntax to allow entry of the various elements of an action in one line of text. The following formats can be used anywhere in the line, with the exception of the flag (!) which must be the last character on the line, preceded by a space.</p>
+
+<ul>
+  <li>@context			   (fragment, no spaces)</li>
+  <li>#project             (fragment, no spaces)</li>
+  <li>due(due date)        (can be shortened as d(date))</li>
+  <li>start(start date)    (can be shortened as s(date))</li>
+  <li>(notes)</li>
+  <li>!						(sets task as flagged)</li>
+</ul>
+
+<p>Contexts and project specifiers should not include spaces. The algorithm that is used will find the best match for the string you give it, so you only need to include enough of it to distinguish it from other contexts or projects. For example, if I were going to put an action directly into my Markdown QuickTags folder, I could just use &ldquo;#mdqt&rdquo; and it will find it. &ldquo;@corr&rdquo; will get me the &ldquo;correspondence&rdquo; context.</p>
+
+<p>Dates are entered in natural language format. You can type &ldquo;tomorrow,&rdquo; &ldquo;in 3 days,&rdquo; &ldquo;next tuesday,&rdquo; etc. You can also use &ldquo;+3&rdquo; to set a date 3 days from the current day, &ldquo;+7&rdquo; for a week, and so on.</p>
+
+<h3 id="command-line-options">Command line options</h3>
+
+<p>-h, &ndash;help     Displays help message <br />
+ -q, &ndash;quiet    Output as little as possible, overrides verbose <br />
+ -V, &ndash;verbose  Verbose output <br />
+ -g, &ndash;growl    Use Growl for feedback   </p>
+
+<h3 id="example-usage">Example usage</h3>
+
+<pre><code>$ otask "Write a letter to mom"
+</code></pre>
+
+<p>This will put a task into your inbox with the name &ldquo;Write a letter to mom.&rdquo; Nothing else will be set, it will wait there for you to pick it up.</p>
+
+<pre><code>$ otask -g "Pick up the kids from school @err #single due(today 3pm) !"
+</code></pre>
+
+<p>This creates a new task in a project called Single Tasks, with a context of &ldquo;errands&rdquo;, a due date of 3pm on the current day, and flags the task. </p>
+
+<p>The task will go to your inbox by default, and&ndash;if provided&ndash;project and context will be set. Your settings for automatic cleanup will determine what happens after that. Task elements not specified are left unset.</p>
+
+<p>The <code>-g</code> parameter gives us our feedback via Growl, which is handy if you&rsquo;re calling it from a background script or application launcher like Quicksilver or LaunchBar.</p>
+
+<pre><code>$ otask "Brainstorm for the morning meeting (Bill had some ideas, it might be worth checking in with him this afternoon) d(tomorrow 8am) #hipstartup @think"
+</code></pre>
+
+<p>This will create a task with a note. Everything in parenthesis is removed from the task name and placed into the notes of the action, sans parenthesis. Note that the due date prefix can be shortened to just &ldquo;d,&rdquo; (and the start date prefix can be just &ldquo;s&rdquo;).</p>
+
+<p>OTask looks for notes in parenthesis, but it can also receive piped input from other applications as a note for the task. If you wanted to include text from a file, the output of a command or the plain-text contents of your clipboard, you can just pipe the output into the command, specifying the rest of the options as usual.</p>
+
+<pre><code>$ pbpaste | otask "Notes from the morning meeting @ref"
+</code></pre>
+
+<p>That would take the current contents of your clipboard and make them the attached note on the &ldquo;Notes from the morning meeting&rdquo; task (with the context &ldquo;reference&rdquo;).</p>
+
+<h4 id="calling-from-launchbar-et-al">Calling from LaunchBar (et al.)</h4>
+
+<p>You can do this with any app that can run a script with input, or call it from automated scripts if you could think of a reason to. Below is the AppleScript for a LaunchBar action. Create a new script in AppleScript Editor and paste the code in. Edit the path in the last function to point to wherever you put the otask script. Save the AppleScript as OTask.scpt in <code>~/Library/Application Support/LaunchBar/Actions</code>. </p>
+
+<p>You&rsquo;ll find the Action in LaunchBar after it indexes. Type &lsquo;ota&rsquo; (or as much as you need to get it to come up) and then press space bar. Use the syntax shown above to write out your action and its elements, but leave out the &lsquo;otask&rsquo; part and any parameters. Hit return and Growl (you have it <a href="http://growl.info">installed, right?</a>) will tell you what&rsquo;s up.</p>
+
+<div class="highlight"><pre><code class="applescript"><span class="k">on</span> <span class="nv">handle_string</span><span class="p">(</span><span class="nv">actionString</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nv">length</span> <span class="k">of</span> <span class="nv">actionString</span> <span class="ow">is not</span> <span class="mi">0</span><span class="p">)</span> <span class="k">then</span>
+		<span class="k">my</span> <span class="nv">runRubyScript</span><span class="p">(</span><span class="nv">actionString</span><span class="p">)</span>
+	<span class="k">end</span> <span class="k">if</span>
+	<span class="nb">open location</span> <span class="s2">&quot;x-launchbar:hide&quot;</span>
+<span class="k">end</span> <span class="nv">handle_string</span>
+
+<span class="k">on</span> <span class="nv">runRubyScript</span><span class="p">(</span><span class="nv">action</span><span class="p">)</span>
+	<span class="k">set</span> <span class="nv">res</span> <span class="k">to</span> <span class="nb">do shell script</span> <span class="s2">&quot;$HOME/scripts/otask.rb -g \&quot;&quot;</span> <span class="o">&amp;</span> <span class="nv">action</span> <span class="o">&amp;</span> <span class="s2">&quot;\&quot;&quot;</span>
+<span class="k">end</span> <span class="nv">runRubyScript</span>
+</code></pre>
+</div>
+
+<h4 id="download">Download</h4>
+
+<p><a href="https://github.com/ttscoff/OTask">https://github.com/ttscoff/OTask</a></p>
+
+</div>
+
+</body>
+</html>

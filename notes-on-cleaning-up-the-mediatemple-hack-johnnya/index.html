@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>Notes on cleaning up the MediaTemple hack (JohnnyA)</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">24 Jul 2010 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/blog">Blog</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">Notes on cleaning up the MediaTemple hack (JohnnyA)</a></h1>
+		<p><strong>NOTE:</strong> Be sure to read through the comments, there&rsquo;s a lot of additional and very useful information in there. I&rsquo;ll compile the notes as soon as I&rsquo;m able and add them to the main post.</p>
+
+<p>First, the hack described here is <del datetime="2010-08-14T21:11:43+00:00">not MediaTemple&rsquo;s fault, nor an exploit of their security system. It&rsquo;s a reminder to all of us that checking permissions and updating software are the bare minimum we can do to avoid a lot of headache and potential security issues. MediaTemple was apparently just targeted because of their size, the responsibility for the hacked sites lies with the site&rsquo;s owner/webmaster.</del><sup id="fnref:mediatemple"><a href="#fn:mediatemple" rel="footnote">1</a></sup></p>
+
+<p>Second, it doesn&rsquo;t just affect WordPress. I found bits of the exploit in MODx files, static files, and even some sites that weren&rsquo;t accessible through the internet.</p>
+
+<p>Lastly, to the perpetrators: thanks for the security reminder, but curses upon you and your families. May you spend eternity grepping for obscure lines of code while every client you have calls you to tell you their business is going to fail because their site is throwing security warnings.</p>
+
+<p>What follows is not a full-fledged guide to cleaning up a hacked server, just some notes from my experience with this round.</p>
+
+<h3 id="have-you-been-hacked">Have you been hacked?</h3>
+
+<p>The exploit is a little difficult to notice. It inserts percent-escaped lines of code into JavaScript files you&rsquo;re already including on your page, which then use document.write to add redirect code to the rendered page. This means that viewing source won&rsquo;t show it, you have to see the rendered source, ala Firebug, Safari Web Inspector, or one of various plugins that show the actual source after the DOM has loaded.</p>
+
+<p>What you&rsquo;ll find in the rendered source is a little function that uses an array of colors and urls to generate somewhat random redirects. A url called &lsquo;edisonsnightclub&rsquo; is always in the mix, so that&rsquo;s what I search for. The redirect has the side-effect of triggering Firefox&rsquo;s security warnings, which is a fair sight better than just sending clients off to malicious sites. However, it appears to only execute the code for search engine bots, so it could potentially go unnoticed on your site for quite some time.</p>
+
+<!--more-->
+<p>### Cleanup ###</p>
+
+<p>I did my cleanup job hastily, and didn&rsquo;t track everything as well as I should have. There were lines inserted into main template PHP files which I just quickly deleted. These always began with <code>$o=</code>, so that became my server-wide search pattern (more on that in a second). This didn&rsquo;t only affect WordPress, it also hit my MODx sites and the exploit would probably hit static sites or any other CMS just fine, so check everything.</p>
+
+<p>Once the PHP files were cleaned up, I realized that the most insidious part of the hack was that it picked random script files from your page to insert itself into. Tracking it down got interesting. One thing to note: you can tell what file it&rsquo;s in when you view the rendered source by looking at the script tag right before the exploit code. The included script is where you&rsquo;ll find the <code>document.write</code> line.</p>
+
+<p>The point of entry on my GridServer turned out to be a single directory in a single WordPress install, from which a rootkit (identifiable by the existence of an <code>is_writable.php</code> file) was able to gain write access to 20+ sites that I host there. The rootkit was found in the <code>img</code> directory of a TinyMCE theme within a WordPress install.</p>
+
+<p>The exploit doesn&rsquo;t even change the mod dates on the files, so it&rsquo;s hard to filter out the infected scripts. What I did was SSH in and <code>cd</code> to the <code>domains</code> directory, where I ran a grep for the patterns I&rsquo;d found so far. The line within the javascript file looks like this (truncated):</p>
+
+<p><code>var st1 = 0;document.write(unescape('%3C%73%63...%74%3E'));var gr0=0;</code></p>
+
+<p>So I set up a grep command like this:</p>
+
+<p><code>find ./ -name "*.js" -exec grep -l "gr0=0" {} \;</code></p>
+
+<p>That gives me just the name and path of any file which contains a match to the string &ldquo;gr0=0,&rdquo; which is unique enough to narrow things down. I ran a similar grep for the PHP files:</p>
+
+<p><code>find ./ -name "*.php" -exec grep -l '$o=' {} \;</code></p>
+
+<p>That one yields some false positives, I need to find a more specific search criteria. It gets the job done, though. Then it&rsquo;s just a matter of manually cleaning out the inserted lines. Be careful not to delete anything in your JavaScript files after the <code>gr0=0;</code>, such as the opening of a comment block or the first line of a jQuery plugin. Just delete up to the semicolon and you&rsquo;ll be fine.</p>
+
+<p>You&rsquo;ll also want to check <em>all</em> of your databases. First look for extra admin users (JohnnyA is what they were always called in mine), then check for lines in your content tables as mentioned on the <a href="http://wiki.mediatemple.net/w/WordPress_Redirect_Exploit">MediaTemple wiki</a>.</p>
+
+<p>Check that your permissions are secure<sup id="fnref:harden"><a href="#fn:harden" rel="footnote">2</a></sup> and make sure you find the rootkit and remove it. That will be several PHP files in a random directory, and they&rsquo;ll have recent modification timestamps. As I mentioned, one of them should be called <code>is_writeable.php</code>, which you can use in a <code>find</code> statement as well.</p>
+
+<p>Best of luck, and please add any additional notes or corrections in the comments!</p>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:mediatemple">
+      <p>I no longer have any confidence that MediaTemple is not at fault for this. I completely cleaned out the hack, updated all installs and plugins across the 20+ sites I host there, and today I&rsquo;m starting over with a whole new blast of malware on the sites.<a href="#fnref:mediatemple" rev="footnote">&#8617;</a></p>
+    </li>
+    <li id="fn:harden">
+      <p>See <a href="http://codex.wordpress.org/Hardening_WordPress">Hardening Wordpress</a> in the Codex for examples<a href="#fnref:harden" rev="footnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/make-amazing-coffee-without-the-hassle"><span>Make amazing coffee without the hassle</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/instapaper-beyond-1-8-7"><span>Instapaper Beyond 1.8.7</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/wordpress" name="wordpress">Wordpress</a></li>
+		
+			<li><a href="/tags/exploit" name="exploit">exploit</a></li>
+		
+			<li><a href="/tags/security" name="security">security</a></li>
+		
+			<li><a href="/tags/webdev" name="webdev">webdev</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/notes-on-cleaning-up-the-mediatemple-hack-johnnya';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

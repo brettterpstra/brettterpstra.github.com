@@ -1,0 +1,334 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>Delicious, Spotlight and OpenMeta tags, revisited</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">25 May 2010 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">Delicious, Spotlight and OpenMeta tags, revisited</a></h1>
+		
+<p>I&rsquo;ve taken a little time to improve the script I&rsquo;d <a href="http://brettterpstra.dev/2010/05/11/delicious-bookmarks-and-openmeta-tags/">posted previously</a>. It saves bookmarks you add to <a href="http://delicious.com/">Delicious</a> as webloc (Safari bookmark) files on your local hard drive, optionally with thumbnails and <a href="http://code.google.com/p/openmeta/">OpenMeta tags</a>.</p>
+
+<h3 id="why-would-you-want-to-do-this">Why would you want to do this?</h3>
+
+<p><a rel="lightbox" href="http://brettterpstra.dev/wp-content/uploads/2010/05/tagsearchdelicious_lg.jpg" title="Searching in Tags for CSS3 bookmarks from Delicious"><img src="http://brettterpstra.dev/wp-content/uploads/2010/05/tagsearchdelicious_lg-150x150.jpg" alt="" title="tagsearchdelicious_lg" width="150" height="150" class="alignleft size-thumbnail wp-image-457" /></a>First, it adds Spotlight search abilities to your Delicious bookmarks, and, if you use OpenMeta tags, it integrates a tag-based search into any OpenMeta application. The second half of that is, in my case, I bookmark in different ways for different purposes, and it&rsquo;s nice to have everything integrate into a full search in the end. For me, that search is primarily tag-based, thus the OpenMeta tagging. When I want to share a link, I use Delicious (<a href="http://www.delibarapp.com/">via Delibar</a>), and when I just want to save it for my own reference, I use OpenMeta (<a href="http://www.gravityapps.com/tags/index.html">via Tags.app</a>). This script is part of a system which blends the two, removing the need for redundant tagging and bringing my Spotlight searches together.</p>
+
+<p>Read on for the new script, and installation instructions.</p>
+
+<!--more-->
+<p>At the top of the script, you&rsquo;ll find a section that looks like this:</p>
+<div>
+<pre><code>
+-- CONFIG
+-- delicious username
+property _user : "username"
+-- delicious password
+property _pass : "password"
+-- POSIX path to *existing* folder, manually create the folder if needed or point to one that does exist
+property targetFolder : "/Users/OSXUSERNAME/Library/Caches/Metadata/Delicious"
+-- use Tags.app to apply OpenMeta tags based on Delicious tags
+property useTagsApp : true
+-- add thumbnails using http://hasseg.org/setWeblocThumb/
+property useWebLocThumb : true
+-- END CONFIG
+</code></pre>
+</div>
+<p>You&rsquo;ll need to set these properties to your own information, but after that the script should take care of itself. Username and password are your login info for Delicious.com. Obviously, it won&rsquo;t work without those. The targetFolder property should be set to a folder that already exists or that you just created for the purpose. The script will <strong><em>not</em></strong> create a folder that doesn&rsquo;t exist. I recommend creating one in <code>~/Library/Caches/Metadata/Delicious</code>, and just substituting your user name in the targetFolder config.</p>
+
+<p>The last two configuration options determine whether posts are tagged with Tags.app and/or thumbnailed with setWeblocThumb. I recommend doing both, but if you have other purposes for the script, feel free to set these to false. In order to use either option, you&rsquo;ll need to have the appropriate application installed. <a href="http://www.gravityapps.com/tags/index.html">Tags</a> is a $29US application that makes tagging everything from URL&rsquo;s to iPhoto pictures, as well as files and folders, a breeze. Worth every penny, in my opinion. <a href="http://hasseg.org/setWeblocThumb/">setWeblocThumb</a> is a free utility that captures thumbnail images of the bookmarked page and applies it to the webloc file. It makes for very nice presentation of search results and bookmark folders.</p>
+
+<p>The last thing you&rsquo;ll probably want to alter is the first line <em>after</em> the end of the config. It sets the &lsquo;date from&rsquo; parameter default to 1 hour prior, in Central Standard Time. If you&rsquo;re not stuck in the middle of the country, you&rsquo;ll want to edit the -v+4H part to a + or - number more indicative of your own GMT offset. It&rsquo;s not a huge deal, this current script will grab everything after this date on the first run, but will record the date of the last bookmark it finds and use that for the next run, and so on. If you want to get <strong><em>all</em></strong> of your Delicious bookmarks on the first run, set this to something long, long ago.</p>
+
+<p>I&rsquo;ve smartened the script up a bit from the previous version, and solved some of the errors that caused the bookmark save to fail on certain filenames. It also checks for existing bookmarks before writing new ones to disk, avoiding duplicates.</p>
+
+<p>As with the last script, you can use Lingon to set up an hourly run for the script in launchd, or even just set it as an alarm in iCal and use that to schedule it, but I&rsquo;ve found a better solution. I use Delibar for bookmarking, and it writes out to an xml file in <code>~/Library/Application Support/Delibar</code>. I used Lingon to set up a launchd process that watches for changes in that file and runs the script. Seems to work really well, at least so far. However you choose to run it, it will keep storing the latest date at the time of retrieval, so you can even just run it once a day (or week, or month) and it will find just the newest bookmarks.</p>
+
+<p>Without further ado, here&rsquo;s the script in its entirety, commented for readability:</p>
+
+<p><strong><em>Updated:</em></strong> Thanks to Matteo from Shiny Frog for tipping me off to the fact that the API rate limiting I was running into was due to the lack of a user agent. This has been added to the curl call in the script, testing will be much smoother now!</p>
+
+<div class="highlight"><pre><code class="applescript"><span class="c">#!/usr/bin/osascript</span>
+<span class="c">-- CONFIG</span>
+<span class="c">-- delicious username</span>
+<span class="k">property</span> <span class="err">_user</span> <span class="p">:</span> <span class="s2">&quot;username&quot;</span>
+<span class="c">-- delicious password</span>
+<span class="k">property</span> <span class="err">_pass</span> <span class="p">:</span> <span class="s2">&quot;password&quot;</span>
+<span class="c">-- POSIX path to *existing* folder, manually create the folder if needed or point to one that does exist</span>
+<span class="k">property</span> <span class="nv">targetFolder</span> <span class="p">:</span> <span class="s2">&quot;/Users/OSXUSERNAME/Library/Caches/Metadata/Delicious&quot;</span>
+<span class="c">-- use Tags.app to apply OpenMeta tags based on Delicious tags</span>
+<span class="k">property</span> <span class="nv">useTagsApp</span> <span class="p">:</span> <span class="no">true</span>
+<span class="c">-- add thumbnails using http://hasseg.org/setWeblocThumb/</span>
+<span class="k">property</span> <span class="nv">useWebLocThumb</span> <span class="p">:</span> <span class="no">true</span>
+<span class="c">-- END CONFIG</span>
+
+<span class="k">set</span> <span class="err">_date</span> <span class="k">to</span> <span class="nb">do shell script</span> <span class="s2">&quot;date -v+4H &#39;+%Y-%m-%dT%H:%M:%SZ&#39;&quot;</span>
+<span class="c">-- returns a date 1 hour ago (CST) in the format required by the twitter API.</span>
+<span class="c">-- you can adjust the date based on your time zone and the frequency that you run</span>
+<span class="c">-- the script by editing the -v+4H part of the date command (e.g. -v-1H for GMT - 1 hour)</span>
+<span class="c">-- Note that the Delicious dates run on GMT, so you have to account for your time offset</span>
+<span class="c">-- For me (CST), this means -v+4H if I want to go back one hour</span>
+<span class="k">try</span>
+	<span class="k">set</span> <span class="err">_fromdt</span> <span class="k">to</span> <span class="nb">do shell script</span> <span class="s2">&quot;defaults read com.brettterpstra.getdelicious fromdt&quot;</span>
+	<span class="c">-- if the last update time is stored in defaults, use it</span>
+<span class="k">on</span> <span class="k">error</span>
+	<span class="k">set</span> <span class="err">_fromdt</span> <span class="k">to</span> <span class="err">_date</span>
+	<span class="c">-- otherwise, use the date we just set</span>
+<span class="k">end</span> <span class="k">try</span>
+
+<span class="k">set</span> <span class="nv">bookmarks</span> <span class="k">to</span> <span class="nb">do shell script</span> <span class="s2">&quot;curl -A \&quot;OpenMetaTagger/1.1\&quot; https://&quot;</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="err">_user</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="s2">&quot;:&quot;</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="err">_pass</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="s2">&quot;@api.del.icio.us/v1/posts/all?fromdt=&quot;</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="err">_fromdt</span>
+
+<span class="c">-- gets the bookmarks starting with the date specified in _date</span>
+<span class="k">set</span> <span class="err">_folder</span> <span class="k">to</span> <span class="nv">POSIX</span> <span class="nv">file</span> <span class="nv">targetFolder</span> <span class="k">as</span> <span class="nv">alias</span>
+<span class="c">-- turns the POSIX path in CONFIG into an AppleScript alias</span>
+<span class="k">set</span> <span class="err">_output</span> <span class="k">to</span> <span class="s2">&quot;&quot;</span>
+
+<span class="k">tell</span> <span class="nb">application</span> <span class="s2">&quot;System Events&quot;</span>
+	<span class="k">set</span> <span class="nv">xmlDocument</span> <span class="k">to</span> <span class="nb">make</span> <span class="nb">new</span> <span class="nv">XML</span> <span class="nb">data</span> <span class="nv">with</span> <span class="nb">data</span> <span class="nv">bookmarks</span>
+	<span class="c">-- set xmlDocument to contents of XML file &quot;Users:ttscoff:Desktop:deliciousbookmarks.xml&quot;</span>
+	<span class="c">-- create the XML object</span>
+    <span class="k">set</span> <span class="p">{</span><span class="nv">astid</span><span class="p">,</span> <span class="no">AppleScript</span>&#39;s <span class="no">text item delimiters</span><span class="p">}</span> <span class="k">to</span> <span class="p">{</span><span class="no">AppleScript</span>&#39;s <span class="no">text item delimiters</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">}</span>
+    <span class="c">-- store the current delimiter and set the new one to a space for breaking up the tags</span>
+	<span class="k">repeat</span> <span class="nv">with</span> <span class="err">_post</span> <span class="k">in</span> <span class="nv">XML</span> <span class="nv">elements</span> <span class="k">of</span> <span class="nv">XML</span> <span class="nv">element</span> <span class="mi">1</span> <span class="k">of</span> <span class="nv">xmlDocument</span>
+		<span class="k">set</span> <span class="err">_url</span> <span class="k">to</span> <span class="nv">value</span> <span class="k">of</span> <span class="nv">XML</span> <span class="nv">attribute</span> <span class="s2">&quot;href&quot;</span> <span class="k">of</span> <span class="err">_post</span> <span class="k">as </span><span class="nc">string</span>
+		<span class="k">set</span> <span class="err">_tags</span> <span class="k">to</span> <span class="nb">text</span> <span class="nb">items</span> <span class="k">of</span> <span class="p">(</span><span class="nv">value</span> <span class="k">of</span> <span class="nv">XML</span> <span class="nv">attribute</span> <span class="s2">&quot;tag&quot;</span> <span class="k">of</span> <span class="err">_post</span> <span class="k">as </span><span class="nc">string</span><span class="p">)</span>
+		<span class="k">set</span> <span class="k">end</span> <span class="k">of</span> <span class="err">_tags</span> <span class="k">to</span> <span class="s2">&quot;delicious&quot;</span>
+		<span class="k">set</span> <span class="err">_name</span> <span class="k">to</span> <span class="nv">value</span> <span class="k">of</span> <span class="nv">XML</span> <span class="nv">attribute</span> <span class="s2">&quot;description&quot;</span> <span class="k">of</span> <span class="err">_post</span> <span class="k">as </span><span class="nc">string</span>
+		<span class="k">set</span> <span class="err">_title</span> <span class="k">to</span> <span class="nb">do shell script</span> <span class="s2">&quot;echo \&quot;&quot;</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="err">_name</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="s2">&quot;\&quot;&quot;</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="s2">&quot;|tr -cs /[^A-Za-z]/ &#39; &#39;&quot;</span>
+		<span class="c">-- strips some bad characters from the page title, solves some errors</span>
+		<span class="k">set</span> <span class="err">_date</span> <span class="k">to</span> <span class="nv">value</span> <span class="k">of</span> <span class="nv">XML</span> <span class="nv">attribute</span> <span class="s2">&quot;time&quot;</span> <span class="k">of</span> <span class="err">_post</span> <span class="k">as </span><span class="nc">string</span>
+		<span class="k">try</span>
+			<span class="k">tell</span> <span class="nb">application</span> <span class="s2">&quot;Finder&quot;</span>
+				<span class="k">set</span> <span class="no">AppleScript</span>&#39;s <span class="no">text item delimiters</span> <span class="k">to</span> <span class="s2">&quot;&quot;</span>
+				<span class="k">if</span> <span class="ow">not</span> <span class="nb">exists</span> <span class="nv">alias</span> <span class="p">((</span><span class="err">_folder</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="err">_title</span> <span class="k">as </span><span class="nc">string</span><span class="p">)</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="s2">&quot;.webloc&quot;</span><span class="p">)</span> <span class="k">then</span>
+					<span class="k">set</span> <span class="nv">webloc</span> <span class="k">to</span> <span class="nb">make</span> <span class="nb">new</span> <span class="nv">internet</span> <span class="na">location</span> <span class="nv">file</span> <span class="nb">at</span> <span class="err">_folder</span> <span class="k">to</span> <span class="err">_url</span> <span class="nv">with</span> <span class="na">properties</span> <span class="p">{</span><span class="na">name</span><span class="p">:</span><span class="err">_title</span><span class="p">}</span>
+					<span class="c">-- makes a .webloc file in our target folder</span>
+					<span class="k">set</span> <span class="err">_output</span> <span class="k">to</span> <span class="err">_output</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="s2">&quot;Grabbed &quot;</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="err">_title</span>
+					<span class="k">set</span> <span class="no">AppleScript</span>&#39;s <span class="no">text item delimiters</span> <span class="k">to</span> <span class="s2">&quot; &quot;</span>
+					<span class="k">if</span> <span class="nv">useTagsApp</span> <span class="k">then</span>
+						<span class="k">tell</span> <span class="nb">application</span> <span class="s2">&quot;Tags&quot;</span> <span class="k">to</span> <span class="nv">apply</span> <span class="nv">tags</span> <span class="err">_tags</span> <span class="k">to</span> <span class="nv">files</span> <span class="p">{</span><span class="nv">POSIX</span> <span class="na">path</span> <span class="k">of</span> <span class="p">(</span><span class="nv">webloc</span> <span class="k">as </span><span class="nc">string</span><span class="p">)}</span>
+						<span class="c">-- adds OpenMeta tags to our newly created file</span>
+						<span class="k">set</span> <span class="err">_output</span> <span class="k">to</span> <span class="err">_output</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="s2">&quot; and tagged with &quot;</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="err">_tags</span> <span class="k">as </span><span class="nc">string</span>
+					<span class="k">end</span> <span class="k">if</span>
+					<span class="k">if</span> <span class="nv">useWebLocThumb</span> <span class="k">then</span>
+						<span class="nb">do shell script</span> <span class="s2">&quot;/usr/local/bin/setWeblocThumb &quot;</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="nb">quoted form</span> <span class="k">of</span> <span class="p">(</span><span class="nv">POSIX</span> <span class="na">path</span> <span class="k">of</span> <span class="p">(</span><span class="nv">webloc</span> <span class="k">as </span><span class="nc">string</span><span class="p">))</span>
+						<span class="c">-- use setWeblocThumb to add a thumbnail to our webloc file</span>
+						<span class="c">-- http://hasseg.org/setWeblocThumb/</span>
+						<span class="k">set</span> <span class="err">_output</span> <span class="k">to</span> <span class="err">_output</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="s2">&quot;, applied thumbnail&quot;</span>
+					<span class="k">end</span> <span class="k">if</span>
+					<span class="k">set</span> <span class="err">_output</span> <span class="k">to</span> <span class="err">_output</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="s2">&quot;.&quot;</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="no">return</span>
+				<span class="k">end</span> <span class="k">if</span>
+			<span class="k">end</span> <span class="k">tell</span>
+		<span class="nb">on</span> <span class="k">error</span> <span class="nv">myError</span>
+			<span class="k">set</span> <span class="err">_output</span> <span class="k">to</span> <span class="err">_output</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="s2">&quot;Error &quot;</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="nv">myError</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="no">return</span>
+		<span class="k">end</span> <span class="k">try</span>
+		<span class="k">set</span> <span class="p">{</span><span class="err">_url</span><span class="p">,</span><span class="err">_title</span><span class="p">,</span><span class="err">_tags</span><span class="p">,</span><span class="err">_name</span><span class="p">,</span><span class="err">_time</span><span class="p">}</span> <span class="k">to</span> <span class="p">{</span><span class="nv">null</span><span class="p">,</span><span class="nv">null</span><span class="p">,</span><span class="nv">null</span><span class="p">,</span><span class="nv">null</span><span class="p">,</span><span class="nv">null</span><span class="p">}</span>
+	<span class="k">end</span> <span class="k">repeat</span>
+	<span class="k">set</span> <span class="no">AppleScript</span>&#39;s <span class="no">text item delimiters</span> <span class="k">to</span> <span class="nv">astid</span>
+	<span class="c">-- restore the delimiters</span>
+<span class="k">end</span> <span class="k">tell</span>
+<span class="nb">do shell script</span> <span class="s2">&quot;defaults write com.brettterpstra.getdelicious fromdt &quot;</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="err">_date</span>
+<span class="c">-- store the date of the last bookmark in system defaults</span>
+<span class="no">return</span> <span class="err">_output</span>
+</code></pre>
+</div>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/targeting-and-filtering-ie-with-relative-ease-2"><span>Targeting and filtering IE with relative ease</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/my-weather-report-seriously"><span>My weather report. Seriously.</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/spotlight" name="spotlight">spotlight</a></li>
+		
+			<li><a href="/tags/delicious" name="delicious">delicious</a></li>
+		
+			<li><a href="/tags/bookmarking" name="bookmarking">bookmarking</a></li>
+		
+			<li><a href="/tags/tagging" name="tagging">tagging</a></li>
+		
+			<li><a href="/tags/openmeta" name="openmeta">openmeta</a></li>
+		
+			<li><a href="/tags/mac" name="mac">mac</a></li>
+		
+			<li><a href="/tags/os-x" name="os-x">os x</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/delicious-spotlight-and-openmeta-tags-revisited';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

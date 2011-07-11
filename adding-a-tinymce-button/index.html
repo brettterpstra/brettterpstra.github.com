@@ -1,0 +1,333 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>Adding a TinyMCE button to Wordpress</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">17 Apr 2010 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">Adding a TinyMCE button to Wordpress</a></h1>
+		<p>I was working on a quick <a href="http://theurbaneanimal.com/">website for my wife</a>, and trying to make things as simple as possible for both of us. For me, I just wanted to give her a flexible template that I didn&rsquo;t have to hack much on (I went with <a href="http://diythemes.com/thesis/">Thesis</a>), and for her, I wanted her to be able to start posting with a minimal learning curve. She just got a <a href="http://www.theflip.com/">Flip</a>, and wanted to start posting video. Since she was already posting to YouTube, I just wrote a quick shortcode in Thesis&rsquo; custom functions file that would take a YouTube id and turn it into a link that the <a href="http://wordpress.org/extend/plugins/shadowbox-js/">Shadowbox plugin</a> could pick up and make into a &ldquo;lightboxed&rdquo; video player. It worked great.</p>
+
+<p>Then, I thought I&rsquo;d just add a quick button to Wordpress&rsquo; TinyMCE editor to make adding the shortcode even easier. That turned out to be a real pain, at least the first time around, so I thought I&rsquo;d detail how I ended up pulling it off. Read on for a step-by-step as I add a button to the built-in visual editor that will request an ID (or a full url) and insert a custom shortcode to play the video. You can see the end results <a href="http://theurbaneanimal.com/2010/04/big-dog-in-a-little-package/">here</a>. I&rsquo;m positive there are plugins that do just this, but I wanted to figure it out for myself&hellip;</p>
+
+<p><img src="http://brettterpstra.dev/wp-content/uploads/2010/04/youtubebutton662135.jpg" alt="" title="youtubebutton662135" width="330" height="89" class="alignnone size-full wp-image-384" /></p>
+
+<!--more-->
+<p><strong><em>Note that these instructions are for Wordpress 2.5+.</em></strong></p>
+
+<p>Want to just download the skeleton files and go for it? <a href="http://brettterpstra.dev/downloads/YourYouTubeButton.zip" title="Download and get started">YourYouTubeButton.zip</a></p>
+
+<p>First, the shortcode. Because the shadowbox plugin just needs a YouTube link to do it&rsquo;s job, all the shortcode is going to do is take an id and turn it into a properly formatted link, inserting the necessary markup for shadowbox to do its job. In your functions.php (or custom/custom_functions.php if you&rsquo;re using Thesis), add this code:</p>
+
+<p>&lt;div markdown=0&gt;</p>
+<pre><code class="php">
+// add the shortcode handler for YouTube videos
+function addYouTube($atts, $content = null) {
+        extract(shortcode_atts(array( &quot;id&quot; =&gt; &#x27;&#x27; ), $atts));
+        return &#x27;&lt;p style=&quot;text-align:center&quot;&gt; \
+        &lt;a href=&quot;http://www.youtube.com/v/&#x27;.$id.&#x27;&quot;&gt; \
+        &lt;img src=&quot;http://img.youtube.com/vi/&#x27;.$id.&#x27;/0.jpg&quot; width=&quot;400&quot; height=&quot;300&quot; class=&quot;aligncenter&quot; /&gt; \
+        &lt;span&gt;Watch the video&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&#x27;;
+}
+add_shortcode(&#x27;youtube&#x27;, &#x27;addYouTube&#x27;);
+</code></pre>
+<p>&lt;/div&gt;</p>
+
+<p>This lets you use a shortcode in your post that looks like <code>[youtube id="xxxxx"]</code> and have that turned into a centered paragraph containing a preview image and a link to the video. If you&rsquo;re running the <a href="http://wordpress.org/extend/plugins/shadowbox-js/">shadowbox plugin</a>, or any plugin that detects YouTube links and handles them, clicking the link in your post will load the destination video in a hovering box, without leaving the page. Otherwise, it will go to the YouTube page for the video. The screenshot is pulled straight from YouTube, and (poorly) resized using HTML. I needed a 400x300 image to fit into the template, and since it wasn&rsquo;t a huge change, it was easiest to just hardcode the size into the tag and let the browser handle it. For reference, you can get a YouTube-generated screenshot by inserting the video&rsquo;s id into a string like this: http://img.youtube.com/vi/[video id]/0.jpg. Use that inside of an image tag, as shown in the script, and you&rsquo;ve got a preview image, ready to go.</p>
+
+<p>Adding a button to the &ldquo;quick tags&rdquo; in the HTML editor is a cinch, but we&rsquo;ll skip that since anyone using that editor can probably handle writing out a shortcode. It&rsquo;s my wife and clients using the Visual editor that I want to save the trouble. So now, in your functions.php or custom_functions.php, we&rsquo;ll first add the function that will insert the button:</p>
+
+<p>&lt;div markdown=0&gt;</p>
+<pre><code class="php">
+function add_youtube_button() {
+   if ( ! current_user_can(&#x27;edit_posts&#x27;) &amp;&amp; ! current_user_can(&#x27;edit_pages&#x27;) )
+     return;
+   if ( get_user_option(&#x27;rich_editing&#x27;) == &#x27;true&#x27;) {
+     add_filter(&#x27;mce_external_plugins&#x27;, &#x27;add_youtube_tinymce_plugin&#x27;);
+     add_filter(&#x27;mce_buttons&#x27;, &#x27;register_youtube_button&#x27;);
+   }
+}
+
+add_action(&#x27;init&#x27;, &#x27;add_youtube_button&#x27;);
+</code></pre>
+<p>&lt;/div&gt;</p>
+
+<p>The first thing the above code does is check to make sure the current user has permission to edit, otherwise there&rsquo;s no point in loading this code. Next, it checks that we&rsquo;re in Rich Text (Visual) mode, and then adds filters that are executed at the time that the editor loads its plugins, and when it loads its buttons. Lastly, the add_action call tells it to run the function when we load the page.</p>
+
+<p>The functions that it calls, <code>add_youtube_tinymce_plugin</code> and <code>register_youtube_button</code> are custom functions that we&rsquo;ll create underneath it in the same file:</p>
+
+<p>&lt;div markdown=0&gt;</p>
+<pre><code class="php">
+function register_youtube_button($buttons) {
+   array_push($buttons, &quot;|&quot;, &quot;brettsyoutube&quot;);
+   return $buttons;
+}
+
+function add_youtube_tinymce_plugin($plugin_array) {
+   $plugin_array[&#x27;brettsyoutube&#x27;] = get_bloginfo(&#x27;template_url&#x27;).&#x27;/custom/editor_plugin.js&#x27;;
+   return $plugin_array;
+}
+</code></pre>
+<p>&lt;/div&gt;</p>
+
+<p>The first function tells the editor to add a divider and the button, in my case <code>brettsyoutube</code>, to the array of buttons. The second function tells it what that button&rsquo;s going to do, which, in this case, is execute a statement found in an external Javascript file in the &ldquo;custom&rdquo; directory of my template. </p>
+
+<p>The last thing we need to do before we get into the Javascript portion is to work a little magic on the TinyMCE version check. TinyMCE defaults to caching everything, so in order for our changes to show up, we have to trick it into thinking its version number has changed:</p>
+
+<p>&lt;div markdown=0&gt;</p>
+<pre><code class="php">
+function my_refresh_mce($ver) {
+  $ver += 3;
+  return $ver;
+}
+
+add_filter( &#x27;tiny_mce_version&#x27;, &#x27;my_refresh_mce&#x27;);
+</code></pre>
+<p>&lt;/div&gt;</p>
+
+<p>This will intercept the version check and increment the current version number by 3. It&rsquo;s the quick and dirty way to do it without messing with the settings directly, but if you&rsquo;re curious, read more on the <a href="http://codex.wordpress.org/TinyMCE_Custom_Buttons">Wordpress Codex</a>.</p>
+
+<p>Now that we&rsquo;ve got the necessary pieces in our functions file, it&rsquo;s time to add the Javascript that the button&rsquo;s going to need to function. I&rsquo;ve located mine in the same folder as my functions file (custom/), but if you want to be tidier about it, make a subfolder. Just make sure that the <code>add_youtube_tinymce_plugin</code> function knows where to look for it. Here&rsquo;s what&rsquo;s in my <code>editor_plugin.js</code> file:</p>
+
+<p>&lt;div markdown=0&gt;</p>
+<pre><code class="js">
+(function() {
+	tinymce.create(&#x27;tinymce.plugins.BrettsYouTube&#x27;, {
+		init : function(ed, url) {
+			ed.addButton(&#x27;brettsyoutube&#x27;, {
+				title : &#x27;brettsyoutube.youtube&#x27;,
+				image : url+&#x27;/youtube.png&#x27;,
+				onclick : function() {
+					idPattern = /(?:(?:[^v]+)+v.)?([^&amp;=]{11})(?=&amp;|$)/;
+					var vidId = prompt(&quot;YouTube Video&quot;, &quot;Enter the id or url for your video&quot;);
+					var m = idPattern.exec(vidId);
+					if (m != null &amp;&amp; m != &#x27;undefined&#x27;)
+						ed.execCommand(&#x27;mceInsertContent&#x27;, false, &#x27;[youtube id=&quot;&#x27;+m[1]+&#x27;&quot;]&#x27;);
+				}
+			});
+		},
+		createControl : function(n, cm) {
+			return null;
+		},
+		getInfo : function() {
+			return {
+				longname : &quot;Brett&#x27;s YouTube Shortcode&quot;,
+				author : &#x27;Brett Terpstra&#x27;,
+				authorurl : &#x27;http://brettterpstra.dev/&#x27;,
+				infourl : &#x27;http://brettterpstra.dev/&#x27;,
+				version : &quot;1.0&quot;
+			};
+		}
+	});
+	tinymce.PluginManager.add(&#x27;brettsyoutube&#x27;, tinymce.plugins.BrettsYouTube);
+})();
+</code></pre>
+<p>&lt;/div&gt;</p>
+
+<p>This function initializes the plugin, sets up what it&rsquo;s going to accomplish, adds an array of info about the plugin, and then adds the plugin to the existing TinyMCE plugin list. The lines that contain <code>brettsyoutube</code> are referenced by the previous functions, so if you change the name of the plugin in one place, make sure to match it up in both the PHP and the Javascript portions. In the <code>onclick</code> handler inside the addButton call, you&rsquo;ll find a function that prompts for a string (YouTube ID or URL), runs it against a regular expression to extract the ID (if necessary) and then inserts the shortcode as defined in our earlier functions. The last line of the main function does the actual adding of the plugin with the name <code>brettsyoutube</code>, so that it can be found by the editor when needed.</p>
+
+<p>Note that the plugin references a <code>youtube.png</code> file in the same directory as the plugin. I lifted mine from Viper&rsquo;s Video Quicktags, but you can use any 20px by 20px image, adjusting the name (and, if desired, location) in the above code appropriately.</p>
+
+<p>Now I have a button in the visual editor that makes life that much easier for my wife. I can add more now, any time I like, and with a lot less effort than this first one turned out to be. I expect to be using this fairly frequently on client sites, as well.</p>
+
+<p>[download id=&rdquo;5&rdquo;]</p>
+
+<h3 id="references">References:</h3>
+
+<ul>
+  <li><a href="http://codex.wordpress.org/TinyMCE_Custom_Buttons">TinyMCE Custom Buttons on the Wordpress Codex</a></li>
+  <li><a href="http://www.viper007bond.com/wordpress-plugins/vipers-video-quicktags/">Viper&rsquo;s Video Quicktags plugin</a></li>
+</ul>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/instapaper-beyond-fluid"><span>Instapaper Beyond for Fluid.app</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/compress-pdfs-with-preview"><span>Compress PDFs with Preview</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/wordpress" name="wordpress">Wordpress</a></li>
+		
+			<li><a href="/tags/functions.php" name="functions.php">functions.php</a></li>
+		
+			<li><a href="/tags/tinymce" name="tinymce">TinyMCE</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/adding-a-tinymce-button';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

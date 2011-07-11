@@ -1,0 +1,333 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>Saving Safari browsing sessions to Evernote</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">06 Mar 2010 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">Saving Safari browsing sessions to Evernote</a></h1>
+		<p><a href="http://brettterpstra.dev/wp-content/uploads/2010/03/EvernoteBookmarksScreenshot-1.jpg" rel="lightbox"><img src="http://brettterpstra.dev/wp-content/uploads/2010/03/EvernoteBookmarksScreenshot-1-300x157.jpg" alt="" title="Evernote Bookmarks" width="300" height="157" class="alignright size-medium wp-image-291" /></a>I primarily use Safari for web browsing, mostly because it&rsquo;s smoother and faster than Firefox, and the Web Inspector is just as useful as Firebug. As time passes, I end up with a lot of web pages open, and I like to clear out my browser tabs on a regular basis. Safari doesn&rsquo;t really have a long-term session-saving option, so I save lists of open tabs to various applications. I used to use <a href="http://hetima.com/safari/stand-e.html">SafariStand</a> to do this, but it got too buggy and slow for me. I use <a href="http://flyingmeat.com/voodoopad/">VoodooPad</a> for it, but I like the sorting and searching option in <a href="http://www.evernote.com/">Evernote</a>, both on my desktop, and synced online and to my iPhone. </p>
+
+<p>As much as I love Evernote, its editor is, well, a hassle. Importing text clippings can strip line breaks and leave you with quite a mess, and cleaning it up is less than pleasant. I&rsquo;ve found that using AppleScript, HTML and Evernote together allows me to create pretty well-formatted notes from web and text clippings, aside from using Evernote&rsquo;s PDF features. In most casesâ€”like website clippingsâ€”I don&rsquo;t need or want a full PDF, replete with ads and comments (<a href="http://brettterpstra.dev/tag/clippable/">Clippable</a> was designed with that in mind). The trick when creating a note in Evernote via AppleScript is to use a little HTML to get the basic formatting. Evernote&rsquo;s AppleScript library provides a command tailored to this purpose.</p>
+
+<p>To demonstrate, I&rsquo;ll show you how to save your browsing session in Safari as a nicely formatted list in Evernote. For this I set up a new Notebook called &ldquo;Bookmarks,&rdquo; and am keeping the markup very simple. Evernote strips most styling from imported HTML, but accepts structural items like headlines, lists, tables, etc., applying its own default formatting to the elements.</p>
+
+<!--more-->
+<p>To begin, open AppleScript Editor (or Script Editor in Leopard) and create a new document. Save it as &ldquo;EverSurfSaver.scpt&rdquo; (or your own, better name) in <code>~/Library/Scripts/Applications/Safari</code>, creating the folders if you need to. This makes the script show up at the top of the list when you&rsquo;re in Safari, and not clutter your script menu in other applications. Speaking of the Script Menu, if yours isn&rsquo;t showing up in your menubar, and you want it to, look in the General tab of AppleScript Editor (Snow Leopard) or open the AppleScript Utility (Leopard). I launch most of my scripts with <a href="http://obdev.at/products/launchbar/index.html">LaunchBar</a>, but I keep the AS menu around.</p>
+
+<p>In my script, the first thing I did was set up a template for the link formatting, and a search-and-replace function to implement it. It&rsquo;s not terribly advanced, it just gives you %name and %url as placeholders, and you can set up the string however you like. I prefer this method to building long <code>this &amp; that &amp; return &amp; etc.</code> strings in AppleScript (although that still happens pretty often). My template for the links is set up as an unordered list, so it looks like this:</p>
+
+<p>&lt;div markdown=0&gt;</p>
+<pre><code>
+property _template : &quot;&lt;li&gt;&lt;a href=\&quot;%url\&quot;&gt;%name&lt;/a&gt;&lt;/li&gt;&quot;
+</code></pre>
+<p>&lt;/div&gt;</p>
+
+<p>This is, fairly obviously, taking a name and a url and creating a hyperlink, wrapped in a list item. Note that any double quotes in the template string need to be escaped with a blackslash. The search-and-replace function is one that I use often, and I can&rsquo;t remember who to attribute for the original code, for which I apologize&hellip;</p>
+
+<p>&lt;div markdown=0&gt;</p>
+<pre><code>
+--search and replace function for template
+on snr(tofind, toreplace, TheString)
+	set atid to text item delimiters
+	set text item delimiters to tofind
+	set textItems to text items of TheString
+	set text item delimiters to toreplace
+	if (class of TheString is string) then
+		set res to textItems as string
+	else -- (assume Unicode)
+		set res to textItems as Unicode text
+	end if
+	set text item delimiters to atid
+	return res
+end snr
+</code></pre>
+<p>&lt;/div&gt;</p>
+
+<p>Now we can update our template with shorter calls to the <code>snr</code> function. We&rsquo;ll get around to using the template in a moment.</p>
+
+<p>Next, we want to set up some basic variables to format the title of our note and create our list variable (open an unordered list) so that they&rsquo;re all available outside of other functions and tell statements. I&rsquo;m using a shell call (<code>do shell script</code>) to create the date strings, just because it&rsquo;s <strong><em>so</em></strong> much faster than formatting a date in AppleScript.</p>
+
+<p>&lt;div markdown=0&gt;</p>
+<pre><code>
+set prettyDate to do shell script &quot;date &#x27;+%A, %B %d, %Y at %l:%M %p&#x27;&quot;
+set theTitle to &quot;Bookmarks &quot; &amp; prettyDate
+set urlList to &quot;&lt;ul&gt;&quot;
+</code></pre>
+<p>&lt;/div&gt;</p>
+
+<p>The command <code>date '+%A, %B %d, %Y at %l:%M %p'</code> will create a date string that looks like <strong>Saturday, March 06, 2010 at&nbsp; 9:04 AM</strong>. Note the extra space before the &ldquo;9:04.&rdquo; That&rsquo;s because it&rsquo;s a single-digit hour and gets padded where the zero would be with other formatting. You can remove this with a little *NIX string handling, but I&rsquo;m just going to live with it for the purposes of this post.</p>
+
+<p>Next, we gather all of the tabs open in the front window of Safari. It&rsquo;s entirely possible to cycle through all open windows and get all tabs, but I always surf in &ldquo;one window&rdquo; mode, so I&rsquo;ll leave it up to you to look that one up if you need it. We&rsquo;ll be appending the information from each tab to the urlList variable we set up at the beginning.</p>
+
+<p>&lt;div markdown=0&gt;</p>
+<pre><code>
+tell application &quot;Safari&quot;
+	set tabList to every tab of front window
+	repeat with aTab in tabList
+		set aLink to _template
+		set aLink to my snr(&quot;%name&quot;, name of aTab, aLink)
+		set aLink to my snr(&quot;%url&quot;, URL of aTab, aLink)
+		set urlList to urlList &amp; aLink &amp; return
+	end repeat
+end tell
+set urlList to urlList &amp; &quot;&lt;/ul&gt;&quot;
+</code></pre>
+<p>&lt;/div&gt;</p>
+
+<p>The block ends by appending the closing tag to our urlList. So we have a simple HTML fragment containing an unordered list of all of our links, the titles hyperlinked to their associated url. All that&rsquo;s left to do now is create our Evernote note from this fragment:</p>
+
+<p>&lt;div markdown=0&gt;</p>
+<pre><code>
+tell application "Evernote"
+	set theNote to create note with html urlList title theTitle notebook "Bookmarks"
+end tell
+</code></pre>
+<p>&lt;/div&gt;</p>
+
+<p>That&rsquo;s it. Now there&rsquo;s a note in Evernote, in a notebook called &ldquo;Bookmarks,&rdquo; titled something like &ldquo;Bookmarks Saturday, March 06, 2010 at  9:04 AM.&rdquo; Here&rsquo;s the code in its entirety:</p>
+
+<p>&lt;div markdown=0&gt;</p>
+<pre><code>
+property _template : &quot;&lt;li&gt;&lt;a href=\&quot;%url\&quot;&gt;%name&lt;/a&gt;&lt;/li&gt;&quot;
+
+--search and replace function for template
+on snr(tofind, toreplace, TheString)
+	set ditd to text item delimiters
+	set text item delimiters to tofind
+	set textItems to text items of TheString
+	set text item delimiters to toreplace
+	if (class of TheString is string) then
+		set res to textItems as string
+	else -- if (class of TheString is Unicode text) then
+		set res to textItems as Unicode text
+	end if
+	set text item delimiters to ditd
+	return res
+end snr
+
+set prettyDate to do shell script &quot;date &#x27;+%A, %B %d, %Y at %l:%M %p&#x27;&quot;
+set theTitle to &quot;Bookmarks &quot; &amp; prettyDate
+set urlList to &quot;&lt;ul&gt;&quot;
+
+tell application &quot;Safari&quot;
+	set tabList to every tab of front window
+	repeat with aTab in tabList
+		set aLink to _template
+		set aLink to my snr(&quot;%name&quot;, name of aTab, aLink)
+		set aLink to my snr(&quot;%url&quot;, URL of aTab, aLink)
+		set urlList to urlList &amp; aLink &amp; return
+	end repeat
+end tell
+set urlList to urlList &amp; &quot;&lt;/ul&gt;&quot;
+
+tell application &quot;Evernote&quot;
+	set theNote to create note with html urlList title theTitle notebook &quot;Bookmarks&quot;
+end tell
+</code></pre>
+<p>&lt;/div&gt;</p>
+
+<p><a href="applescript://com.apple.scripteditor?action=new&amp;script=property%20_template%20:%20%22%3Cli%3E%3Ca%20href=%5C%22%25url%5C%22%3E%25name%3C/a%3E%3C/li%3E%22%0A%0A--search%20and%20replace%20function%20for%20template%0Aon%20snr(tofind,%20toreplace,%20TheString)%0A%09set%20ditd%20to%20text%20item%20delimiters%0A%09set%20text%20item%20delimiters%20to%20tofind%0A%09set%20textItems%20to%20text%20items%20of%20TheString%0A%09set%20text%20item%20delimiters%20to%20toreplace%0A%09if%20(class%20of%20TheString%20is%20string)%20then%0A%09%09set%20res%20to%20textItems%20as%20string%0A%09else%20--%20if%20(class%20of%20TheString%20is%20Unicode%20text)%20then%0A%09%09set%20res%20to%20textItems%20as%20Unicode%20text%0A%09end%20if%0A%09set%20text%20item%20delimiters%20to%20ditd%0A%09return%20res%0Aend%20snr%0A%0Aset%20prettyDate%20to%20do%20shell%20script%20%22date%20'+%25A,%20%25B%20%25d,%20%25Y%20at%20%25l:%25M%20%25p'%22%0Aset%20theTitle%20to%20%22Bookmarks%20%22%20&amp;%20prettyDate%0Aset%20urlList%20to%20%22%3Cul%3E%22%0A%0Atell%20application%20%22Safari%22%0A%09set%20tabList%20to%20every%20tab%20of%20front%20window%0A%09repeat%20with%20aTab%20in%20tabList%0A%09%09set%20aLink%20to%20_template%0A%09%09set%20aLink%20to%20my%20snr(%22%25name%22,%20name%20of%20aTab,%20aLink)%0A%09%09set%20aLink%20to%20my%20snr(%22%25url%22,%20URL%20of%20aTab,%20aLink)%0A%09%09set%20urlList%20to%20urlList%20&amp;%20aLink%20&amp;%20return%0A%09end%20repeat%0Aend%20tell%0Aset%20urlList%20to%20urlList%20&amp;%20%22%3C/ul%3E%22%0A%0Atell%20application%20%22Evernote%22%0A%09set%20theNote%20to%20create%20note%20with%20html%20urlList%20title%20theTitle%20notebook%20%22Bookmarks%22%0Aend%20tell">Click here</a> to open this script in your default script editor.</p>
+
+<h3 id="addendum">Addendum</h3>
+
+<p>One of the great things about using Evernote for this purpose is that you can add todo checkboxes next to important or &ldquo;read later&rdquo; links for reference. If there&rsquo;s a theme to the batch of links (I just saved the results of a long search for decent Wordpress e-commerce plugins), you can also add meaningful tags to the note itself. Further, you can add any notes and keywords you want next to or below the link in an indented list item (you never have to deal with markup again after the import, at that point it&rsquo;s just a rich text list).</p>
+
+<p>Because this script only deals with the frontmost window, you can also drag off a specific group of tabs to a new window, and only bookmark those in the Evernote note. With a little &ldquo;show dialog&rdquo; or CocoaDialog action, you could easily have the script request tags or notes in the process and append them to the note. If I ever implement that, I&rsquo;ll post it, but I like the simplicity and immediacy it has right now.</p>
+
+<p>Also, I forgot to look and see who else was doing something similar (I&rsquo;m in my own little world a lot). Justin over at <a href="http://veritrope.com/">Veritrope</a> has a <a href="http://veritrope.com/tips/safari-tabs-to-evernote">similar script</a> (minus the HTML), amongst a large collection of really useful scripts and services. You should check that out, too!</p>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/fk-redux"><span>fk: redux</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/save-safari-tabs-to-instapaper"><span>Save Safari tabs to Instapaper</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/evernote" name="evernote">evernote</a></li>
+		
+			<li><a href="/tags/safari" name="safari">safari</a></li>
+		
+			<li><a href="/tags/websurfing" name="websurfing">websurfing</a></li>
+		
+			<li><a href="/tags/applescript" name="applescript">applescript</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/saving-safari-browsing-sessions-to-evernote';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

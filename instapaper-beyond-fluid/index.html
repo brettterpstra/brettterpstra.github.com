@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>Instapaper Beyond for Fluid.app</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">28 Mar 2010 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">Instapaper Beyond for Fluid.app</a></h1>
+		<p>Introducing Instapaper Beyond, an <a href="http://www.instapaper.com">Instapaper</a> userscript for <a href="http://fluidapp.com/">Fluid</a> that provides full keyboard navigation and some special features for browsing your Instapaper articles. If you&rsquo;re not familiar, Fluid is a Mac (only) application which creates a Single Site Browser (SSB) for a site, using the same Webkit engine as Safari. It essentially allows you to turn web applications and sites into Mac apps. It&rsquo;s pure Cocoa, so all of your Services and fun text tricks (like Control-T transposition) work on it. Oh, and it includes <a href="http://userstyles.org/">userstyle</a> and <a href="http://userscripts.org/">userscript</a> engines, similar to <a href="https://addons.mozilla.org/en-US/firefox/addon/748">Greasemonkey</a>, which allows nerds like me to do some crazy things. Fluid (WebKit) is the only browser I&rsquo;ve developed this for, so I doubt Greasemonkey (Firefox) users will have much luck with it.</p>
+
+<p>[caption id=&rdquo;attachment_347&rdquo; width=&rdquo;300&rdquo; align=&rdquo;alignright&rdquo; caption=&rdquo;Keyboard navigation highlight&rdquo;]<a href="http://brettterpstra.dev/wp-content/uploads/2010/03/highlighted.jpg" class="alignright"><img src="http://brettterpstra.dev/wp-content/uploads/2010/03/highlighted-300x191.jpg" alt="Screenshot of a highlighted entry" title="Highlighted entry" width="300" height="191" class="size-medium wp-image-347" /></a>[/caption]</p>
+
+<p>Know what you&rsquo;re doing and want to skip straight to the script? <a href="http://brettterpstra.dev/userscripts/instapaperbeyond.user.js">OK</a>.</p>
+
+<!--more-->
+<p>The script started as an expansion of a cool userscript called <a href="http://userscripts.org/scripts/show/59917">Instapaper Article Tools</a>, which provides a floating menu with some options while in the text view of an article. For the most part, that script isn&rsquo;t even visible in the final version, unless you manually click into an article. You don&rsquo;t need to do that, though, because the whole point of the script is to provide keyboard navigation for Instapaper. Articles are loaded via Ajax and you can go from article to article in full-screen text view, starring/unstarring, moving and archiving on the fly. A full list of commands available at any time can be seen by pressing &ldquo;h&rdquo;, but here&rsquo;s a quick overview:</p>
+
+<p>[caption id=&rdquo;attachment_373&rdquo; align=&rdquo;alignright&rdquo; width=&rdquo;300&rdquo; caption=&rdquo;Help HUD (h)&rdquo;]<img src="http://brettterpstra.dev/wp-content/uploads/2010/03/InstapaperHelpHud.jpg" alt="Image of the Instapaper Beyond Help HUD" title="InstapaperHelpHud" width="300" height="301" class="size-full wp-image-373" />[/caption]</p>
+
+<ul>
+  <li>&ldquo;h&rdquo; will bring up a help screen with the available shortcuts on it</li>
+  <li>&ldquo;g&rdquo; opens a list of folders you can jump to</li>
+  <li>navigation is fairly intuitive if you use Google Reader or other Google apps, in that j is forward, k is backwards, o is open, u returns to unread articles. </li>
+  <li>Escape and Enter function as expected (at least to me), closing open dialogs, returning to posts, etc.</li>
+  <li>In list view, lowercase letters jump to sections (a:Archive, s:Starred, u:unread) and capital letters perform functions (A:Archive, S:Toggle Star).</li>
+  <li>The delete key deletes the current article in list and text views</li>
+  <li>see the help (h) for more!</li>
+</ul>
+
+<p>Additionally, Instapaper Beyond adds target=_blank to external links (original articles) so that you can open them in tabs or new windows (depending on your tabbed browsing settings). &ldquo;U&rdquo; will check for updates to the script and offer you a link to any updated version for easy installation. There&rsquo;s wraparound navigation of lists, so using any &ldquo;next&rdquo; command at the end of a list will take you to the top, and vice versa. I also built myself an easy-to-expand, contextual help system so adding new commands is a snap, and having them show up in the appropriate help menus is automatic. You don&rsquo;t care so much about that, but hey, it&rsquo;s cool.</p>
+
+<p>No guarantee is offered that this script will function well with your userstyle of choice, although several have been tested with good results.</p>
+
+<h3 id="installation">Installation</h3>
+
+<ol>
+  <li>First, create your Fluid SSB and set http://www.instapaper.com/u as your home page. <a href="http://fluidapp.com/">Download Fluid here</a>, if needed, then run it to create the SSB. <a href="http://brettterpstra.dev/wp-content/uploads/2010/03/instapapericon1.png">Here&rsquo;s a handy icon</a> you can use, too!</li>
+  <li>Have new windows open with your Home Page under General Settings in Preferences</li>
+  <li>Under Advanced Settings in Preferences, set your SSB to browse to any url <a href="http://brettterpstra.dev/wp-content/uploads/2010/03/Advanced-Preferences.jpg" rel="lightbox">(image)</a></li>
+  <li>Enable Tabbed Browsing under the Tabs Preferences <a href="http://brettterpstra.dev/wp-content/uploads/2010/03/Tabs-Preferences.jpg" rel="lightbox">(image)</a></li>
+  <li>Install the Instapaper Beyond Userscript: Point your Fluid <acronym title="Single Site Browser">SSB</acronym> at <a href="http://brettterpstra.dev/userscripts/instapaperbeyond.user.js">http://brettterpstra.dev/userscripts/instapaperbeyond.user.js</a>. Fluid should automatically recognize it as a userscript and offer to install it for you. If you have any trouble, you can open the link above, copy the entire script and use &ldquo;New Userscript&rdquo; under the SSB&rsquo;s Script menu (looks like a scroll). Name it &ldquo;Instapaper Beyond&rdquo; and paste the copied script into the window.</li>
+  <li>For best results, turn off Auto Archiving in Instapaper by unchecking the box at the bottom of a post list page
+<a href="http://brettterpstra.dev/wp-content/uploads/2010/03/instapaperbeyondarchivesetting.jpg" rel="lightbox">(image)</a></li>
+</ol>
+
+<p>The script is under development, but is stable at this point. Please let me know how it works for you and what you&rsquo;d like to see! I&rsquo;m thinking that I&rsquo;ll eventually use <a href="http://fluidium.org/">Fluidium</a> to make this into a full-blown app with auto-updates, so keep your eyes peeled for that. Remember, &ldquo;h&rdquo; for help, &ldquo;U&rdquo; to check for new versions! If you need a script to quickly populate your Instapaper account, be sure to check out the <a href="http://brettterpstra.dev/2010/03/08/save-safari-tabs-to-instapaper/">&ldquo;Safari to Instapaper&rdquo;</a> script I posted earlier.</p>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/updated-songza-lucky-link-service"><span>Updated: Songza Lucky Link Service</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/adding-a-tinymce-button"><span>Adding a TinyMCE button to Wordpress</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/instapaper" name="instapaper">instapaper</a></li>
+		
+			<li><a href="/tags/fluid" name="fluid">fluid</a></li>
+		
+			<li><a href="/tags/userscript" name="userscript">userscript</a></li>
+		
+			<li><a href="/tags/navigation" name="navigation">navigation</a></li>
+		
+			<li><a href="/tags/keyboard" name="keyboard">keyboard</a></li>
+		
+			<li><a href="/tags/instapaper-beyond" name="instapaper-beyond">instapaper beyond</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/instapaper-beyond-fluid';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

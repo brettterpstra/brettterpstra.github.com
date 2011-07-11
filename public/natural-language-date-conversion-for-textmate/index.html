@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Natural language date conversion for TextMate</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p><img src="http://brettterpstra.dev/wp-content/uploads/2011/02/natural_language_examples.jpg" class="alignright shadow" />I&rsquo;ve been flirting with a plain-text to-do system again. The biggest problem for me is that a plain text system opens up so many possibilities for fiddling and scripting. I always end up fiddling more than working when I try it. I don&rsquo;t see any reason this time would be different, but it&rsquo;s Sunday and I have some extra time on my hands after being snowed in today. So I&rsquo;m fiddling.</p>
+
+<p>In the process, I wrote a quick <a href="http://macromates.com/">TextMate</a> command which lets me enter a date in natural language and have it converted to whatever format I need for my system. It has variables at the top of the command for defining the date format and output string template. I packaged it up in its own little bundle for people to play with. The command is similar to what I built as a <a href="http://brettterpstra.dev/a-few-scripts-for-taskpaper-users/" title="A few scripts for TaskPaper users - Brett Terpstra">TaskPaper script</a> a while back. Just <a href="#download">download</a> at the end of the post, unzip and double-click to install.</p>
+
+<!--more-->
+<p>## Customizing</p>
+
+<p>The output format of the command defaults to a full date in the system&rsquo;s preferred format. This makes it easy to see the effect of various strings. For most purposes, you&rsquo;ll want something more along the lines of &ldquo;2011-02-22&rdquo; instead. To change the format, you just need to edit the <code>dateformat</code> variable at the top of the command&rsquo;s script.</p>
+
+<p>To edit the command, just go to <strong>Bundles &gt; Bundle Editor &gt; Show Bundle Editor</strong> and find the Date Entry bundle. Select the <strong>Natural Date Entry</strong> command and edit it in the field on the right.</p>
+
+<h3 id="date-format">Date Format</h3>
+
+<p>There&rsquo;s a commented-out <code>dateformat</code> replacement above the current variable, and you can modify it to fit whatever you need. Don&rsquo;t forget to comment out or remove the current variable if you uncomment the one above it. The % format elements use Ruby&rsquo;s <a href="http://www.ruby-doc.org/core/classes/Time.src/M000392.html" title="strftime (Time) [ruby-doc.org]">strftime format</a>. I built the command to work with <a href="http://skiadas.dcostanet.net/afterthought/2006/06/25/details-on-the-gtdalt-bundle/">GTDAlt</a> and <a href="http://www.hogbaysoftware.com/products/taskpaper">TaskPaper</a>, and on my system both use the YYYY-MM-DD format, so that&rsquo;s what the secondary option is set to.</p>
+
+<h3 id="output-template">Output Template</h3>
+
+<p>To be practical, you probably also need to output some delimiters with the date. In GTDAlt, it would look like &ldquo;due:[2011-02-22]&rdquo;, and in TaskPaper it would look like &ldquo;@due(2010-02-22)&rdquo;. You can set this up using the <code>outputtemplate</code> variable below <code>dateformat</code>. It uses <code>%date%</code> as a placeholder which will be replaced with the date in the format you specified above. As an example, if you wanted to use the command with TaskPaper files, you would set it to <code>'@due(%date%)'</code>.</p>
+
+<h3 id="usage">Usage</h3>
+
+<p>The command uses Command-Shift-D by default, but you can change that to whatever&rsquo;s clever when you&rsquo;re in the Bundle Editor. When run, it pops up an input dialog courtesy of TextMate&rsquo;s built-in dialog system. You can enter text in an intuitive natural language format and it will output the date based on the variables you&rsquo;ve defined. Here are some example strings:</p>
+
+<ul>
+  <li>tomorrow</li>
+  <li>tomorrow 3pm</li>
+  <li>wednesday</li>
+  <li>wednesday morning</li>
+  <li>wed</li>
+  <li>next thursday</li>
+  <li>in one week</li>
+  <li>in three days</li>
+  <li>in 3 days</li>
+</ul>
+
+<p>You get the idea. I also set it up to take &ldquo;+&rdquo; modifiers. You can add any number of days at the end of a string, or just use the plus modifier to add days to today. For example:</p>
+
+<ul>
+  <li>thu+7</li>
+  <li>+2</li>
+  <li>tomorrow + 3</li>
+</ul>
+
+<p>It will roll with any of those punches. Abbreviated days have to be three characters, i.e. mon, tue, wed, thu, fri, sat, or sun.</p>
+
+<h2 id="moving-the-command">Moving the command</h2>
+
+<p>This command has to be distributed in a bundle because it requires the Ruby library <a href="http://rubyforge.org/projects/chronic/" title="RubyForge: Chronic: Project Info">&ldquo;Chronic&rdquo;</a> for the date conversion. The library is included in the Support/lib folder of the bundle. If you happen to have RubyGems installed, you can install the Chronic gem (<code>sudo gem install chronic</code>) and then modify the command to allow you to put it wherever you like without needing the support folder at all. To make the command use the gem instead of the bundled library, change the require statements in the command to look like this:</p>
+
+<pre lang="ruby" escaped="true">
+SUPPORT = ENV['TM_SUPPORT_PATH']
+BSUPPORT = ENV['TM_BUNDLE_SUPPORT']
+DIALOG = ENV['DIALOG']
+require SUPPORT + '/lib/ui'
+require SUPPORT + '/lib/exit_codes'
+require 'rubygems'
+require 'chronic'
+</pre>
+
+<p>It would also be pretty easy to port to any other system, including an OS X system service. You&rsquo;d just need to make sure you include the Chronic library, either bundled or install the gem, and find a way to get the text input without using TextMate&rsquo;s dialog. <a href="http://cocoadialog.sourceforge.net/">CocoaDialog</a> or a service that acts on selected text would fit the bill.</p>
+
+<p>I think this will be handy for more than just to-do lists. Let me know if you find a use for it elsewhere!</p>
+
+<p><em>Man, it took me twice as long to write that post as it did to put together the command and the bundle. Like I said: Sunday.</em></p>
+
+<h2 id="download">Download</h2>
+
+<p>[download id=&rdquo;32&rdquo;]</p>
+
+</div>
+
+</body>
+</html>

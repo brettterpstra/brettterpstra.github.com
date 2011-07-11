@@ -1,0 +1,234 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>nvALT 2.1 progress report</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">20 May 2011 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">nvALT 2.1 progress report</a></h1>
+		<p>Development on the next version of nvALT is going more slowly than I&rsquo;d like, but some very cool changes are happening. In addition to implementing the latest changes and fixes from <a href="https://github.com/scrod/nv">the main branch of Notational Velocity</a>, I&rsquo;ve also worked in a few new features and a small bucket of fixes.</p>
+
+<!--more-->
+
+<dl>
+  <dt><strong>Usability fixes</strong></dt>
+  <dd>I&rsquo;m waiting for input from elasticthreads on this one, but for now I&rsquo;m removing the hold-control-for-temporary-preview feature. It&rsquo;s baffling for people who like to use Cocoa&rsquo;s Emacs emulation when typing. Understandable, especially since it was undocumented.</dd>
+  <dd>I&rsquo;m still working on a fix for the Spaces behavior, but that&rsquo;s definitely a bug that will be squashed before the 2.1 release.</dd>
+  <dd>I&rsquo;ve updated the External Editor feature to use scrod&rsquo;s ODBEditor solution. Yes, this one consistently provides TextMate as an editing option.</dd>
+  <dt><strong>MultiMarkdown 3</strong></dt>
+  <dd>While I haven&rsquo;t implemented the fully live preview that Fletcher is hoping I will, I have made nvALT compatible with <a href="https://github.com/fletcher/peg-multimarkdown">MultiMarkdown 3</a>, if you have it installed. It&rsquo;s fast. nvALT will also check for metadata headers in your note, and if they exist it will export the straight MMD-rendered document (no custom CSS<sup id="fnref:fn1"><a href="#fn:fn1" rel="footnote">1</a></sup>).</dd>
+  <dt><strong>Tag Sync</strong></dt>
+  <dd>Totally not my doing. <a href="https://github.com/darrylhthomas">Darryl H. Thomas</a> has been hard at work revamping the Simplenote sync and adding Tag Syncing to NV. I&rsquo;ve incorporated his changes for testing, and things are looking really good.</dd>
+  <dt><strong>Preview Window</strong></dt>
+  <dd>The preview window is no longer a HUD, but rather a utility panel. This change was needed to add some additional features:
+
+    <ul>
+      <li>Lock the preview on a note so you can edit other notes and use it as a reference</li>
+      <li>Print the preview. This can easily be used to save rendered Markdown as a PDF</li>
+      <li>Icons for all features beyond the View Source button</li>
+    </ul>
+  </dd>
+  <dt><strong>Display preferences</strong></dt>
+  <dd>You can now remove the grid lines and/or add alternating row colors to the notes list. It&rsquo;s still one color across the whole window, but I may change it to allow a separate edit field color before release.</dd>
+</dl>
+
+<p>There&rsquo;s more, but my primary goal for the next week is to work with scrod to implement all of the things he&rsquo;s already fixed and bring nvALT up to parity with the trunk. It&rsquo;ll be worth it. The source is back up <a href="https://github.com/ttscoff/nv">on GitHub</a> now, so if you want to see any of these changes in action (and have Developer Tools installed), feel free. Pull requests are welcome as well.</p>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:fn1">
+      <p>This is because MMD 3 doesn&rsquo;t have any override for &ldquo;snippet&rdquo; vs. &ldquo;complete.&rdquo; If you add headers, you&rsquo;re getting a complete document. So&hellip; nvALT simply detects that and avoids outputting an HTML document with an <code>&lt;html&gt;</code> tag inside of the <code>&lt;body&gt;</code>. It&rsquo;s not beautiful, but it&rsquo;s the only sensible solution I&rsquo;ve found thus far.<a href="#fnref:fn1" rev="footnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/web-excursions-may-4-2011-may-16-2011"><span>Web excursions: May 4, 2011 - May 16, 2011</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/quick-tip-throttling-parallel-batch-processes-in-terminal"><span>Quick Tip: throttling parallel batch processes in Terminal</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/news" name="news">news</a></li>
+		
+			<li><a href="/tags/nvalt" name="nvalt">nvalt</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/nvalt-2-1-progress-report';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

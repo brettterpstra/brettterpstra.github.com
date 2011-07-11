@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>A Bash function for Markdown bloggers</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p><img src="http://brettterpstra.dev/wp-content/uploads/2011/06/markdowntypewriter.jpg" alt="Markdown Typewriter Image" class="alignright" />I store all of my writing as separate Markdown files. A basic tagging system<sup id="fnref:tag"><a href="#fn:tag" rel="footnote">1</a></sup> adds more &ldquo;searchability,&rdquo; and I can quickly locate any file with Spotlight<sup id="fnref:spot"><a href="#fn:spot" rel="footnote">2</a></sup>. Given the amount of time I spend in Terminal (well, <a href="http://www.iterm2.com/">iTerm 2</a> these days), I use <a href="http://osxdaily.com/2006/12/05/use-spotlight-from-the-command-line-with-mdfind/"><code>mdfind</code></a> quite a bit to do the Spotlight searching. This function just makes it a little more convenient to search for and quickly edit an existing document. </p>
+
+<p>By default, it looks in a Dropbox &ldquo;Writing&rdquo; folder, but you can adjust that to restrict to any folder at the top of the script. You can also set your edit command there (<code>mate</code>, <code>mvim</code>, <code>vim</code>, etc.). Then it takes all arguments and uses them as a Spotlight search, restricted to your writing folder and the Markdown filetype, and offers you a quick menu of matches. Selecting a match opens the file with your preferred editor. If there&rsquo;s only one match, it&rsquo;s opened automatically.</p>
+
+<p>It&rsquo;s written as a function to be included in your .bash_profile (or sourced from there). If you want to run it as a shell script, just remove the <code>edmd () {</code> at the top and the closing <code>}</code>, put it in your path and run <code>chmod a+x filename</code>.</p>
+
+<p>Once it&rsquo;s installed you can just type <code>edmd keyword</code> to find posts and drafts related to keyword. You can use multiple words (no quotes required) and prefixes like &ldquo;keyword:&rdquo; or &ldquo;tag:&rdquo;, just like a Spotlight query.</p>
+
+<pre lang="bash" filename="edmd.sh">
+# Edit Markdown File from Writing directory
+# Finds Markdown files matching a Spotlight-style search query
+# If there's more than one, you get a menu
+edmd () {
+  WRITINGDIR="~/Dropbox/Writing"
+  EDITCMD="mate"
+  filelist=$(mdfind -onlyin "$WRITINGDIR" "($@) AND kind:markdown")
+  listlength=$(mdfind -onlyin "$WRITINGDIR" -count "($@) AND kind:markdown")
+  if [[ $listlength &gt; 0 ]]; then
+    if [[ $listlength == 1 ]]; then
+      $EDITCMD $filelist
+    else
+      IFS=$'\n'
+      PS3='Edit which file? (1 to cancel): '
+      select OPT in "Cancel" $filelist; do
+        if [ $OPT != "Cancel" ]; then
+          $EDITCMD $OPT
+        fi
+        break
+      done
+    fi
+  else
+    return 1
+  fi
+  return 0
+}
+</pre>
+<div class="footnotes">
+  <ol>
+    <li id="fn:tag">
+      <p>I save drafts and posts to my desktop as <code>.md</code> files. During my daily review I use <a href="http://www.caseapps.com/tags/">Tags.app</a> or <a href="http://itunes.apple.com/us/app/filr/id402468144?mt=12">Filr</a> to quickly add target keywords (&lsquo;blogging&rsquo;, a tag for which blog it&rsquo;s for and one, maybe two topical tags). <a href="http://www.noodlesoft.com/hazel.php">Hazel</a> picks these up and stores them in my Dropbox &ldquo;Writing&rdquo; folder, in subfolders based on blog and filetype.<a href="#fnref:tag" rev="footnote">&#8617;</a></p>
+    </li>
+    <li id="fn:spot">
+      <p>I never realized it, but apparently Spotlight doesn&rsquo;t search these by default. My use of the <a href="https://github.com/toland/qlmarkdown">QLMarkdown Quick Look plugin</a> fixes that, I guess.<a href="#fnref:spot" rev="footnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Quick tip: AppleScript application toggle</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  <p><img src="http://brettterpstra.dev/wp-content/uploads/2011/01/tophatmagic.jpg" alt="Tophat and wand" title="tophatmagic" width="232" height="228" class="alignright size-full wp-image-1647" /></p>
+
+<p>From my hat full of stupid Mac tricks:</p>
+
+<p>I use a lesser-known (and very old) program called <a href="http://www.shadowlab.org/Software/spark.php">Spark</a> for defining most of the keyboard shortcuts on my system. I have a shortcut for every one of my most regularly-used applications, plus shortcuts for various AppleScripts, shell scripts, system functions, etc. I know there are more recent applications which do the same thing, but I&rsquo;ve had everything set up in Spark for ages and it still works a treat. Seriously, if you want an application launcher, it&rsquo;s worth checking out (and free). However, you can use this tip in any app which lets you assign a hotkey to an AppleScript (<a href="http://www.red-sweater.com/fastscripts/">FastScripts</a>, <a href="http://www.boastr.de/">BetterTouchTool</a>). </p>
+
+<p>So, anyway, I&rsquo;ve grown to like applications which have a system-wide hotkey that toggles them between foreground and hidden. It makes a lot of sense for certain applications which you check and then move on from. Sparrow, Twitter, etc. I wanted that functionality in more apps, so I run this as the AppleScript in Spark, replacing the app name with whatever I want to toggle.</p>
+
+<pre lang="applescript" filename="apptoggle.applescript" escaped="true">
+set appName to &quot;Mail&quot;
+
+set appID to bundle identifier of (info for (path to application appName))
+tell application &quot;System Events&quot;
+	if not (exists process appName) then
+		tell application appID to activate
+	else
+		if frontmost of process appName then
+			set visible of process appName to false
+		else
+			set frontmost of process appName to true
+		end if
+	end if
+end tell
+</pre>
+
+<p><del datetime="2011-01-22T18:30:55+00:00">Sorry about the <code>do shell script</code> for launching the app. I&rsquo;m really lazy about replacing more than one instance of a variable, and &ldquo;tell application appName&rdquo; doesn&rsquo;t work, even with various &ldquo;using terms from&rdquo; attempts. Know how to fix that? Let me know.</del> Thanks to D Curtis and Zettt in the comments, I&rsquo;ve put together a more elegant script. It does the same thing without shelling out, and the syntax is cleaned up. Thanks guys!</p>
+
+<p><strong>One more update:</strong> after some testing, it looks like D Curtis&rsquo; first script below is much faster for some reason (I&rsquo;m assuming that getting the &ldquo;bundle identifier of (info for (path to application appName))&rdquo; takes some extra resources). I recommend going with this one instead, but I&rsquo;m leaving both up for reference:</p>
+
+<pre lang="applescript" filename="apptoggle2.applescript" escaped="true">
+set appName to &quot;Mail&quot;
+set startIt to false
+tell application &quot;System Events&quot;
+	if not (exists process appName) then
+		set startIt to true
+	else if frontmost of process appName then
+		set visible of process appName to false
+	else
+		set frontmost of process appName to true
+	end if
+end tell
+if startIt then
+	tell application appName to activate
+end if
+</pre>
+
+</div>
+
+</body>
+</html>

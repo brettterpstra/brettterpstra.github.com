@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Automated HTML5 video encoding revisited</title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+   <link rel="stylesheet" href="/css/railscasts.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    Brett Terpstra
+  </div>
+  
+  
+<p><img src="http://brettterpstra.dev/wp-content/uploads/2011/05/html5automatorTV-small.jpg" alt="HTML5 Automator" title="HTML5 Automator" width="328" height="257" class="alignright size-full wp-image-2296" />A little while ago I approached the subject of scripting <a href="http://brettterpstra.dev/automating-html5-video-encodes/">automated encoding for HTML5 video formats</a>. I started using the process regularly as I built the <a href="http://bundle.weblogzinc.com/video/">Blogsmith Bundle video site</a>. Pretty soon I got some help from friend and TUAW editor <a href="http://www.tuaw.com/bloggers/michael-rose">Mike Rose</a>, and working together we refined the script and improved the speed tremendously. It was built for use on Mac OS X, but with just a few lines modified, it should work on any *NIX system.
+<!--more--></p>
+
+<h3 id="what-it-does">What it does</h3>
+
+<p>The script is specifically designed to take an MPEG-4, H.264 file, move it to a new folder based on the filename, create WEBM and OGV versions of it in the new folder, and upload the whole folder to a server using <code>rsync</code>. SSH information and target directories are specified in the config at the top of the script. At the end, it takes what it knows about the files and filenames and creates a TextMate Markdown blog template, inserts the video shortcode for the <a href="http://wordpress.org/extend/plugins/videojs-html5-video-player-for-wordpress/">VideoJS WordPress plugin</a> (which is common syntax for other plugins as well) and opens it for editing in TextMate. The <code>rsync</code> command really needs <a href="http://www.rootsilver.com/2007/10/keyless-ssh-sshkeygen-setup-an">keyless SSH login</a> for this to be considered fully-automated.</p>
+
+<p>If you run this script with <a href="http://www.noodlesoft.com/hazel.php">Hazel</a>, you can just render an <a href="http://en.wikipedia.org/wiki/H.264">H.264</a> video (<code>.mov</code> files that pass the H.264 test<sup id="fnref:fnh264"><a href="#fn:fnh264" rel="footnote">1</a></sup> will automatically be renamed to <code>.mp4</code>) to that folder from your screen-recording application of choice, sit back for a few minutes (or start writing the post) and wait for the pre-populated TextMate blog post to pop open. Then type or paste your text in, hit Control-Command-P (assuming you&rsquo;re set up for TextMate-&gt;WordPress blogging) and your video is posted.</p>
+
+<h3 id="improvements">Improvements</h3>
+
+<p>The first thing that happened in this rewrite was a major simplification of the WEBM encoding process, which now only takes a third of the time it did before and the files are not significantly larger in most cases. They may even look better. The old command involved two passes, one of them turning out to be unnecessary; <code>ffmpeg</code> is smarter than I thought. The new command (using the variables from the script) is just <code>/usr/local/bin/ffmpeg -i "$FILENAME" -b 614400 -s $MAXSIZE -aspect 16:9 "$BASENAME".webm</code>.</p>
+
+<p>I also added better logging, optional progress reports with <a href="http://growl.info/">Growl</a>, batch file handling and a few other refinements. The logging, if enabled in the config at the top, will output information including processing time for each file and total processing time to STDOUT (command line) and to the system log where you can watch it from Console. If you enable growl notifications, the messages at the beginning and end of each conversion will be &ldquo;growled&rdquo; on your screen. </p>
+
+<h3 id="using-the-script">Using the script</h3>
+
+<p>You&rsquo;ll need a couple of additional utilities to do the conversions.</p>
+
+<h4 id="requirements">Requirements</h4>
+
+<p>To run the script and do the encoding, you&rsquo;ll need <code>ffmpeg</code> and <code>ffmpeg2theora</code>. You can install <code>ffmpeg</code> from <a href="https://github.com/mxcl/homebrew">Homebrew</a> (<code>brew install ffmpeg</code>) quite easily, if you&rsquo;re set up for that. You can also pull the binary out of <a href="http://www.ffmpegx.com/">ffmpegX</a> with a <a href="http://hints.macworld.com/article.php?story=20061220082125312">few simple steps</a>. You can, of course, <a href="http://troykelly.com/2007/01/18/building-ffmpeg-on-os-x/">build your own</a> if you have the developer tools installed.</p>
+
+<p>ffmpeg2theora (needed for OGV conversion) no longer appears to be available from <code>brew</code>, but there are OS X binaries (and source) <a href="http://v2v.cc/~j/ffmpeg2theora/download.html">available for download</a>.</p>
+
+<p>The <a href="#thescript">script is below</a>. You&rsquo;ll want to modify the information in the configuration section at the top, and modify the template output at the bottom to suit your needs. Anything between <code>&lt;&lt;-POSTTEMPLATE</code> and <code>POSTTEMPLATE</code> is freeform text that you can edit in any way you like, including the use of $variables. If you&rsquo;d rather do something such as copy a shortcode to your clipboard and show a Growl message, just use <code>pbcopy</code> and <code>growlnotify</code>. You could also just comment out the template part and let Hazel tell you when it&rsquo;s done, if you want to handle things more manually. I&rsquo;ll let you work out the details on that.</p>
+
+<h4 id="command-line-usage">Command line usage</h4>
+
+<p>To use the script from the command line, save it as &ldquo;html5encode.sh&rdquo; somewhere in your path, change to its parent folder in Terminal and run <code>chmod a+x html5encode.sh</code>. The you can run it on any h.264 .mov or .mp4 file and it will handle the rest. It also handles batches, so you can specify multiple targets or use <code>*.mp4</code> to run it on all .mp4 files in a folder. It will process them one by one, creating new folders for each.</p>
+
+<h4 id="hazel">Hazel</h4>
+
+<p>If you want to run it with Hazel, you can follow the same procedure and set up a rule that runs a shell script when a .mov or .mp4 is detected in a watch folder. The script can then be run as a command or be pasted in its entirety into the Hazel script editor within the rule.</p>
+
+<p>You should be able to pull off using this with OS X Folder Actions, as well, but I haven&rsquo;t played with that yet.</p>
+
+<p><strong>Bonus tip:</strong> <em>If you name your original .mov or .mp4 file with a CamelCased name, it will break apart the filename and create the title of your post based on it. Not an essential feature, but kind of nifty. Well, I think so anyway.</em></p>
+
+<h3 id="thescript">The script</h3>
+
+<table>
+  <tbody>
+    <tr>
+      <td><a href="http://brettterpstra.dev/share/html5encode.sh.txt">View Raw</a></td>
+      <td><a href="http://brettterpstra.dev/share/html5encode.sh">Download</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<pre lang="bash">
+#!/bin/bash
+#################################################################
+### html5encode.sh by Brett Terpstra and Mike Rose
+### Published 05/01/2011
+### Freely distributed, modifications welcomed (with attribution)
+#################################################################
+### Configuration ###############################################
+#################################################################
+MAXSIZE="960x540"
+DISPLAYWIDTH="600"
+DISPLAYHEIGHT="338"
+SSHURL="username@ssh.host.name"
+SSHDIR="/server/folder/target/for/rsync/"
+WEBDIR="/front-end/url/path/video/" # used for blog template
+LOGGING=true # send status messages and times to STDOUT and syslog
+GROWLLOG=false # duplicate messages to growl, if installed
+##################################################################
+### END Configuration ############################################
+##################################################################
+
+# function to handle logging (if enabled) to STDOUT and STDERR 
+# as well as Growl (if enabled)
+function logit() {
+  if $LOGGING ; then
+    logger -st "HTML5 Encoder" "$1"
+    if $GROWLLOG ; then
+      /usr/local/bin/growlnotify -t "HTML5 Encoder" -a "Terminal" -m "$1"
+    fi
+  fi
+}
+
+# Count the inputs for log message
+if [[ $# -gt 1 ]]; then
+  logit "Starting batch conversion."
+  maintimer1=`date '+%s'`
+else
+  logit "Starting HTML5 Encoder"
+fi
+
+# Loop through each passed file
+for file in "$@"; do
+  timer1=`date '+%s'`
+  INPUT=$file
+  # Check that input file is H.264
+  isH264=`mdls -raw -name kMDItemCodecs $INPUT|grep H.264`
+
+  if [ !$isH264 ] ; then
+    logit "$INPUT is not h.264"
+    continue
+  fi
+
+  DIRNAME=`dirname "$INPUT"`
+  FILENAME=`basename "$INPUT"`
+  BASENAME=${FILENAME%%.*}
+  logit "Conversion of $FILENAME started on `date '+%D'` at `date '+%r'`"
+  bytesize=`stat -f '%z' $FILENAME`
+  filesize=`echo "scale = 2 ; $bytesize/1048576"|bc -lq`
+  cd "$DIRNAME"
+  if [ -d "$BASENAME" ]; then
+    logit "Found $FILENAME, but directory $BASENAME already exists. Aborting"
+    continue
+  fi
+  mkdir "$BASENAME"
+  mv "$FILENAME" "$BASENAME/"
+  cd "$BASENAME"
+  if [[ ${FILENAME#*.} -eq "mov" ]]; then mv $FILENAME ${BASENAME}.mp4; fi  
+  FILENAME=${BASENAME}.mp4
+  /usr/local/bin/ffmpeg -i "$FILENAME" -b 614400 -s $MAXSIZE -aspect 16:9 "$BASENAME".webm
+  logit "Completed webm conversion"
+  /usr/local/bin/ffmpeg2theora --videoquality 5 --audioquality 1 --max_size $MAXSIZE "$FILENAME" -o "$BASENAME.ogv"
+  logit "Completed ogv conversion"
+  /usr/local/bin/ffmpeg -i "$FILENAME" -ss 0 -vframes 1 -vcodec mjpeg -f image2 "${BASENAME}Poster.jpg"
+  logit "Created poster image"
+
+  # Create a title from camelcased filename
+  TITLE=`echo "$BASENAME"|sed 's/\([A-Z][^A-Z]*\)/&amp; /g'|sed 's/ $//'`
+  SERVER=`echo "$SSHURL"|sed 's/^.*\@//'`
+  logit "Uploading to $SERVER..."
+  cd ..
+  rsync -v -r -e ssh "`pwd`/$BASENAME" $SSHURL:$SSHDIR
+  logit "Finished Uploading"
+  # remove trailing slash from $WEBDIR
+  WEBDIR=`echo "$WEBDIR"|sed 's/\/$//'`
+  cat &gt; "$BASENAME/$BASENAME.blog.markdown" &lt;&lt;-POSTTEMPLATE
+Type: Blog Post (Markdown)
+Blog: BlogsmithVideo
+Title: $TITLE
+Keywords: 
+Status: draft
+Pings: On
+Comments: On
+Category: Tutorial
+
+Synopsis
+
+[video mp4="$WEBDIR/$BASENAME/$BASENAME.mp4" ogg="$WEBDIR/$BASENAME/$BASENAME.ogv" webm="$WEBDIR/$BASENAME/$BASENAME.webm" poster="$WEBDIR/$BASENAME/${BASENAME}Poster.jpg" preload="true" width="$DISPLAYWIDTH" height="$DISPLAYHEIGHT"]
+
+<!--more-->
+Transcript
+
+POSTTEMPLATE
+
+  open "$BASENAME/$BASENAME.blog.markdown" -a "TextMate.app"
+  timer2=`date '+%s'`
+  time=`echo "scale=2 ; ($timer2-$timer1)/60"|bc -lq`
+  logit "Conversion of $FILENAME complete"
+  logit "It took $time minutes to process a ${filesize}M MP4 to webm and ogv and upload to `echo "$SSHURL"|sed 's/^.*\@//'`."
+done
+if [[ $# -gt 1 ]]; then
+  maintimer2=`date '+%s'`
+  total=`echo "scale=2 ; ($maintimer2-$maintimer1)/60"|bc -lq`
+  logit "Batch conversion complete, total time $total minutes."
+fi
+</pre>
+
+<p>Hopefully this will make a few people&rsquo;s lives easier. Mike and I have battle tested it and it seems to be a pretty great fit for our needs. If you modify it for your own needs, please share (with credit) so that it can become as well-rounded as possible!</p>
+<div class="footnotes">
+  <ol>
+    <li id="fn:fnh264">
+      <p>The script runs a quick check using <code>mdls</code> to look for the h.264 codec. It will skip the file if it doesn&rsquo;t match the criteria. It doesn&rsquo;t check for AAC, but assumes that you know what you&rsquo;re doing to <em>some</em> extent. If you&rsquo;re running Hazel, just check for the specific extension you&rsquo;re rendering to (<code>.mov</code> or <code>.mp4</code>) to avoid any hassle from the start.<a href="#fnref:fnh264" rev="footnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+</div>
+
+</body>
+</html>

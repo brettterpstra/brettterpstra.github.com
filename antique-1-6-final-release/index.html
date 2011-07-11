@@ -1,0 +1,247 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>Antique 1.6, final release</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">17 Jun 2010 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">Antique 1.6, final release</a></h1>
+		
+<p><a href="http://brettterpstra.dev/wp-content/uploads/2010/06/AntiqueImageLinking.jpg"><img src="http://brettterpstra.dev/wp-content/uploads/2010/06/AntiqueImageLinking-150x150.jpg" alt="" title="AntiqueImageLinking" width="150" height="150" class="alignright size-thumbnail wp-image-628" /></a></p>
+
+<p><strong>For a quick &ldquo;how-to&rdquo; on using the Antique (or any) Safari Reader hack, see the <a href="http://brettterpstra.dev/howtos/install-a-safari-reader-hack/">related article</a> in the <a href="http://brettterpstra.dev/howtos/">HowTo section</a>.</strong></p>
+
+<p>This will be the last release of Antique, I think, barring a few minor fixes (follow <a href="http://twitter.com/ttscoff">@ttscoff</a> for updates on this and other projects). You can download it &lt;a href=&rdquo;[download id=&rdquo;13&rdquo; format=&rdquo;2&rdquo;]&rdquo; title=&rdquo;Antique Reader 1.6&rdquo;&gt;here&lt;/a&gt;. The code is completely open source, if anyone wants to continue the project feel free (credit would be swell, where it&rsquo;s due). I&rsquo;ll be putting my free time into <a href="http://brettterpstra.dev/2010/06/09/instapaper-beyond-for-safari/">Instapaper Beyond</a> and other more &ldquo;legitimate&rdquo; projects now (although I really would like to do a nice, high-contrast, Helvetica version&hellip;). In deference to <a href="http://farukat.es/journal/2010/06/456-stop-hacking-safari-reader">Faruk Ate&#x15F;</a>, I&rsquo;d like to clearly state that this <em>is</em> a hack, and you run a risk (albeit very minimal) of breaking your Safari install if you don&rsquo;t know what you&rsquo;re doing. I also won&rsquo;t be posting further simplified instructions for installation, but they&rsquo;re not hard to find. For advanced users, you simply need to know that you&rsquo;re replacing <code>Reader.html</code> in <code>Contents/Resources</code>.</p>
+
+<p><a href="http://brettterpstra.dev/wp-content/uploads/2010/06/AntiqueHeadlineSplit.jpg"><img src="http://brettterpstra.dev/wp-content/uploads/2010/06/AntiqueHeadlineSplit-150x150.jpg" alt="" title="AntiqueHeadlineSplit" width="150" height="150" class="alignright size-thumbnail wp-image-627" /></a></p>
+
+<p>The coolest changes, in my opinion, are an <strong>amped-up Widon&rsquo;t</strong> for headlines, and <strong>improved image linking</strong>. On the Widon&rsquo;t end, if a title exceeds the width of the headline area, it&rsquo;s actually split in the middle to provide more equal-length lines. It&rsquo;s neat-o. And for the images: I had it only lightboxing images which were too large for the style and which <em>weren&rsquo;t</em> already linked somewhere else, resulting in the user never knowing what would happen when they clicked an image. Now, if an image is linked to an external site, that link is extracted and placed on a line below the image. If an alt or title attribute are present in the image or the link, they&rsquo;re preferred over the source attribute for naming the link, which should provide a decent idea of where you&rsquo;re going, in most cases. Images which are linked, then, are always linked to the Colorbox effect, and will never take you out of the Reader page. Ah, consistency.</p>
+
+<p>Here&rsquo;s what else is new in this version.</p>
+
+<ul>
+  <li>I swapped out the scrollbar images, shifted the colors a little, and included them in the HTML file.</li>
+  <li>Some style changes, including a darker background and slightly heavier gradient</li>
+  <li>Massively fixed up the <a href="http://brettterpstra.dev/2010/06/14/ampersands-javascript/">ampersand code</a>. Also shifted ampersands 1 pixel left for better kerning within non-italicized text.</li>
+  <li>Improved smashing of empty paragraphs in bad markup to avoid huge spaces between paragraphs.</li>
+  <li>Fixed a CSS mistake I had introduced which caused the background and drop shadow to be visible before the content slid up from the bottom.</li>
+  <li>Set up an onscroll check for new elements. Every time the page is scrolled, Antique checks for new elements (i.e. additional pages that were inserted after initial load) and applies the default functions to them.</li>
+  <li>did I mention 12px Droid Sans Mono for code blocks? 12px seems reasonable, and doesn&rsquo;t change when zooming/shrinking the rest of the text.</li>
+</ul>
+
+<!-- more -->
+
+<p>Are there too many buttons in the HUD for your taste? They&rsquo;re there as an example, but you can remove them easily by commenting out the &ldquo;button&rdquo; lines at the bottom of the Reader.html file. The HUD will adjust size and position automatically based on the number of buttons you have in there, so just remove the ones that aren&rsquo;t of use to you.</p>
+
+<p>If you&rsquo;re playing with Reader styles, here&rsquo;s a tip: you can set up a &ldquo;sandbox&rdquo; page to speed up development (at least with css). Once Reader has loaded a page that has elements you want to style, right click and choose &ldquo;Inspect Element&rdquo; (obviously, you have to have the developer menu enabled in preferences). Then, right click on the doctype declaration in the element inspector and choose &ldquo;Copy as HTML.&rdquo; That will give you the full HTML of the <em>rendered</em> document, which you can save to a new HTML file. Extract the inline stylesheets and link them into external stylesheets, and you can edit in CSSEdit or Firebug. It&rsquo;s handy, given that, in order to change the live styles, you have to restart Safari every time you edit Reader.html.</p>
+
+<p>I had started working on smart quotes and other javascript-based typography changes, but decided it wasn&rsquo;t worth the time to try to come up with regular expressions that covered every possible circumstance. If anyone wants to pick up where I left off, I&rsquo;d love to see what you come up with.</p>
+
+<p><strong>For a quick &ldquo;how-to&rdquo; on using the Antique (or any) Safari Reader hack, see the <a href="http://brettterpstra.dev/howtos/install-a-safari-reader-hack/">related article</a> in the <a href="http://brettterpstra.dev/howtos/">HowTo section</a>.</strong></p>
+
+<p>[download id=&rdquo;13&rdquo; format=&rdquo;1&rdquo;]</p>
+
+<hr />
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/ampersands-javascript"><span>Ampersands & Javascript</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/redirectbuster-another-late-night-safari-extension"><span>RedirectBuster, another late night Safari Extension</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/widont" name="widont">widont</a></li>
+		
+			<li><a href="/tags/typography" name="typography">typography</a></li>
+		
+			<li><a href="/tags/antique" name="antique">antique</a></li>
+		
+			<li><a href="/tags/hacks" name="hacks">hacks</a></li>
+		
+			<li><a href="/tags/reader" name="reader">reader</a></li>
+		
+			<li><a href="/tags/safari-5" name="safari-5">safari 5</a></li>
+		
+			<li><a href="/tags/jquery" name="jquery">jquery</a></li>
+		
+			<li><a href="/tags/safari" name="safari">safari</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/antique-1-6-final-release';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

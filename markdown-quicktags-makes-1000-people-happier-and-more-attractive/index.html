@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head>	
+	<title>Markdown QuickTags makes 1000 people happier and more attractive</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="readability-verification" content="rbPZmz5uZnPmEg4UNerszNZUcyxN2aHQL7XcRewB">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+  <link rel='me' href='http://www.google.com/profiles/circlesixdesign' />
+	<meta name="robots" content="all" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="7 days" />
+	<meta name="version" content="1.0" />
+	<meta name="copyright" content="" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
+	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
+
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+
+	<!--[if IE 6]>
+	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
+	<![endif]-->
+</head>
+<body class="blog single-post">
+	<div id="header-wrapper">
+		<div id="header">
+			<h1>
+				<a id="logo" href="/" title="Brett Terpstra">Brett Terpstra</a>
+			</h1>
+			<div id="nav">
+	<ul>
+		<li><a class="current home" href="/">Home</a></li>
+		<li><a href="/categories/">Categories</a></li>
+		<li><a href="/tags/">Tags</a></li>
+		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/about/">About</a></li>
+	</ul>
+</div><!-- end: #nav -->
+		</div><!-- end: #header -->
+	</div><!-- end: #header-wrapper-->
+	<div id="content-wrapper">
+		<div id="main-container" class="clearfix">
+			<div id="content">
+	<div class="post">
+		<div class="post-meta">
+			<span class="date">23 Apr 2011 | </span>
+			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
+			<span class="categories">
+				Category: <a href="/categories/code">Code</a>
+			</span>
+		</div>
+		<h1 class="post-title"><a href="#">Markdown QuickTags makes 1000 people happier and more attractive</a></h1>
+		<p>I can&rsquo;t prove that anybody is happier, really, and attraction is entirely subjective. For all I know they were run off by the &ldquo;invalid header&rdquo; error<sup id="fnref:invalidheader"><a href="#fn:invalidheader" rel="footnote">1</a></sup> and never even tried it out, but <a href="http://wordpress.org/extend/plugins/markdown-quicktags/">Markdown QuickTags</a> <em>finally</em> passed the <a href="http://wordpress.org/extend/plugins/markdown-quicktags/stats/">1000 downloads mark</a> on the Wordpress Plugins site. I&rsquo;m celebrating by diving into nvALT for the weekend, but version 0.8 of <abbr title="Markdown QuickTags">MDQT</abbr> is in the works.</p>
+
+<p>I&rsquo;ve handled almost all of the bug reports for the plugin and it&rsquo;s a smooth-running machine for me now. If you like <a href="http://en.wikipedia.org/wiki/Markdown">Markdown</a> and use WordPress, you really should check it out. I&rsquo;m not making any money on it, but it makes my insides feel gooey to know I made your life that much easier. You&rsquo;re totally worth it.</p>
+
+<p>Here&rsquo;s a quick breakdown, if you&rsquo;ve previously never heard of Markdown QuickTags:</p>
+
+<!--more-->
+
+<p>[caption id=&rdquo;attachment_2228&rdquo; align=&rdquo;alignright&rdquo; width=&rdquo;300&rdquo; caption=&rdquo;Click for big.&rdquo;]<a href="http://brettterpstra.dev/wp-content/uploads/2011/04/MarkdownQuickTagsScreenshot4-23.jpg"><img src="http://brettterpstra.dev/wp-content/uploads/2011/04/MarkdownQuickTagsScreenshot4-23-300x213.jpg" alt="Markdown QuickTags Screenshot" title="Markdown QuickTags Screenshot" width="300" height="213" class="size-medium wp-image-2228" /></a>[/caption]</p>
+
+<p>It&rsquo;s a plugin with a powerful Markdown editor that replaces the WordPress HTML view. It provides auto-pairing, wrapping, link detection, smart list continuation, reference link title completion and much more. </p>
+
+<p>Auto-pairing and wrapping are my favorite features; select text and type the left character of a double or single quote, square, curly or angle brackets or a backtick and the appropriate pairing will surround your selection. If you type the left character without a selection, it will create the pair and place your cursor in the middle. If you finish typing and your cursor is to the immediate left of the right character in the pair, typing the right character will jump you out of the scope and not double the quote/bracket.</p>
+
+<p>If you have some reference-format links in your post (<code>[link title]: http://link.com</code>) and you select some text and hit the left square bracket twice, it will create a reference link (<code>[linked text][]</code>) and go into autocomplete mode with the list of all your reference titles ready to fill in as you type the first couple of characters. Pressing <code>[(</code> with text selected will start an inline link and fill in the &ldquo;http://&rdquo; for you, leaving it selected so you can just paste over it if you like. There&rsquo;s even a button that pops up a text field where you can paste <em>any</em> text containing links, even the full source code for a page, and it will parse them out, give them titles and insert a list of reference links into your post for you to work with.</p>
+
+<p>You can save your post as Markdown if you have a plugin installed to render it on the front end (<a href="http://wordpress.org/extend/plugins/markdown-for-wordpress-and-bbpress/">like this one</a>), or you can use the built-in Markdown (Extra) converter to turn it into clean HTML and switch back the the visual view. You can also go the other way, turning existing HTML posts into Markdown for editing using the Markdownify button at the bottom. It works <a href="http://markdownrules.com/">just like Marky</a>. There&rsquo;s also an overlay preview system (which can take custom styles) and a full-screen editing mode with customizable background color and transparency. You can even customize the font in the editor with built-in <a href="http://www.google.com/webfonts">Google fonts</a>. Whew.</p>
+
+<p>I could go on for a long, long time, but I just wanted to let people know that Markdown QuickTags is alive and kicking, and making some new strides soon. It&rsquo;s not perfect, but it definitely makes my life easier. Check it out <a href="http://wordpress.org/extend/plugins/markdown-quicktags/">at the Wordpress Plugins site</a>.</p>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:invalidheader">
+      <p>There&rsquo;s an error that&rsquo;s still plaguing the plugin where, when you first install it, it tells you it was unsuccessful because of an &ldquo;invalid header&rdquo;. I can <strong>not</strong> find the problem, but going back to your plugins page and activating it manually works fine. When it upgrades, it disables itself for the same reason, so you have to go back and enable it <em>again</em>. If you happen to know the answer to this problem, <em>please</em> let me know.<a href="#fnref:invalidheader" rev="footnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+	</div>
+	<div class="nextprev clearfix">
+		<a class="prev" href="/bored-with-your-macvim-icon-me-too"><span>Bored with your MacVim icon? Me too.</span><br/>&larr; Previous Entry</a>
+		<a class="next" href="/a-couple-of-textmate-macros-for-markdown-lists"><span>A couple of TextMate Macros for Markdown lists</span><br/>Next Entry &rarr;</a>
+	</div>
+	<div class="related-posts section">
+		<h3 class="uppercase-title">Related Posts</h3>
+		<ol>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ol>
+	</div><!-- end: related-posts -->
+	<div id="comments" class="section">
+		<div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+		<h3>Discussion</h3>
+		<div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+		<div id="disqus_thread" name="#comments">
+		</div>
+	</div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="popular-tags" class="section">	
+	<h2 class="section-title">Topics</h2>
+	<ul>
+		
+			<li><a href="/tags/markdown" name="markdown">markdown</a></li>
+		
+			<li><a href="/tags/wordpress" name="wordpress">Wordpress</a></li>
+		
+			<li><a href="/tags/plugin" name="plugin">plugin</a></li>
+		
+			<li><a href="/tags/mdqt" name="mdqt">mdqt</a></li>
+		
+	</ul>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+				<li><a href="/categories/Misc">Misc</a></li>
+			
+				<li><a href="/categories/Blog">Blog</a></li>
+			
+				<li><a href="/categories/Code">Code</a></li>
+			
+				<li><a href="/categories/Bookmarks">Bookmarks</a></li>
+			
+				<li><a href="/categories/Music">Music</a></li>
+			
+				<li><a href="/categories/Write">Write</a></li>
+			
+		</ul>
+	</div>
+</div>
+	
+
+<div id="selected-work" class="section">
+	<h2 class="section-title">Projects</h2>
+	<a href="/portfolio/" class="btn-more">more &raquo;</a>
+	
+	</ul>
+</div><!-- end: #recent-work -->
+
+</div><!-- end: #sidebar -->
+<script type="text/javascript">
+    var disqus_shortname = 'brettterpstra';
+    var disqus_identifier = '';
+    var disqus_url = '/markdown-quicktags-makes-1000-people-happier-and-more-attractive';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		</div><!-- end: #main-container -->
+	</div><!-- end: #content-wrapper -->
+	<div id="footer-wrapper">
+	<div id="footer">
+		<div id="colophon">
+			<p>Copyright &copy; 2010 All Rights Reserved. Auguste template designed and coded <small>by</small> <a href="http://www.carlofranco.ca">Gian Carlo Franco</a>. Antique variation by Brett Terpstra. Icons <small>by</small> <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango</a></p>
+		</div>
+	</div><!-- end: #footer -->
+</div><!-- end: #footer-wrapper -->
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+  </script>
+</body>
+</html>

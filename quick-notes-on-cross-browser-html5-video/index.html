@@ -61,6 +61,7 @@
 <p>I kept running into hurdles, whether it was the content-type of the file being served, or the OGV encoding not working in Firefox, weird sizing, slight variations in syntax, etc. So here are my notes on how I got from <a href="http://www.telestream.net/screen-flow/overview.htm">ScreenFlow</a> to a cross-browser HTML5 video embed. They may not be of much use outside of that situation, but they might help somebody.</p>
 
 <!--more-->
+
 <ol>
   <li>The only way I could get an OGV file that actually played in Firefox was to export from ScreenFlow in a DV format, and use <a href="http://thelittleappfactory.com/evom/">Evom</a> or <a href="http://v2v.cc/~j/ffmpeg2theora/">ffmpeg2theora</a> to convert. Note that Evom requires the file extension to be <code>mov</code>, as it doesn&rsquo;t recognize (and won&rsquo;t accept) <code>dv</code> files. Evom has a setting called HTML5 that will create both MP4 and OGV files.</li>
   <li>Aside from writing my own Ruby scripts to handle the upload to my <a href="http://aws.amazon.com/s3/">Amazon S3</a> account, <a href="http://www.panic.com/transmit/">Transmit</a> is the only app I could find that would let me automatically set appropriate MIME headers on uploaded video files, and allow me to automatically make them public. I now have a Transmit droplet in <a href="http://aptonic.com/">Dropzone</a> that will upload my files directly to the S3 bucket that my Cloudfront account uses, set their Content-Type to video/ogg and video/mp4, respectively, and make them public-readable.</li>

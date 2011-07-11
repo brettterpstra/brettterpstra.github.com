@@ -59,23 +59,22 @@
 		<p>This is a function from my OS X .bash_profile. &lsquo;fk&rsquo; is short for Find and Kill, and it lets you do a quick search of your running processes for a case-insensitive partial match of the first parameter passed to it. It&rsquo;s useful for quickly finding a process without worrying about its capitalization or full spelling, and without having to sift through (or manually grep) a long <code>ps ax</code> list.</p>
 
 <!--more-->
-<div>
-<pre><code class="bash">
-fp () { #find and list processes matching a case-insensitive partial-match string
-		ps Ao pid,comm|awk '{match($0,/[^\/]+$/); print substr($0,RSTART,RLENGTH)": "$1}'|grep -i $1|grep -v grep
-}
 
-fk () { # build menu to kill process
-    IFS=$'\n'
-    PS3='Kill which process? '
-    select OPT in $(fp $1) "Cancel"; do
-        if [ $OPT != "Cancel" ]; then
-            kill $(echo $OPT|awk '{print $NF}')
-        fi
-        break
-    done
-    unset IFS
-}
+<div class="highlight"><pre><code class="bash">fp <span class="o">()</span> <span class="o">{</span> <span class="c">#find and list processes matching a case-insensitive partial-match string</span>
+		ps Ao pid,comm|awk <span class="s1">&#39;{match($0,/[^\/]+$/); print substr($0,RSTART,RLENGTH)&quot;: &quot;$1}&#39;</span>|grep -i <span class="nv">$1</span>|grep -v grep
+<span class="o">}</span>
+
+fk <span class="o">()</span> <span class="o">{</span> <span class="c"># build menu to kill process</span>
+    <span class="nv">IFS</span><span class="o">=</span><span class="s1">$&#39;\n&#39;</span>
+    <span class="nv">PS3</span><span class="o">=</span><span class="s1">&#39;Kill which process? &#39;</span>
+    <span class="k">select </span>OPT in <span class="k">$(</span>fp <span class="nv">$1</span><span class="k">)</span> <span class="s2">&quot;Cancel&quot;</span>; <span class="k">do</span>
+<span class="k">        if</span> <span class="o">[</span> <span class="nv">$OPT</span> !<span class="o">=</span> <span class="s2">&quot;Cancel&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">            </span><span class="nb">kill</span> <span class="k">$(</span><span class="nb">echo</span> <span class="nv">$OPT</span>|awk <span class="s1">&#39;{print $NF}&#39;</span><span class="k">)</span>
+        <span class="k">fi</span>
+<span class="k">        </span><span class="nb">break</span>
+<span class="nb">    </span><span class="k">done</span>
+<span class="k">    </span><span class="nb">unset </span>IFS
+<span class="o">}</span>
 </code></pre>
 </div>
 

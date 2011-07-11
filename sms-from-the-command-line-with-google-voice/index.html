@@ -65,110 +65,112 @@
 <p>To use it, copy the code below into a text file, save it as voicesms.rb (or download it directly using the link at the top of the code), and run <code>chmod a+x voicesms.rb</code> from the command line to make it executable.</p>
 
 <div class="collapse">
-<pre lang="ruby" escaped="true" filename="voicesms.rb">
-#!/usr/bin/env ruby -rjcode -Ku
 
-require 'net/http'
-require 'net/https'
-require 'open-uri'
-require 'cgi'
-require 'optparse'
+<div class="highlight"><pre><code class="ruby"><span class="c1">#!/usr/bin/env ruby -rjcode -Ku</span>
 
-ACCOUNT = '' # Set to Google Voice account email for default account
-PASSWORD = '' # Set to Google Voice account password for default account
-NUMBERS = ['+1555444333','+1555444222'] # Set one or more numbers for default destination(s)
+<span class="nb">require</span> <span class="s1">&#39;net/http&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;net/https&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;open-uri&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;cgi&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;optparse&#39;</span>
 
-options = {}
-optparse = OptionParser.new do|opts|
-  opts.banner = &quot;Usage: voicesms.rb -n +15554443333[,+15554442222] -m \&quot;Message to send\&quot; [-u Username:Password]&quot;
+<span class="no">ACCOUNT</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span> <span class="c1"># Set to Google Voice account email for default account</span>
+<span class="no">PASSWORD</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span> <span class="c1"># Set to Google Voice account password for default account</span>
+<span class="no">NUMBERS</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;+1555444333&#39;</span><span class="p">,</span><span class="s1">&#39;+1555444222&#39;</span><span class="o">]</span> <span class="c1"># Set one or more numbers for default destination(s)</span>
 
-  options[:numbers] = NUMBERS
-  opts.on( '-n', '--numbers NUM[,NUM]', 'Phone numbers to SMS (separate multiples with comma)' ) do|numbers|
-    options[:numbers] = numbers.split(',')
-  end
+<span class="n">options</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">optparse</span> <span class="o">=</span> <span class="no">OptionParser</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span><span class="o">|</span><span class="n">opts</span><span class="o">|</span>
+  <span class="n">opts</span><span class="o">.</span><span class="n">banner</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="no">Usage</span><span class="p">:</span> <span class="n">voicesms</span><span class="o">.</span><span class="n">rb</span> <span class="o">-</span><span class="n">n</span> <span class="o">+</span><span class="mi">15554443333</span><span class="o">[</span><span class="p">,</span><span class="o">+</span><span class="mi">15554442222</span><span class="o">]</span> <span class="o">-</span><span class="n">m</span> <span class="p">\</span><span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="no">Message</span> <span class="n">to</span> <span class="nb">send</span><span class="p">\</span><span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span> <span class="o">[-</span><span class="n">u</span> <span class="no">Username</span><span class="ss">:Password</span><span class="o">]&amp;</span><span class="n">quot</span><span class="p">;</span>
 
-  options[:message] = false
-  opts.on( '-m', '--message MESSAGE', 'Message to send' ) do|msg|
-    options[:message] = msg
-  end
+  <span class="n">options</span><span class="o">[</span><span class="ss">:numbers</span><span class="o">]</span> <span class="o">=</span> <span class="no">NUMBERS</span>
+  <span class="n">opts</span><span class="o">.</span><span class="n">on</span><span class="p">(</span> <span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="s1">&#39;--numbers NUM[,NUM]&#39;</span><span class="p">,</span> <span class="s1">&#39;Phone numbers to SMS (separate multiples with comma)&#39;</span> <span class="p">)</span> <span class="k">do</span><span class="o">|</span><span class="n">numbers</span><span class="o">|</span>
+    <span class="n">options</span><span class="o">[</span><span class="ss">:numbers</span><span class="o">]</span> <span class="o">=</span> <span class="n">numbers</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="n">options</span><span class="o">[</span><span class="ss">:message</span><span class="o">]</span> <span class="o">=</span> <span class="kp">false</span>
+  <span class="n">opts</span><span class="o">.</span><span class="n">on</span><span class="p">(</span> <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;--message MESSAGE&#39;</span><span class="p">,</span> <span class="s1">&#39;Message to send&#39;</span> <span class="p">)</span> <span class="k">do</span><span class="o">|</span><span class="n">msg</span><span class="o">|</span>
+    <span class="n">options</span><span class="o">[</span><span class="ss">:message</span><span class="o">]</span> <span class="o">=</span> <span class="n">msg</span>
+  <span class="k">end</span>
    
-   options[:username] = ACCOUNT
-   options[:password] = PASSWORD
-   opts.on( '-u', '--user USERNAME:PASSWORD', 'Google Voice username and password' ) do|creds|
-     parts = creds.split(':')
-     options[:username] = parts[0]
-     options[:password] = parts[1]
-   end
+   <span class="n">options</span><span class="o">[</span><span class="ss">:username</span><span class="o">]</span> <span class="o">=</span> <span class="no">ACCOUNT</span>
+   <span class="n">options</span><span class="o">[</span><span class="ss">:password</span><span class="o">]</span> <span class="o">=</span> <span class="no">PASSWORD</span>
+   <span class="n">opts</span><span class="o">.</span><span class="n">on</span><span class="p">(</span> <span class="s1">&#39;-u&#39;</span><span class="p">,</span> <span class="s1">&#39;--user USERNAME:PASSWORD&#39;</span><span class="p">,</span> <span class="s1">&#39;Google Voice username and password&#39;</span> <span class="p">)</span> <span class="k">do</span><span class="o">|</span><span class="n">creds</span><span class="o">|</span>
+     <span class="n">parts</span> <span class="o">=</span> <span class="n">creds</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+     <span class="n">options</span><span class="o">[</span><span class="ss">:username</span><span class="o">]</span> <span class="o">=</span> <span class="n">parts</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+     <span class="n">options</span><span class="o">[</span><span class="ss">:password</span><span class="o">]</span> <span class="o">=</span> <span class="n">parts</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>
+   <span class="k">end</span>
  
-  opts.on( '-h', '--help', 'Display this screen' ) do
-    puts opts
-    exit
-  end
-end
+  <span class="n">opts</span><span class="o">.</span><span class="n">on</span><span class="p">(</span> <span class="s1">&#39;-h&#39;</span><span class="p">,</span> <span class="s1">&#39;--help&#39;</span><span class="p">,</span> <span class="s1">&#39;Display this screen&#39;</span> <span class="p">)</span> <span class="k">do</span>
+    <span class="nb">puts</span> <span class="n">opts</span>
+    <span class="nb">exit</span>
+  <span class="k">end</span>
+<span class="k">end</span>
 
-optparse.parse!
+<span class="n">optparse</span><span class="o">.</span><span class="n">parse!</span>
 
-unless options[:message]
-  puts &quot;Message required. Use -m \&quot;MESSAGE\&quot;.&quot;
-  puts &quot;Enter `voicesms.rb -h` for help.&quot;
-  exit
-end
+<span class="k">unless</span> <span class="n">options</span><span class="o">[</span><span class="ss">:message</span><span class="o">]</span>
+  <span class="nb">puts</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="no">Message</span> <span class="n">required</span><span class="o">.</span> <span class="no">Use</span> <span class="o">-</span><span class="n">m</span> <span class="p">\</span><span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="no">MESSAGE</span><span class="p">\</span><span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="o">.</span><span class="n">&amp;quot</span><span class="p">;</span>
+  <span class="nb">puts</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="no">Enter</span> <span class="sb">`voicesms.rb -h`</span> <span class="k">for</span> <span class="n">help</span><span class="o">.</span><span class="n">&amp;quot</span><span class="p">;</span>
+  <span class="nb">exit</span>
+<span class="k">end</span>
 
-def postit(uri_str, data, header = nil, limit = 3)
-    raise ArgumentError, 'HTTP redirect too deep' if limit == 0
-    url = URI.parse(uri_str)
-    http = Net::HTTP.new(url.host,443)
-    http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    response,content = http.post(url.path,data,header)
-    case response
-      when Net::HTTPSuccess     then content
-      when Net::HTTPRedirection then postit(response['location'],data,header, limit - 1)
-      else
-        puts response.inspect
-        response.error!
-    end
-end
+<span class="k">def</span> <span class="nf">postit</span><span class="p">(</span><span class="n">uri_str</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">limit</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="no">ArgumentError</span><span class="p">,</span> <span class="s1">&#39;HTTP redirect too deep&#39;</span> <span class="k">if</span> <span class="n">limit</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="no">URI</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">uri_str</span><span class="p">)</span>
+    <span class="n">http</span> <span class="o">=</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">host</span><span class="p">,</span><span class="mi">443</span><span class="p">)</span>
+    <span class="n">http</span><span class="o">.</span><span class="n">use_ssl</span> <span class="o">=</span> <span class="kp">true</span>
+    <span class="n">http</span><span class="o">.</span><span class="n">verify_mode</span> <span class="o">=</span> <span class="no">OpenSSL</span><span class="o">::</span><span class="no">SSL</span><span class="o">::</span><span class="no">VERIFY_NONE</span>
+    <span class="n">response</span><span class="p">,</span><span class="n">content</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">path</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">header</span><span class="p">)</span>
+    <span class="k">case</span> <span class="n">response</span>
+      <span class="k">when</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTPSuccess</span>     <span class="k">then</span> <span class="n">content</span>
+      <span class="k">when</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTPRedirection</span> <span class="k">then</span> <span class="n">postit</span><span class="p">(</span><span class="n">response</span><span class="o">[</span><span class="s1">&#39;location&#39;</span><span class="o">]</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">header</span><span class="p">,</span> <span class="n">limit</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="k">else</span>
+        <span class="nb">puts</span> <span class="n">response</span><span class="o">.</span><span class="n">inspect</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">error!</span>
+    <span class="k">end</span>
+<span class="k">end</span>
 
-def getit(uri_str, header, limit = 3)
-    raise ArgumentError, 'HTTP redirect too deep' if limit == 0
-    url = URI.parse(uri_str)
-    http = Net::HTTP.new(url.host,url.port)
-    http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    response,content = http.get(url.path,header)
-    case response
-      when Net::HTTPSuccess     then content
-      when Net::HTTPRedirection then getit(response['location'],header, limit - 1)
-      else
-        response.error!
-    end
-end
+<span class="k">def</span> <span class="nf">getit</span><span class="p">(</span><span class="n">uri_str</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">limit</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="no">ArgumentError</span><span class="p">,</span> <span class="s1">&#39;HTTP redirect too deep&#39;</span> <span class="k">if</span> <span class="n">limit</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="no">URI</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">uri_str</span><span class="p">)</span>
+    <span class="n">http</span> <span class="o">=</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">host</span><span class="p">,</span><span class="n">url</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
+    <span class="n">http</span><span class="o">.</span><span class="n">use_ssl</span> <span class="o">=</span> <span class="kp">true</span>
+    <span class="n">http</span><span class="o">.</span><span class="n">verify_mode</span> <span class="o">=</span> <span class="no">OpenSSL</span><span class="o">::</span><span class="no">SSL</span><span class="o">::</span><span class="no">VERIFY_NONE</span>
+    <span class="n">response</span><span class="p">,</span><span class="n">content</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">path</span><span class="p">,</span><span class="n">header</span><span class="p">)</span>
+    <span class="k">case</span> <span class="n">response</span>
+      <span class="k">when</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTPSuccess</span>     <span class="k">then</span> <span class="n">content</span>
+      <span class="k">when</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTPRedirection</span> <span class="k">then</span> <span class="n">getit</span><span class="p">(</span><span class="n">response</span><span class="o">[</span><span class="s1">&#39;location&#39;</span><span class="o">]</span><span class="p">,</span><span class="n">header</span><span class="p">,</span> <span class="n">limit</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="k">else</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">error!</span>
+    <span class="k">end</span>
+<span class="k">end</span>
 
-data = &quot;accountType=GOOGLE&amp;Email=#{options[:username]}&amp;Passwd=#{options[:password]}&amp;service=grandcentral&amp;source=brettterpstra-CLISMS-2.0&quot;
-res = postit('https://www.google.com/accounts/ClientLogin',data)
-if res
-  authcode = res.match(/Auth=(.+)/)[1]
-  header = {'Authorization' =&gt; &quot;GoogleLogin auth=#{authcode.strip}&quot;,'Content-Length' =&gt; '0'}
-  newres = getit('https://www.google.com/voice',header)
-  if newres
-    rnrse = newres.match(/'_rnr_se': '([^']+)'/)[1]
-    options[:numbers].each {|num|
-      data = &quot;_rnr_se=#{rnrse}&amp;phoneNumber=#{num.strip}&amp;text=#{CGI.escape(options[:message])}&amp;id=&quot;
-      finalres = postit('https://www.google.com/voice/sms/send/',data,header)
-      if finalres[&quot;ok&quot;]
-        puts &quot;Message sent to #{num}&quot;
-      else
-        puts &quot;Error sending to #{num}&quot;
-      end
-    }
-  else
-    newres.error!
-  end
-else
-  res.error!
-end
-</pre>
+<span class="n">data</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="n">accountType</span><span class="o">=</span><span class="no">GOOGLE</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="no">Email</span><span class="o">=</span><span class="c1">#{options[:username]}&amp;amp;Passwd=#{options[:password]}&amp;amp;service=grandcentral&amp;amp;source=brettterpstra-CLISMS-2.0&amp;quot;</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">postit</span><span class="p">(</span><span class="s1">&#39;https://www.google.com/accounts/ClientLogin&#39;</span><span class="p">,</span><span class="n">data</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">res</span>
+  <span class="n">authcode</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/Auth=(.+)/</span><span class="p">)</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>
+  <span class="n">header</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Authorization&#39;</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="no">GoogleLogin</span> <span class="n">auth</span><span class="o">=</span><span class="c1">#{authcode.strip}&amp;quot;,&#39;Content-Length&#39; =&amp;gt; &#39;0&#39;}</span>
+  <span class="n">newres</span> <span class="o">=</span> <span class="n">getit</span><span class="p">(</span><span class="s1">&#39;https://www.google.com/voice&#39;</span><span class="p">,</span><span class="n">header</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">newres</span>
+    <span class="n">rnrse</span> <span class="o">=</span> <span class="n">newres</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/&#39;_rnr_se&#39;: &#39;([^&#39;]+)&#39;/</span><span class="p">)</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>
+    <span class="n">options</span><span class="o">[</span><span class="ss">:numbers</span><span class="o">].</span><span class="n">each</span> <span class="p">{</span><span class="o">|</span><span class="n">num</span><span class="o">|</span>
+      <span class="n">data</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="n">_rnr_se</span><span class="o">=</span><span class="c1">#{rnrse}&amp;amp;phoneNumber=#{num.strip}&amp;amp;text=#{CGI.escape(options[:message])}&amp;amp;id=&amp;quot;</span>
+      <span class="n">finalres</span> <span class="o">=</span> <span class="n">postit</span><span class="p">(</span><span class="s1">&#39;https://www.google.com/voice/sms/send/&#39;</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">header</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">finalres</span><span class="o">[&amp;</span><span class="n">quot</span><span class="p">;</span><span class="n">ok</span><span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="o">]</span>
+        <span class="nb">puts</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="no">Message</span> <span class="n">sent</span> <span class="n">to</span> <span class="c1">#{num}&amp;quot;</span>
+      <span class="k">else</span>
+        <span class="nb">puts</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="no">Error</span> <span class="n">sending</span> <span class="n">to</span> <span class="c1">#{num}&amp;quot;</span>
+      <span class="k">end</span>
+    <span class="p">}</span>
+  <span class="k">else</span>
+    <span class="n">newres</span><span class="o">.</span><span class="n">error!</span>
+  <span class="k">end</span>
+<span class="k">else</span>
+  <span class="n">res</span><span class="o">.</span><span class="n">error!</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
 </div>
 
 <h3 id="usage">Usage</h3>

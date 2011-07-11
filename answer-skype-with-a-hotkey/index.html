@@ -58,59 +58,61 @@
 		<h1 class="post-title"><a href="#">Answer Skype with a hotkey</a></h1>
 		<p><img src="http://brettterpstra.dev/wp-content/uploads/2010/10/applescriptskypeicons.jpg" alt="applescriptskypeicons.jpg" border="0" width="198" height="183" class="alignright" />If you use <a href="http://www.skype.com/">Skype</a> and happen to be as clumsy as I am, you may have run into this at some point: you see a call come in, you fumble for your headset, you go back to your mouse, find the cursor on your big screen and then try to click the &ldquo;Answer&rdquo; button on the call window&hellip; only to miss the call because you took too long. I solved this for myself a while back, and thought I&rsquo;d share my solution.</p>
 
-<p>It&rsquo;s a fairly simple AppleScript that requires nothing but Skype. It will make good use of <a href="http://growl.info/">Growl</a> if you have it installed, but it&rsquo;s only needed for visual feedback; the script will function fine without it. I use <a href="http://www.shadowlab.org/Software/spark.php">Spark</a> to trigger it, but you can use any kind of launcher that can run AppleScripts. If Spark isn&rsquo;t your cup of tea, definitely check out <a href="http://www.red-sweater.com/fastscripts/">FastScripts</a>. Ultimately, you just need to assign the following script to a hotkey&hellip;<!--more-->
-### The script</p>
+<p>It&rsquo;s a fairly simple AppleScript that requires nothing but Skype. It will make good use of <a href="http://growl.info/">Growl</a> if you have it installed, but it&rsquo;s only needed for visual feedback; the script will function fine without it. I use <a href="http://www.shadowlab.org/Software/spark.php">Spark</a> to trigger it, but you can use any kind of launcher that can run AppleScripts. If Spark isn&rsquo;t your cup of tea, definitely check out <a href="http://www.red-sweater.com/fastscripts/">FastScripts</a>. Ultimately, you just need to assign the following script to a hotkey&hellip;
+<!--more--></p>
 
-<pre lang="applescript" filename="SkypeAnswer.applescript" escaped="true">
-global _proc
-global use_growl
+<h3 id="the-script">The script</h3>
 
-tell application &quot;System Events&quot; to set _proc to name of processes as list
-if _proc contains &quot;GrowlHelperApp&quot; then
-	set use_growl to true
-	my growlRegister()
-else
-	set use_growl to false
-end if
+<div class="highlight"><pre><code class="applescript"><span class="k">global</span> <span class="err">_proc</span>
+<span class="k">global</span> <span class="nv">use_growl</span>
 
-if _proc contains &quot;Skype&quot; then
-	tell application &quot;Skype&quot;
-		set calls to send command &quot;SEARCH ACTIVECALLS&quot; script name &quot;AnsweringScript&quot;
-		set callID to last word of calls
-		if callID is not &quot;CALLS&quot; then
-			set status to send command &quot;GET CALL &quot; &amp; callID &amp; &quot; STATUS&quot; script name &quot;AnsweringScript&quot;
-			if last word of status is &quot;RINGING&quot; then
-				send command &quot;ALTER CALL &quot; &amp; callID &amp; &quot; ANSWER&quot; script name &quot;AnsweringScript&quot;
-				my growlNotify(&quot;SkypeAnswer&quot;, &quot;Answering call&quot;)
-				return
-			else
-				send command &quot;ALTER CALL &quot; &amp; callID &amp; &quot; HANGUP&quot; script name &quot;AnsweringScript&quot;
-				my growlNotify(&quot;SkypeAnswer&quot;, &quot;Hanging up&quot;)
-			end if
-		else
-			my growlNotify(&quot;SkypeAnswer&quot;, &quot;No call found to answer or hang up&quot;)
-		end if
-	end tell
-else
-	my growlNotify(&quot;SkypeAnswer&quot;, &quot;Skype not detected&quot;)
-end if
+<span class="k">tell</span> <span class="nb">application</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">System</span> <span class="nv">Events</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="k">to</span> <span class="k">set</span> <span class="err">_proc</span> <span class="k">to</span> <span class="na">name</span> <span class="k">of</span> <span class="nv">processes</span> <span class="k">as</span> <span class="nv">list</span>
+<span class="k">if</span> <span class="err">_proc</span> <span class="ow">contains</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">GrowlHelperApp</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="k">then</span>
+	<span class="k">set</span> <span class="nv">use_growl</span> <span class="k">to</span> <span class="no">true</span>
+	<span class="k">my</span> <span class="nv">growlRegister</span><span class="p">()</span>
+<span class="k">else</span>
+	<span class="k">set</span> <span class="nv">use_growl</span> <span class="k">to</span> <span class="no">false</span>
+<span class="k">end</span> <span class="k">if</span>
 
-using terms from application &quot;GrowlHelperApp&quot;
-	on growlRegister()
-		tell application &quot;GrowlHelperApp&quot;
-			register as application &quot;SkypeAnswer&quot; all notifications {&quot;Alert&quot;} default notifications {&quot;Alert&quot;} icon of application &quot;Skype.app&quot;
-		end tell
-	end growlRegister
+<span class="k">if</span> <span class="err">_proc</span> <span class="ow">contains</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">Skype</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="k">then</span>
+	<span class="k">tell</span> <span class="nb">application</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">Skype</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+		<span class="k">set</span> <span class="nv">calls</span> <span class="k">to</span> <span class="nv">send</span> <span class="nv">command</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">SEARCH</span> <span class="nv">ACTIVECALLS</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="nv">script</span> <span class="na">name</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">AnsweringScript</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+		<span class="k">set</span> <span class="nv">callID</span> <span class="k">to</span> <span class="nb">last</span> <span class="nb">word</span> <span class="k">of</span> <span class="nv">calls</span>
+		<span class="k">if</span> <span class="nv">callID</span> <span class="ow">is not</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">CALLS</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="k">then</span>
+			<span class="k">set</span> <span class="nv">status</span> <span class="k">to</span> <span class="nv">send</span> <span class="nv">command</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">GET</span> <span class="nv">CALL</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="nv">callID</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="nv">STATUS</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="nv">script</span> <span class="na">name</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">AnsweringScript</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+			<span class="k">if</span> <span class="nb">last</span> <span class="nb">word</span> <span class="k">of</span> <span class="nv">status</span> <span class="ow">is</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">RINGING</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="k">then</span>
+				<span class="nv">send</span> <span class="nv">command</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">ALTER</span> <span class="nv">CALL</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="nv">callID</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="nv">ANSWER</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="nv">script</span> <span class="na">name</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">AnsweringScript</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+				<span class="k">my</span> <span class="nv">growlNotify</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">SkypeAnswer</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="p">,</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">Answering</span> <span class="nv">call</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="p">)</span>
+				<span class="no">return</span>
+			<span class="k">else</span>
+				<span class="nv">send</span> <span class="nv">command</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">ALTER</span> <span class="nv">CALL</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="nv">callID</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="nv">HANGUP</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="nv">script</span> <span class="na">name</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">AnsweringScript</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+				<span class="k">my</span> <span class="nv">growlNotify</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">SkypeAnswer</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="p">,</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">Hanging</span> <span class="nv">up</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="p">)</span>
+			<span class="k">end</span> <span class="k">if</span>
+		<span class="k">else</span>
+			<span class="k">my</span> <span class="nv">growlNotify</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">SkypeAnswer</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="p">,</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">No</span> <span class="nv">call</span> <span class="nv">found</span> <span class="k">to</span> <span class="nv">answer</span> <span class="ow">or</span> <span class="nv">hang</span> <span class="nv">up</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="p">)</span>
+		<span class="k">end</span> <span class="k">if</span>
+	<span class="k">end</span> <span class="k">tell</span>
+<span class="k">else</span>
+	<span class="k">my</span> <span class="nv">growlNotify</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">SkypeAnswer</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="p">,</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">Skype</span> <span class="ow">not</span> <span class="nv">detected</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="p">)</span>
+<span class="k">end</span> <span class="k">if</span>
 
-	on growlNotify(grrTitle, grrDescription)
-		if use_growl is true then
-			tell application &quot;GrowlHelperApp&quot;
-				notify with name &quot;Alert&quot; title grrTitle description grrDescription application name &quot;SkypeAnswer&quot;
-			end tell
-		end if
-	end growlNotify
-end using terms from
-</pre>
+<span class="k">using terms from</span> <span class="nb">application</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">GrowlHelperApp</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+	<span class="nb">on</span> <span class="nv">growlRegister</span><span class="p">()</span>
+		<span class="k">tell</span> <span class="nb">application</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">GrowlHelperApp</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+			<span class="nb">register</span> <span class="k">as</span> <span class="nb">application</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">SkypeAnswer</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="nv">all</span> <span class="nv">notifications</span> <span class="p">{</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">Alert</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="p">}</span> <span class="nv">default</span> <span class="nv">notifications</span> <span class="p">{</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">Alert</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="p">}</span> <span class="nv">icon</span> <span class="k">of</span> <span class="nb">application</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">Skype</span><span class="p">.</span><span class="nv">app</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+		<span class="k">end</span> <span class="k">tell</span>
+	<span class="k">end</span> <span class="nv">growlRegister</span>
+
+	<span class="nb">on</span> <span class="nv">growlNotify</span><span class="p">(</span><span class="nv">grrTitle</span><span class="p">,</span> <span class="nv">grrDescription</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nv">use_growl</span> <span class="ow">is</span> <span class="no">true</span> <span class="k">then</span>
+			<span class="k">tell</span> <span class="nb">application</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">GrowlHelperApp</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+				<span class="nv">notify</span> <span class="nv">with</span> <span class="na">name</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">Alert</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="na">title</span> <span class="nv">grrTitle</span> <span class="nv">description</span> <span class="nv">grrDescription</span> <span class="nb">application</span> <span class="na">name</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">SkypeAnswer</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+			<span class="k">end</span> <span class="k">tell</span>
+		<span class="k">end</span> <span class="k">if</span>
+	<span class="k">end</span> <span class="nv">growlNotify</span>
+<span class="k">end</span> <span class="k">using terms from</span>
+</code></pre>
+</div>
 
 <p><a href="applescript://com.apple.scripteditor?action=new&amp;script=global%20_proc%0Aglobal%20use_growl%0A%0Atell%20application%20%22System%20Events%22%20to%20set%20_proc%20to%20name%20of%20processes%20as%20list%0Aif%20_proc%20contains%20%22GrowlHelperApp%22%20then%0A%09set%20use_growl%20to%20true%0A%09my%20growlRegister%28%29%0Aelse%0A%09set%20use_growl%20to%20false%0Aend%20if%0A%0Aif%20_proc%20contains%20%22Skype%22%20then%0A%09tell%20application%20%22Skype%22%0A%09%09set%20calls%20to%20send%20command%20%22SEARCH%20ACTIVECALLS%22%20script%20name%20%22AnsweringScript%22%0A%09%09set%20callID%20to%20last%20word%20of%20calls%0A%09%09if%20callID%20is%20not%20%22CALLS%22%20then%0A%09%09%09set%20status%20to%20send%20command%20%22GET%20CALL%20%22%20%26%20callID%20%26%20%22%20STATUS%22%20script%20name%20%22AnsweringScript%22%0A%09%09%09if%20last%20word%20of%20status%20is%20%22RINGING%22%20then%0A%09%09%09%09send%20command%20%22ALTER%20CALL%20%22%20%26%20callID%20%26%20%22%20ANSWER%22%20script%20name%20%22AnsweringScript%22%0A%09%09%09%09my%20growlNotify%28%22SkypeAnswer%22%2C%20%22Answering%20call%22%29%0A%09%09%09%09return%0A%09%09%09else%0A%09%09%09%09send%20command%20%22ALTER%20CALL%20%22%20%26%20callID%20%26%20%22%20HANGUP%22%20script%20name%20%22AnsweringScript%22%0A%09%09%09%09my%20growlNotify%28%22SkypeAnswer%22%2C%20%22Hanging%20up%22%29%0A%09%09%09end%20if%0A%09%09else%0A%09%09%09my%20growlNotify%28%22SkypeAnswer%22%2C%20%22No%20call%20found%20to%20answer%20or%20hang%20up%22%29%0A%09%09end%20if%0A%09end%20tell%0Aelse%0A%09my%20growlNotify%28%22SkypeAnswer%22%2C%20%22Skype%20not%20detected%22%29%0Aend%20if%0A%0Ausing%20terms%20from%20application%20%22GrowlHelperApp%22%0A%09on%20growlRegister%28%29%0A%09%09tell%20application%20%22GrowlHelperApp%22%0A%09%09%09register%20as%20application%20%22SkypeAnswer%22%20all%20notifications%20%7B%22Alert%22%7D%20default%20notifications%20%7B%22Alert%22%7D%20icon%20of%20application%20%22Skype%2Eapp%22%0A%09%09end%20tell%0A%09end%20growlRegister%0A%09%0A%09on%20growlNotify%28grrTitle%2C%20grrDescription%29%0A%09%09if%20use_growl%20is%20true%20then%0A%09%09%09tell%20application%20%22GrowlHelperApp%22%0A%09%09%09%09notify%20with%20name%20%22Alert%22%20title%20grrTitle%20description%20grrDescription%20application%20name%20%22SkypeAnswer%22%0A%09%09%09end%20tell%0A%09%09end%20if%0A%09end%20growlNotify%0Aend%20using%20terms%20from">Open this script in your Script Editor</a></p>
 

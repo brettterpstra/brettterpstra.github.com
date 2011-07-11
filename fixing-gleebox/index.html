@@ -57,8 +57,9 @@
 		</div>
 		<h1 class="post-title"><a href="#">Fixing Gleebox</a></h1>
 		
-<p><a href="http://brettterpstra.dev/wp-content/uploads/2010/07/defaultgleeboxhighlights.jpg"><img src="http://brettterpstra.dev/wp-content/uploads/2010/07/defaultgleeboxhighlights-150x150.jpg" alt="" title="defaultgleeboxhighlights" width="150" height="150" class="size-thumbnail wp-image-784 alignright" /></a>If you haven&rsquo;t tried it, <a href="http://thegleebox.com/">gleeBox</a> is an amazing extension. I have it installed in my Firefox and Chrome setups, and I&rsquo;m more than thrilled that it&rsquo;s finally available for Safari. It lets you do a lot of crazy (and useful) things with keyboard commands on any website. There&rsquo;s a <a href="http://www.pimpmysafari.com/extensions/gleebox-command-line-interface-for-safari">great writeup over at PimpMySafari.com</a>, so I won&rsquo;t go into depth on the wonderful parts. I&rsquo;ll concentrate on the one thing that bugs me about gleeBox: the highlight colors on found and selected elements. They are, in my opinion, a little obnoxious.
-<!--more--></p>
+<p><a href="http://brettterpstra.dev/wp-content/uploads/2010/07/defaultgleeboxhighlights.jpg"><img src="http://brettterpstra.dev/wp-content/uploads/2010/07/defaultgleeboxhighlights-150x150.jpg" alt="" title="defaultgleeboxhighlights" width="150" height="150" class="size-thumbnail wp-image-784 alignright" /></a>If you haven&rsquo;t tried it, <a href="http://thegleebox.com/">gleeBox</a> is an amazing extension. I have it installed in my Firefox and Chrome setups, and I&rsquo;m more than thrilled that it&rsquo;s finally available for Safari. It lets you do a lot of crazy (and useful) things with keyboard commands on any website. There&rsquo;s a <a href="http://www.pimpmysafari.com/extensions/gleebox-command-line-interface-for-safari">great writeup over at PimpMySafari.com</a>, so I won&rsquo;t go into depth on the wonderful parts. I&rsquo;ll concentrate on the one thing that bugs me about gleeBox: the highlight colors on found and selected elements. They are, in my opinion, a little obnoxious.</p>
+
+<!--more-->
 
 <p>Fortunately, another Safari extension comes to the rescue. <a href="http://code.grid.in.th/">User CSS</a> is a pretty effective way to use slightly-modified <a href="userstyles.org/">userstyles</a> and generate your own CSS overrides. If you happen to have both extensions installed (or are on your way to get them right now), here&rsquo;s a recipe for de-uglifying gleeBox (<a href="http://brettterpstra.dev/wp-content/uploads/2010/07/UserCSSGleebox.jpg">settings screenshot</a>):</p>
 
@@ -68,18 +69,18 @@
   <li>Add the code below in the Styles field:</li>
 </ol>
 
-<pre lang="css">
-body .GleeHL { 
-	background-color:#eef49b !important;
-	-webkit-box-shadow:none !important;
-	border:solid 1px #dfec2c !important;
-	padding:0 !important;
-}
-body .GleeReaped {
-	background-color:#f6f9c9 !important;
-	border:solid 1px #c0c660 !important;
-}
-</pre>
+<div class="highlight"><pre><code class="css"><span class="nt">body</span> <span class="nc">.GleeHL</span> <span class="p">{</span> 
+	<span class="k">background-color</span><span class="o">:</span><span class="m">#eef49b</span> <span class="cp">!important</span><span class="p">;</span>
+	<span class="o">-</span><span class="n">webkit</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span><span class="k">none</span> <span class="cp">!important</span><span class="p">;</span>
+	<span class="k">border</span><span class="o">:</span><span class="k">solid</span> <span class="m">1px</span> <span class="m">#dfec2c</span> <span class="cp">!important</span><span class="p">;</span>
+	<span class="k">padding</span><span class="o">:</span><span class="m">0</span> <span class="cp">!important</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">body</span> <span class="nc">.GleeReaped</span> <span class="p">{</span>
+	<span class="k">background-color</span><span class="o">:</span><span class="m">#f6f9c9</span> <span class="cp">!important</span><span class="p">;</span>
+	<span class="k">border</span><span class="o">:</span><span class="k">solid</span> <span class="m">1px</span> <span class="m">#c0c660</span> <span class="cp">!important</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
 
 <p><a href="http://brettterpstra.dev/wp-content/uploads/2010/07/adjustedGleeboxHighlights.jpg"><img src="http://brettterpstra.dev/wp-content/uploads/2010/07/adjustedGleeboxHighlights-150x150.jpg" alt="" title="adjustedGleeboxHighlights" width="150" height="150" class="size-thumbnail wp-image-782 alignright" /></a>The highlights should be prettier now, even if the change is fairly subtle. The style also removes the padding and shadow on the selected item so that, in most cases, selected items don&rsquo;t jump around and move other elements as you tab through the page. Let me know if it doesn&rsquo;t work for you. Obviously, the colors are adjustable to taste. You could even create special overrides for certain sites to match color schemes better&hellip; I mean, if you were crazy obsessive or something. If you come up with a better all-around color set, let me know!</p>
 

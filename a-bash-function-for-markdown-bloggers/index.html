@@ -64,34 +64,35 @@
 
 <p>Once it&rsquo;s installed you can just type <code>edmd keyword</code> to find posts and drafts related to keyword. You can use multiple words (no quotes required) and prefixes like &ldquo;keyword:&rdquo; or &ldquo;tag:&rdquo;, just like a Spotlight query.</p>
 
-<pre lang="bash" filename="edmd.sh">
-# Edit Markdown File from Writing directory
-# Finds Markdown files matching a Spotlight-style search query
-# If there's more than one, you get a menu
-edmd () {
-  WRITINGDIR="~/Dropbox/Writing"
-  EDITCMD="mate"
-  filelist=$(mdfind -onlyin "$WRITINGDIR" "($@) AND kind:markdown")
-  listlength=$(mdfind -onlyin "$WRITINGDIR" -count "($@) AND kind:markdown")
-  if [[ $listlength &gt; 0 ]]; then
-    if [[ $listlength == 1 ]]; then
-      $EDITCMD $filelist
-    else
-      IFS=$'\n'
-      PS3='Edit which file? (1 to cancel): '
-      select OPT in "Cancel" $filelist; do
-        if [ $OPT != "Cancel" ]; then
-          $EDITCMD $OPT
-        fi
-        break
-      done
-    fi
-  else
-    return 1
-  fi
-  return 0
-}
-</pre>
+<div class="highlight"><pre><code class="bash"><span class="c"># Edit Markdown File from Writing directory</span>
+<span class="c"># Finds Markdown files matching a Spotlight-style search query</span>
+<span class="c"># If there&#39;s more than one, you get a menu</span>
+edmd <span class="o">()</span> <span class="o">{</span>
+  <span class="nv">WRITINGDIR</span><span class="o">=</span><span class="s2">&quot;~/Dropbox/Writing&quot;</span>
+  <span class="nv">EDITCMD</span><span class="o">=</span><span class="s2">&quot;mate&quot;</span>
+  <span class="nv">filelist</span><span class="o">=</span><span class="k">$(</span>mdfind -onlyin <span class="s2">&quot;$WRITINGDIR&quot;</span> <span class="s2">&quot;($@) AND kind:markdown&quot;</span><span class="k">)</span>
+  <span class="nv">listlength</span><span class="o">=</span><span class="k">$(</span>mdfind -onlyin <span class="s2">&quot;$WRITINGDIR&quot;</span> -count <span class="s2">&quot;($@) AND kind:markdown&quot;</span><span class="k">)</span>
+  <span class="k">if</span> <span class="o">[[</span> <span class="nv">$listlength</span> &gt; 0 <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">    if</span> <span class="o">[[</span> <span class="nv">$listlength</span> <span class="o">==</span> 1 <span class="o">]]</span>; <span class="k">then</span>
+      <span class="nv">$EDITCMD</span> <span class="nv">$filelist</span>
+    <span class="k">else</span>
+<span class="k">      </span><span class="nv">IFS</span><span class="o">=</span><span class="s1">$&#39;\n&#39;</span>
+      <span class="nv">PS3</span><span class="o">=</span><span class="s1">&#39;Edit which file? (1 to cancel): &#39;</span>
+      <span class="k">select </span>OPT in <span class="s2">&quot;Cancel&quot;</span> <span class="nv">$filelist</span>; <span class="k">do</span>
+<span class="k">        if</span> <span class="o">[</span> <span class="nv">$OPT</span> !<span class="o">=</span> <span class="s2">&quot;Cancel&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+          <span class="nv">$EDITCMD</span> <span class="nv">$OPT</span>
+        <span class="k">fi</span>
+<span class="k">        </span><span class="nb">break</span>
+<span class="nb">      </span><span class="k">done</span>
+<span class="k">    fi</span>
+<span class="k">  else</span>
+<span class="k">    return </span>1
+  <span class="k">fi</span>
+<span class="k">  return </span>0
+<span class="o">}</span>
+</code></pre>
+</div>
+
 <div class="footnotes">
   <ol>
     <li id="fn:tag">

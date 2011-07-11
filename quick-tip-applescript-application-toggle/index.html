@@ -64,43 +64,44 @@
 
 <p>So, anyway, I&rsquo;ve grown to like applications which have a system-wide hotkey that toggles them between foreground and hidden. It makes a lot of sense for certain applications which you check and then move on from. Sparrow, Twitter, etc. I wanted that functionality in more apps, so I run this as the AppleScript in Spark, replacing the app name with whatever I want to toggle.</p>
 
-<pre lang="applescript" filename="apptoggle.applescript" escaped="true">
-set appName to &quot;Mail&quot;
+<div class="highlight"><pre><code class="applescript"><span class="k">set</span> <span class="nv">appName</span> <span class="k">to</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">Mail</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
 
-set appID to bundle identifier of (info for (path to application appName))
-tell application &quot;System Events&quot;
-	if not (exists process appName) then
-		tell application appID to activate
-	else
-		if frontmost of process appName then
-			set visible of process appName to false
-		else
-			set frontmost of process appName to true
-		end if
-	end if
-end tell
-</pre>
+<span class="k">set</span> <span class="nv">appID</span> <span class="k">to</span> <span class="nb">bundle</span> <span class="na">identifier</span> <span class="k">of</span> <span class="p">(</span><span class="nb">info for</span> <span class="p">(</span><span class="nb">path to</span> <span class="nb">application</span> <span class="nv">appName</span><span class="p">))</span>
+<span class="k">tell</span> <span class="nb">application</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">System</span> <span class="nv">Events</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">exists</span> <span class="nv">process</span> <span class="nv">appName</span><span class="p">)</span> <span class="k">then</span>
+		<span class="k">tell</span> <span class="nb">application</span> <span class="nv">appID</span> <span class="k">to</span> <span class="nb">activate</span>
+	<span class="k">else</span>
+		<span class="k">if</span> <span class="na">frontmost</span> <span class="k">of</span> <span class="nv">process</span> <span class="nv">appName</span> <span class="k">then</span>
+			<span class="k">set</span> <span class="na">visible</span> <span class="k">of</span> <span class="nv">process</span> <span class="nv">appName</span> <span class="k">to</span> <span class="no">false</span>
+		<span class="k">else</span>
+			<span class="k">set</span> <span class="na">frontmost</span> <span class="k">of</span> <span class="nv">process</span> <span class="nv">appName</span> <span class="k">to</span> <span class="no">true</span>
+		<span class="k">end</span> <span class="k">if</span>
+	<span class="k">end</span> <span class="k">if</span>
+<span class="k">end</span> <span class="k">tell</span>
+</code></pre>
+</div>
 
 <p><del datetime="2011-01-22T18:30:55+00:00">Sorry about the <code>do shell script</code> for launching the app. I&rsquo;m really lazy about replacing more than one instance of a variable, and &ldquo;tell application appName&rdquo; doesn&rsquo;t work, even with various &ldquo;using terms from&rdquo; attempts. Know how to fix that? Let me know.</del> Thanks to D Curtis and Zettt in the comments, I&rsquo;ve put together a more elegant script. It does the same thing without shelling out, and the syntax is cleaned up. Thanks guys!</p>
 
 <p><strong>One more update:</strong> after some testing, it looks like D Curtis&rsquo; first script below is much faster for some reason (I&rsquo;m assuming that getting the &ldquo;bundle identifier of (info for (path to application appName))&rdquo; takes some extra resources). I recommend going with this one instead, but I&rsquo;m leaving both up for reference:</p>
 
-<pre lang="applescript" filename="apptoggle2.applescript" escaped="true">
-set appName to &quot;Mail&quot;
-set startIt to false
-tell application &quot;System Events&quot;
-	if not (exists process appName) then
-		set startIt to true
-	else if frontmost of process appName then
-		set visible of process appName to false
-	else
-		set frontmost of process appName to true
-	end if
-end tell
-if startIt then
-	tell application appName to activate
-end if
-</pre>
+<div class="highlight"><pre><code class="applescript"><span class="k">set</span> <span class="nv">appName</span> <span class="k">to</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">Mail</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+<span class="k">set</span> <span class="nv">startIt</span> <span class="k">to</span> <span class="no">false</span>
+<span class="k">tell</span> <span class="nb">application</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">System</span> <span class="nv">Events</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">exists</span> <span class="nv">process</span> <span class="nv">appName</span><span class="p">)</span> <span class="k">then</span>
+		<span class="k">set</span> <span class="nv">startIt</span> <span class="k">to</span> <span class="no">true</span>
+	<span class="k">else</span> <span class="k">if</span> <span class="na">frontmost</span> <span class="k">of</span> <span class="nv">process</span> <span class="nv">appName</span> <span class="k">then</span>
+		<span class="k">set</span> <span class="na">visible</span> <span class="k">of</span> <span class="nv">process</span> <span class="nv">appName</span> <span class="k">to</span> <span class="no">false</span>
+	<span class="k">else</span>
+		<span class="k">set</span> <span class="na">frontmost</span> <span class="k">of</span> <span class="nv">process</span> <span class="nv">appName</span> <span class="k">to</span> <span class="no">true</span>
+	<span class="k">end</span> <span class="k">if</span>
+<span class="k">end</span> <span class="k">tell</span>
+<span class="k">if</span> <span class="nv">startIt</span> <span class="k">then</span>
+	<span class="k">tell</span> <span class="nb">application</span> <span class="nv">appName</span> <span class="k">to</span> <span class="nb">activate</span>
+<span class="k">end</span> <span class="k">if</span>
+</code></pre>
+</div>
+
 
 	</div>
 	<div class="nextprev clearfix">

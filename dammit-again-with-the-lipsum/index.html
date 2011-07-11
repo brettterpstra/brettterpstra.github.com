@@ -62,6 +62,7 @@
 <p>I used a Gem called <a href="https://github.com/postmodern/raingrams">Raingrams</a>, along with <a href="https://github.com/nex3/maruku">Maruku</a> for processing Markdown to HTML. See, if I had it output Markdown to begin with, I had the flexibility to do both easily. I&rsquo;m posting the main script, which you can modify to output various elements and amounts of text. Even if you don&rsquo;t know ruby, you can probably find your way around with a little guessing. In the section after the function definitions you can take any of the lines and output what you want by mixing or removing those elements.</p>
 
 <!--more-->
+
 <p>This script requires Rubygems, and the Raingrams and Maruku gems. If you have Rubygems installed, you can just type <code>sudo gem install raingrams</code> and <code>sudo gem install maruku</code> at the command line to quickly get both on your system. If you don&rsquo;t have Rubygems, you might want to skip this one, as you&rsquo;re in for more trouble than this will pay off&hellip;</p>
 
 <p>You&rsquo;ll also need a text file to pull from. I&rsquo;m using a chopped up version of 1984, with just enough paragraphs to get some good randomness. You can <a href="http://brettterpstra.dev/share/1984trunc.txt">find it here</a>, if you want it. Otherwise, choose your favorite text file and make it long enough to be random and short enough to be fast. That might take some experimentation. Put the text in a file called <code>inputtext.txt</code> in a directory called <code>words</code> in the root of your home folder. The final path should look like <code>/Users/[YOUR USER NAME]/words/inputtext.txt</code>.</p>
@@ -70,98 +71,98 @@
 
 <p>The script should have enough comments to make it relatively easy to dissect and rebuild as a TextExpander snippet for any individual part of it.</p>
 
-<pre lang="ruby" escaped="true" filename="randomwords.rb">
-#!/usr/bin/env ruby -rjcode -Ku
+<div class="highlight"><pre><code class="ruby"><span class="c1">#!/usr/bin/env ruby -rjcode -Ku</span>
 
-require 'rubygems'
-require 'raingrams'
-require 'maruku'
+<span class="nb">require</span> <span class="s1">&#39;rubygems&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;raingrams&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;maruku&#39;</span>
 
-include Raingrams
+<span class="kp">include</span> <span class="no">Raingrams</span>
 
-# All (min,max) pairs need max &gt; min
+<span class="c1"># All (min,max) pairs need max &amp;gt; min</span>
 
-@model = BigramModel.build do |model|
-  model.train_with_text File.new(File.expand_path('~/words/inputtext.txt'),'r').read
-end
+<span class="vi">@model</span> <span class="o">=</span> <span class="no">BigramModel</span><span class="o">.</span><span class="n">build</span> <span class="k">do</span> <span class="o">|</span><span class="n">model</span><span class="o">|</span>
+  <span class="n">model</span><span class="o">.</span><span class="n">train_with_text</span> <span class="no">File</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s1">&#39;~/words/inputtext.txt&#39;</span><span class="p">),</span><span class="s1">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span>
+<span class="k">end</span>
 
-@model.refresh
+<span class="vi">@model</span><span class="o">.</span><span class="n">refresh</span>
 
-# generates a paragraph with random sentences
-# min = minimum sentences
-# max = maximum sentences
-def graf(min,max) 
-  # grab the paragraph and split it into words
-  para = @model.random_paragraph({:min_sentences =&gt; min,:max_sentences =&gt; max }).split(' ')
-  # add a random italics element
-  em = (rand(para.count - 10) + 10)
-  para[em] = &quot;*#{para[em]}*&quot;
-  # add a random bold element
-  strong = (rand(para.count - 10) + 10)
-  # make sure they don't overlap
-  strong = strong - 2 if strong == em
-  para[strong] = &quot;**#{para[strong]}**&quot;
-  # add a multi-word link
-  link = (rand(para.count - 10) + 10)
-  linkend = link + (rand(6) + 2)
-  para[link] = &quot;[#{para[link]}&quot;
-  para[linkend] = &quot;#{para[linkend]}](http://dummy.com)&quot;
-  return para.join(' ')
-end
+<span class="c1"># generates a paragraph with random sentences</span>
+<span class="c1"># min = minimum sentences</span>
+<span class="c1"># max = maximum sentences</span>
+<span class="k">def</span> <span class="nf">graf</span><span class="p">(</span><span class="n">min</span><span class="p">,</span><span class="n">max</span><span class="p">)</span> 
+  <span class="c1"># grab the paragraph and split it into words</span>
+  <span class="n">para</span> <span class="o">=</span> <span class="vi">@model</span><span class="o">.</span><span class="n">random_paragraph</span><span class="p">({</span><span class="ss">:min_sentences</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="n">min</span><span class="p">,</span><span class="ss">:max_sentences</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="n">max</span> <span class="p">})</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+  <span class="c1"># add a random italics element</span>
+  <span class="n">em</span> <span class="o">=</span> <span class="p">(</span><span class="nb">rand</span><span class="p">(</span><span class="n">para</span><span class="o">.</span><span class="n">count</span> <span class="o">-</span> <span class="mi">10</span><span class="p">)</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span>
+  <span class="n">para</span><span class="o">[</span><span class="n">em</span><span class="o">]</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="o">*</span><span class="c1">#{para[em]}*&amp;quot;</span>
+  <span class="c1"># add a random bold element</span>
+  <span class="n">strong</span> <span class="o">=</span> <span class="p">(</span><span class="nb">rand</span><span class="p">(</span><span class="n">para</span><span class="o">.</span><span class="n">count</span> <span class="o">-</span> <span class="mi">10</span><span class="p">)</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span>
+  <span class="c1"># make sure they don&#39;t overlap</span>
+  <span class="n">strong</span> <span class="o">=</span> <span class="n">strong</span> <span class="o">-</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">strong</span> <span class="o">==</span> <span class="n">em</span>
+  <span class="n">para</span><span class="o">[</span><span class="n">strong</span><span class="o">]</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="o">**</span><span class="c1">#{para[strong]}**&amp;quot;</span>
+  <span class="c1"># add a multi-word link</span>
+  <span class="n">link</span> <span class="o">=</span> <span class="p">(</span><span class="nb">rand</span><span class="p">(</span><span class="n">para</span><span class="o">.</span><span class="n">count</span> <span class="o">-</span> <span class="mi">10</span><span class="p">)</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span>
+  <span class="n">linkend</span> <span class="o">=</span> <span class="n">link</span> <span class="o">+</span> <span class="p">(</span><span class="nb">rand</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+  <span class="n">para</span><span class="o">[</span><span class="n">link</span><span class="o">]</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="o">[</span><span class="c1">#{para[link]}&amp;quot;</span>
+  <span class="n">para</span><span class="o">[</span><span class="n">linkend</span><span class="o">]</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="c1">#{para[linkend]}](http://dummy.com)&amp;quot;</span>
+  <span class="k">return</span> <span class="n">para</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="k">end</span>
 
-# returns a random sentence, used in headlines
-# min = minumum words, max = max words
-def sentence(min,max) 
-  return @model.random_sentence.split(' ')[0..(rand(max - min)+min)].join(' ')
-end
+<span class="c1"># returns a random sentence, used in headlines</span>
+<span class="c1"># min = minumum words, max = max words</span>
+<span class="k">def</span> <span class="nf">sentence</span><span class="p">(</span><span class="n">min</span><span class="p">,</span><span class="n">max</span><span class="p">)</span> 
+  <span class="k">return</span> <span class="vi">@model</span><span class="o">.</span><span class="n">random_sentence</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="p">(</span><span class="nb">rand</span><span class="p">(</span><span class="n">max</span> <span class="o">-</span> <span class="n">min</span><span class="p">)</span><span class="o">+</span><span class="n">min</span><span class="p">)</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="k">end</span>
 
-# returns a random list
-# type = ul or ol
-# min = minimum number of list items
-# max = maximum number of list items
-def list(type,min,max)
-  list = '';
-  prefix = type == &quot;ol&quot; ? &quot; 1. &quot; : &quot; * &quot;
-  (rand(max - min) + min).times do
-    list += prefix + @model.random_gram.to_s + &quot;\n&quot;
-  end
-  list += &quot;\n\n&quot;
-  return list
-end
+<span class="c1"># returns a random list</span>
+<span class="c1"># type = ul or ol</span>
+<span class="c1"># min = minimum number of list items</span>
+<span class="c1"># max = maximum number of list items</span>
+<span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="n">type</span><span class="p">,</span><span class="n">min</span><span class="p">,</span><span class="n">max</span><span class="p">)</span>
+  <span class="n">list</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+  <span class="n">prefix</span> <span class="o">=</span> <span class="n">type</span> <span class="o">==</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="n">ol</span><span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span> <span class="p">?</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span> <span class="mi">1</span><span class="o">.</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span> <span class="p">:</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span> <span class="o">*</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span>
+  <span class="p">(</span><span class="nb">rand</span><span class="p">(</span><span class="n">max</span> <span class="o">-</span> <span class="n">min</span><span class="p">)</span> <span class="o">+</span> <span class="n">min</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span>
+    <span class="n">list</span> <span class="o">+=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="vi">@model</span><span class="o">.</span><span class="n">random_gram</span><span class="o">.</span><span class="n">to_s</span> <span class="o">+</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;\</span><span class="n">n</span><span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span>
+  <span class="k">end</span>
+  <span class="n">list</span> <span class="o">+=</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;\</span><span class="n">n</span><span class="p">\</span><span class="n">n</span><span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">list</span>
+<span class="k">end</span>
 
-# Sequentially builds an output variable (o)
-# Chop this apart to make snippets as needed
+<span class="c1"># Sequentially builds an output variable (o)</span>
+<span class="c1"># Chop this apart to make snippets as needed</span>
 
-# Level 1 headline
-o = &quot;# &quot; + sentence(2,5) + &quot;\n\n&quot;
-# 2 medium paragraphs
-2.times do
-  o += &quot;#{graf(4,6)}\n\n&quot;
-end
-# Level 2 headline
-o += &quot;## &quot; + sentence(4,7) + &quot;\n\n&quot;
-# 1 short paragraph
-o += graf(2,4) + &quot;\n\n&quot;
-# an unordered list
-o += list('ul',5,8) + &quot;\n\n&quot;
-# 1 more long paragraph
-o += graf(6,8) + &quot;\n\n&quot;
-# Level 3 header
-o += &quot;### &quot; + sentence(5,9) + &quot;\n\n&quot;
-# medium paragraph
-o += graf(4,6) + &quot;\n\n&quot;
-# ordered list
-o += list('ol',5,8) + &quot;\n\n&quot;
+<span class="c1"># Level 1 headline</span>
+<span class="n">o</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="c1"># &amp;quot; + sentence(2,5) + &amp;quot;\n\n&amp;quot;</span>
+<span class="c1"># 2 medium paragraphs</span>
+<span class="mi">2</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span>
+  <span class="n">o</span> <span class="o">+=</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="c1">#{graf(4,6)}\n\n&amp;quot;</span>
+<span class="k">end</span>
+<span class="c1"># Level 2 headline</span>
+<span class="n">o</span> <span class="o">+=</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="c1">## &amp;quot; + sentence(4,7) + &amp;quot;\n\n&amp;quot;</span>
+<span class="c1"># 1 short paragraph</span>
+<span class="n">o</span> <span class="o">+=</span> <span class="n">graf</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;\</span><span class="n">n</span><span class="p">\</span><span class="n">n</span><span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span>
+<span class="c1"># an unordered list</span>
+<span class="n">o</span> <span class="o">+=</span> <span class="n">list</span><span class="p">(</span><span class="s1">&#39;ul&#39;</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span> <span class="o">+</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;\</span><span class="n">n</span><span class="p">\</span><span class="n">n</span><span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span>
+<span class="c1"># 1 more long paragraph</span>
+<span class="n">o</span> <span class="o">+=</span> <span class="n">graf</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span> <span class="o">+</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;\</span><span class="n">n</span><span class="p">\</span><span class="n">n</span><span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span>
+<span class="c1"># Level 3 header</span>
+<span class="n">o</span> <span class="o">+=</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="c1">### &amp;quot; + sentence(5,9) + &amp;quot;\n\n&amp;quot;</span>
+<span class="c1"># medium paragraph</span>
+<span class="n">o</span> <span class="o">+=</span> <span class="n">graf</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;\</span><span class="n">n</span><span class="p">\</span><span class="n">n</span><span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span>
+<span class="c1"># ordered list</span>
+<span class="n">o</span> <span class="o">+=</span> <span class="n">list</span><span class="p">(</span><span class="s1">&#39;ol&#39;</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span> <span class="o">+</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;\</span><span class="n">n</span><span class="p">\</span><span class="n">n</span><span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span>
 
-# Process Markdown to HTML
+<span class="c1"># Process Markdown to HTML</span>
 
-# if you want just the Markdown
-# delete the two lines below
-# and replace with 'puts o'
-doc = Maruku.new(o)
-puts doc.to_html.gsub(/\/li&gt;\n/,'/li&gt;').gsub(/\/li&gt;&lt;\/([uo])l/,&quot;/li&gt;\n&lt;/\\1l&quot;)
-# the gsub is just to clean up maruku's double-spaced list output
-</pre>
+<span class="c1"># if you want just the Markdown</span>
+<span class="c1"># delete the two lines below</span>
+<span class="c1"># and replace with &#39;puts o&#39;</span>
+<span class="n">doc</span> <span class="o">=</span> <span class="no">Maruku</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_html</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/\/li&amp;gt;\n/</span><span class="p">,</span><span class="s1">&#39;/li&amp;gt;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/\/li&amp;gt;&amp;lt;\/([uo])l/</span><span class="p">,</span><span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="o">/</span><span class="n">li</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;\</span><span class="n">n</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">/</span><span class="p">\\</span><span class="mi">1</span><span class="n">l</span><span class="o">&amp;</span><span class="n">quot</span><span class="p">;)</span>
+<span class="c1"># the gsub is just to clean up maruku&#39;s double-spaced list output</span>
+</code></pre>
+</div>
 
 <p><a href="http://peg.gd/17Q">Here&rsquo;s some sample output</a>, generated in <a href="http://brettterpstra.dev/code/notational-velocity-alt/">nvALT</a>, using <a href="http://smilesoftware.com/TextExpander/">TextExpander</a> with this script as a shell Snippet, and posted to Peggd. As you can see, it needs some fine tuning. The list items, strong and em could be multi-word, the links could check to see if there was a period-space-capital and prevent overlapping sentences, etc. It&rsquo;s enough for my purposes, though, and between the script and this post, I&rsquo;ve lost over an hour of what was supposed to be a productive weekend. I&rsquo;m out!</p>
 

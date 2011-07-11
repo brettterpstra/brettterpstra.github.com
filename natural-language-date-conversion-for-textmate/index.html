@@ -61,7 +61,8 @@
 <p>In the process, I wrote a quick <a href="http://macromates.com/">TextMate</a> command which lets me enter a date in natural language and have it converted to whatever format I need for my system. It has variables at the top of the command for defining the date format and output string template. I packaged it up in its own little bundle for people to play with. The command is similar to what I built as a <a href="http://brettterpstra.dev/a-few-scripts-for-taskpaper-users/" title="A few scripts for TaskPaper users - Brett Terpstra">TaskPaper script</a> a while back. Just <a href="#download">download</a> at the end of the post, unzip and double-click to install.</p>
 
 <!--more-->
-<p>## Customizing</p>
+
+<h2 id="customizing">Customizing</h2>
 
 <p>The output format of the command defaults to a full date in the system&rsquo;s preferred format. This makes it easy to see the effect of various strings. For most purposes, you&rsquo;ll want something more along the lines of &ldquo;2011-02-22&rdquo; instead. To change the format, you just need to edit the <code>dateformat</code> variable at the top of the command&rsquo;s script.</p>
 
@@ -105,15 +106,15 @@
 
 <p>This command has to be distributed in a bundle because it requires the Ruby library <a href="http://rubyforge.org/projects/chronic/" title="RubyForge: Chronic: Project Info">&ldquo;Chronic&rdquo;</a> for the date conversion. The library is included in the Support/lib folder of the bundle. If you happen to have RubyGems installed, you can install the Chronic gem (<code>sudo gem install chronic</code>) and then modify the command to allow you to put it wherever you like without needing the support folder at all. To make the command use the gem instead of the bundled library, change the require statements in the command to look like this:</p>
 
-<pre lang="ruby" escaped="true">
-SUPPORT = ENV['TM_SUPPORT_PATH']
-BSUPPORT = ENV['TM_BUNDLE_SUPPORT']
-DIALOG = ENV['DIALOG']
-require SUPPORT + '/lib/ui'
-require SUPPORT + '/lib/exit_codes'
-require 'rubygems'
-require 'chronic'
-</pre>
+<div class="highlight"><pre><code class="ruby"><span class="no">SUPPORT</span> <span class="o">=</span> <span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;TM_SUPPORT_PATH&#39;</span><span class="o">]</span>
+<span class="no">BSUPPORT</span> <span class="o">=</span> <span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;TM_BUNDLE_SUPPORT&#39;</span><span class="o">]</span>
+<span class="no">DIALOG</span> <span class="o">=</span> <span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;DIALOG&#39;</span><span class="o">]</span>
+<span class="nb">require</span> <span class="no">SUPPORT</span> <span class="o">+</span> <span class="s1">&#39;/lib/ui&#39;</span>
+<span class="nb">require</span> <span class="no">SUPPORT</span> <span class="o">+</span> <span class="s1">&#39;/lib/exit_codes&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;rubygems&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;chronic&#39;</span>
+</code></pre>
+</div>
 
 <p>It would also be pretty easy to port to any other system, including an OS X system service. You&rsquo;d just need to make sure you include the Chronic library, either bundled or install the gem, and find a way to get the text input without using TextMate&rsquo;s dialog. <a href="http://cocoadialog.sourceforge.net/">CocoaDialog</a> or a service that acts on selected text would fit the bill.</p>
 

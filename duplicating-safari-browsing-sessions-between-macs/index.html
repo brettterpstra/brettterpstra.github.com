@@ -71,11 +71,11 @@
   <li>To keep things simple, set up a <code>~/.ssh/config</code> file on each machine you want to pull tabs to. Create the file if you don&rsquo;t have one, or add this at the bottom of an existing one, modifying it for your setup:</li>
 </ol>
 
-<pre lang="bash">
-host air
+<div class="highlight"><pre><code class="bash">host air
   HostName computername.local
   User remoteusername
-</pre>
+</code></pre>
+</div>
 
 <p>Now you can just install the scripts, edit one line on each and start pulling tabs back and forth between computers.</p>
 
@@ -85,51 +85,51 @@ host air
 
 <p>Because I often run <a href="http://www.webkit.org/">Webkit</a>, and because Webkit demands that it be addressed separately from Safari, there&rsquo;s a quick check in here to see which one is running at the time.</p>
 
-<pre lang="ruby" filename="remotetabs.rb">
-#!/usr/bin/ruby
+<div class="highlight"><pre><code class="ruby"><span class="c1">#!/usr/bin/ruby</span>
 
-def app_running?(app)
-  not `ps ax|grep -i "#{app}.app"|grep -v grep`.empty?
-end
+<span class="k">def</span> <span class="nf">app_running?</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+  <span class="ow">not</span> <span class="sb">`ps ax|grep -i &quot;</span><span class="si">#{</span><span class="n">app</span><span class="si">}</span><span class="sb">.app&quot;|grep -v grep`</span><span class="o">.</span><span class="n">empty?</span>
+<span class="k">end</span>
 
-def webkit_running?
-  return false if `ps ax|grep -i "Safari.app"|grep -v grep`.empty?
-  not `ps ax|grep -i "/Applications/Webkit.app"|grep -v grep`.empty?
-end
+<span class="k">def</span> <span class="nf">webkit_running?</span>
+  <span class="k">return</span> <span class="kp">false</span> <span class="k">if</span> <span class="sb">`ps ax|grep -i &quot;Safari.app&quot;|grep -v grep`</span><span class="o">.</span><span class="n">empty?</span>
+  <span class="ow">not</span> <span class="sb">`ps ax|grep -i &quot;/Applications/Webkit.app&quot;|grep -v grep`</span><span class="o">.</span><span class="n">empty?</span>
+<span class="k">end</span>
 
-if app_running?("Safari")
-  browser = webkit_running? ? "Webkit" : "Safari"
-  urllist = %x{osascript &lt;&lt;-APPLESCRIPT
-               tell application "#{browser}"
-               set _tabs to every tab of window 1
-               set _urls to {}
-               repeat with _tab in _tabs
-               set end of _urls to URL of _tab
-               end repeat
-               set {astid, AppleScript's text item delimiters} to {AppleScript's text item delimiters, " "}
-               set output to _urls as text
-               set AppleScript's text item delimiters to astid
-               return output
-               end tell
-               APPLESCRIPT }.chomp
-  puts urllist
-end
-</pre>
+<span class="k">if</span> <span class="n">app_running?</span><span class="p">(</span><span class="s2">&quot;Safari&quot;</span><span class="p">)</span>
+  <span class="n">browser</span> <span class="o">=</span> <span class="n">webkit_running?</span> <span class="p">?</span> <span class="s2">&quot;Webkit&quot;</span> <span class="p">:</span> <span class="s2">&quot;Safari&quot;</span>
+  <span class="n">urllist</span> <span class="o">=</span> <span class="sx">%x{osascript &lt;&lt;-APPLESCRIPT</span>
+<span class="sx">               tell application &quot;</span><span class="si">#{</span><span class="n">browser</span><span class="si">}</span><span class="sx">&quot;</span>
+<span class="sx">               set _tabs to every tab of window 1</span>
+<span class="sx">               set _urls to {}</span>
+<span class="sx">               repeat with _tab in _tabs</span>
+<span class="sx">               set end of _urls to URL of _tab</span>
+<span class="sx">               end repeat</span>
+<span class="sx">               set {astid, AppleScript&#39;s text item delimiters} to {AppleScript&#39;s text item delimiters, &quot; &quot;}</span>
+<span class="sx">               set output to _urls as text</span>
+<span class="sx">               set AppleScript&#39;s text item delimiters to astid</span>
+<span class="sx">               return output</span>
+<span class="sx">               end tell</span>
+<span class="sx">               APPLESCRIPT }</span><span class="o">.</span><span class="n">chomp</span>
+  <span class="nb">puts</span> <span class="n">urllist</span>
+<span class="k">end</span>
+</code></pre>
+</div>
 
 <h3 id="getremotetabsrb">getremotetabs.rb</h3>
 
 <p>This goes on the machine that&rsquo;s doing the &ldquo;pulling.&rdquo; Save it as <code>getremotetabs.rb</code> in <code>~/scripts/</code> and run <code>chmod a+x ~/scripts/getremotetabs.rb</code>. You need to edit the <code>remote_host</code> variable in this script on each machine to match the hostname you set up in your <code>~/.ssh/config</code> file for the &lsquo;other&rsquo; Mac.</p>
 
-<pre lang="ruby" filename="getremotetabs.rb">
-#!/usr/bin/ruby
-# retrieves a list of urls from the front Safari window running on a remote machine
+<div class="highlight"><pre><code class="ruby"><span class="c1">#!/usr/bin/ruby</span>
+<span class="c1"># retrieves a list of urls from the front Safari window running on a remote machine</span>
 
-remote_host = 'air' # as set up in ~/.ssh/config with nick and keyless login
+<span class="n">remote_host</span> <span class="o">=</span> <span class="s1">&#39;air&#39;</span> <span class="c1"># as set up in ~/.ssh/config with nick and keyless login</span>
 
-%x{ssh #{remote_host} ~/scripts/remotetabs.rb}.chomp.split(' ').each { |url|
-  %x{osascript -e 'tell application "Safari" to open location "#{url}"'}
-}
-</pre>
+<span class="sx">%x{ssh </span><span class="si">#{</span><span class="n">remote_host</span><span class="si">}</span><span class="sx"> ~/scripts/remotetabs.rb}</span><span class="o">.</span><span class="n">chomp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">url</span><span class="o">|</span>
+  <span class="sx">%x{osascript -e &#39;tell application &quot;Safari&quot; to open location &quot;</span><span class="si">#{</span><span class="n">url</span><span class="si">}</span><span class="sx">&quot;&#39;}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
 
 <p>That&rsquo;s it. You can save an AppleScript with <code>do shell script "/Users/username/scripts/getremotetabs.rb"</code> anywhere you want to, or just call the script from the command line. Also, stop making fun of my <abbr title="Obsessive Scripting Disorder">OSD</abbr>. I mean it.</p>
 

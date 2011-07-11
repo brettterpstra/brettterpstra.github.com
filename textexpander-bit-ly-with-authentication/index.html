@@ -58,41 +58,41 @@
 		<h1 class="post-title"><a href="#">TextExpander: bit.ly with authentication</a></h1>
 		<p>A quick script in response to <a href="http://brettterpstra.dev/textexpander-experiments/#comments">Donald&rsquo;s query</a> on my TextExpander Experiments post. He wanted to know if I could make the bit.ly scriptâ€”which expands to a bit.ly-shortened version of a url in the clipboardâ€”work with an authenticated account, presumably for click tracking. Well, sure! Just adjust the script below to contain your bit.ly username and your <a href="http://bit.ly/a/your_api_key">API key</a> (in lines 6 &amp; 7), and replace the existing script in the <a href="http://brettterpstra.dev/code/?did=6" title="Download the TextExpander Experiments bundle">TextExpander experiments bundle</a> with this one (or create a new snippet with the script).</p>
 
-<pre lang="ruby" filename="bitlywithauth.rb" escaped="true">
-#!/usr/bin/env ruby -wKU
+<div class="highlight"><pre><code class="ruby"><span class="c1">#!/usr/bin/env ruby -wKU</span>
 
-require 'open-uri'
-require 'cgi'
+<span class="nb">require</span> <span class="s1">&#39;open-uri&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;cgi&#39;</span>
 
-USER_NAME = 'username' # Your login name
-API_KEY = 'yourlongapikey' # http://bit.ly/a/your_api_key
+<span class="no">USER_NAME</span> <span class="o">=</span> <span class="s1">&#39;username&#39;</span> <span class="c1"># Your login name</span>
+<span class="no">API_KEY</span> <span class="o">=</span> <span class="s1">&#39;yourlongapikey&#39;</span> <span class="c1"># http://bit.ly/a/your_api_key</span>
 
-def entity_escape(text)
-  text.gsub(/&amp;(?!([a-zA-Z0-9]+|#[0-9]+|#x[0-9a-fA-F]+);)/, '&amp;amp;')
-end
+<span class="k">def</span> <span class="nf">entity_escape</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+  <span class="n">text</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/&amp;amp;(?!([a-zA-Z0-9]+|#[0-9]+|#x[0-9a-fA-F]+);)/</span><span class="p">,</span> <span class="s1">&#39;&amp;amp;amp;&#39;</span><span class="p">)</span>
+<span class="k">end</span>
 
-def make_link(text)
-  case text
-  when %r{\Ahttps?://.*?\.\w{2,4}.*?\z}:
-    entity_escape(text)
-  when %r{\A(www\..*|.*\.\w{2,4})\z}:
-    &quot;http://#{entity_escape text}&quot;
-  when %r{\A.*?\.\w{2,4}\/?.*\z}:
-    &quot;http://#{entity_escape text}&quot;
-  else
-    nil
-  end
-end
+<span class="k">def</span> <span class="nf">make_link</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+  <span class="k">case</span> <span class="n">text</span>
+  <span class="k">when</span> <span class="sr">%r{\Ahttps?://.*?\.\w{2,4}.*?\z}</span><span class="p">:</span>
+    <span class="n">entity_escape</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+  <span class="k">when</span> <span class="sr">%r{\A(www\..*|.*\.\w{2,4})\z}</span><span class="p">:</span>
+    <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="n">http</span><span class="ss">:/</span><span class="o">/</span><span class="c1">#{entity_escape text}&amp;quot;</span>
+  <span class="k">when</span> <span class="sr">%r{\A.*?\.\w{2,4}\/?.*\z}</span><span class="p">:</span>
+    <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="n">http</span><span class="ss">:/</span><span class="o">/</span><span class="c1">#{entity_escape text}&amp;quot;</span>
+  <span class="k">else</span>
+    <span class="kp">nil</span>
+  <span class="k">end</span>
+<span class="k">end</span>
 
-url = make_link %x{__CF_USER_TEXT_ENCODING=$UID:0x8000100:0x8000100 pbpaste}.strip
-res = open(&quot;http://api.bit.ly/v3/shorten?login=#{USER_NAME}&amp;apiKey=#{API_KEY}&amp;longUrl=#{CGI.escape(url)}&amp;format=txt&quot;).read unless url.nil?
+<span class="n">url</span> <span class="o">=</span> <span class="n">make_link</span> <span class="sx">%x{__CF_USER_TEXT_ENCODING=$UID:0x8000100:0x8000100 pbpaste}</span><span class="o">.</span><span class="n">strip</span>
+<span class="n">res</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="n">http</span><span class="ss">:/</span><span class="o">/</span><span class="n">api</span><span class="o">.</span><span class="n">bit</span><span class="o">.</span><span class="n">ly</span><span class="o">/</span><span class="n">v3</span><span class="o">/</span><span class="n">shorten?login</span><span class="o">=</span><span class="c1">#{USER_NAME}&amp;amp;apiKey=#{API_KEY}&amp;amp;longUrl=#{CGI.escape(url)}&amp;amp;format=txt&amp;quot;).read unless url.nil?</span>
 
-begin
-  print res unless res.nil?
-rescue
-  exit
-end
-</pre>
+<span class="k">begin</span>
+  <span class="nb">print</span> <span class="n">res</span> <span class="k">unless</span> <span class="n">res</span><span class="o">.</span><span class="n">nil?</span>
+<span class="k">rescue</span>
+  <span class="nb">exit</span>
+<span class="k">end</span>
+</code></pre>
+</div>
 
 <p>The API can output JSON and XML, which would be more appropriate on most occasions, but the &ldquo;txt&rdquo; format (which <em>only</em> includes the shortened link) is perfect for this situation. Enjoy!</p>
 

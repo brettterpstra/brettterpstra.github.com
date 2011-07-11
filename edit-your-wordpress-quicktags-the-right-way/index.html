@@ -76,19 +76,19 @@
 
 <p>Now we just need to change which script gets called when you&rsquo;re in the post editor. Add the following to your theme&rsquo;s functions.php file:</p>
 
-<pre lang="php" escaped="true">
-function bt_load_admin_scripts()
-{
-  if ( is_admin() ) {
-    wp_deregister_script('quicktags');
-    wp_register_script('quicktags', (&quot;/path/to/your/quicktags.js&quot;), false, '', true);
-  }
-}
+<div class="highlight"><pre><code class="php"><span class="x">function bt_load_admin_scripts()</span>
+<span class="x">{</span>
+<span class="x">  if ( is_admin() ) {</span>
+<span class="x">    wp_deregister_script(&#39;quicktags&#39;);</span>
+<span class="x">    wp_register_script(&#39;quicktags&#39;, (&amp;quot;/path/to/your/quicktags.js&amp;quot;), false, &#39;&#39;, true);</span>
+<span class="x">  }</span>
+<span class="x">}</span>
 
-if (is_admin()) {
-  add_action('init', bt_load_admin_scripts);
-}
-</pre>
+<span class="x">if (is_admin()) {</span>
+<span class="x">  add_action(&#39;init&#39;, bt_load_admin_scripts);</span>
+<span class="x">}</span>
+</code></pre>
+</div>
 
 <p>Modify the path in wp_register_script to point to the location where you put your quicktags.js file. This will tell WordPress to load your file instead of its own.</p>
 

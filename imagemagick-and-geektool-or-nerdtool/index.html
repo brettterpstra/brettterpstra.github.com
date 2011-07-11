@@ -78,45 +78,45 @@
 
 <p>Here&rsquo;s the script:</p>
 
-<pre lang="bash" escaped="false" filename="shadow.sh">
-#!/bin/bash
+<div class="highlight"><pre><code class="bash"><span class="c">#!/bin/bash</span>
 
-# ======= CONFIG ============================================
-# set this to the location of ImageMagick's convert command
-CONVERTER="/usr/local/bin/convert"
-# set this to the location where your Image geeklet will look
-OUTFILE="$HOME/reflected.jpg"
-# ===========================================================
+<span class="c"># ======= CONFIG ============================================</span>
+<span class="c"># set this to the location of ImageMagick&#39;s convert command</span>
+<span class="nv">CONVERTER</span><span class="o">=</span><span class="s2">&quot;/usr/local/bin/convert&quot;</span>
+<span class="c"># set this to the location where your Image geeklet will look</span>
+<span class="nv">OUTFILE</span><span class="o">=</span><span class="s2">&quot;$HOME/reflected.jpg&quot;</span>
+<span class="c"># ===========================================================</span>
 
-# don't mess with these
-workdir=$TMPDIR
-infile="$workdir/combo.png"
+<span class="c"># don&#39;t mess with these</span>
+<span class="nv">workdir</span><span class="o">=</span><span class="nv">$TMPDIR</span>
+<span class="nv">infile</span><span class="o">=</span><span class="s2">&quot;$workdir/combo.png&quot;</span>
 
-# create the pieces of the date (year, month, day) in $TMPDIR
-date +'%Y' - $CONVERTER -background none -fill white -kerning -9 -font Helvetica -pointsize 120 -trim -bordercolor none -border 0x8 label:@- $workdir/year.png
-date +'%A %I:%M%p' - $CONVERTER -background none -fill white -kerning 10 -font Helvetica -pointsize 70 -trim -bordercolor none -border 0x8 label:@- $workdir/day.png
-date +'%B %d' - $CONVERTER -background none -fill white -kerning 0 -font Helvetica -pointsize 200 label:@- -trim $workdir/month.png
-# stack the day on top of the month
-$CONVERTER $workdir/day.png $workdir/month.png -background none -trim -append $workdir/daymonth.png
-# rotate the result 90 degrees
-$CONVERTER $workdir/daymonth.png -background none -trim -rotate 90 $workdir/daymonth90.png
-# stack the year on top of the rotated day/month and rotate the result -90 degrees
-$CONVERTER $workdir/year.png $workdir/daymonth90.png -gravity northeast -background none -append -rotate -90 $infile
-# set the width and height variables
-ww=`$CONVERTER $infile -format "%w" info:`
-hh=`$CONVERTER $infile -format "%h" info:`
-hhr=`$CONVERTER xc: -format "%[fx:$hh*40/50]" info:`
-# clone the original image, flip it, composite a gradient and append it below the original
-$CONVERTER $infile \
-\( -size ${ww}x0 xc:none \) \
-\( -clone 0 -flip +repage \) \
-\( -clone 0 -alpha extract -flip +repage \
--size ${ww}x${hh} gradient: +level 0x50% \
--compose multiply -composite \) \
-\( -clone 2 -clone 3 -alpha off -compose copy_opacity -composite \) \
--delete 2,3 -channel rgba -alpha on -background none -append $OUTFILE
-exit 0
-</pre>
+<span class="c"># create the pieces of the date (year, month, day) in $TMPDIR</span>
+date +<span class="s1">&#39;%Y&#39;</span> - <span class="nv">$CONVERTER</span> -background none -fill white -kerning -9 -font Helvetica -pointsize 120 -trim -bordercolor none -border 0x8 label:@- <span class="nv">$workdir</span>/year.png
+date +<span class="s1">&#39;%A %I:%M%p&#39;</span> - <span class="nv">$CONVERTER</span> -background none -fill white -kerning 10 -font Helvetica -pointsize 70 -trim -bordercolor none -border 0x8 label:@- <span class="nv">$workdir</span>/day.png
+date +<span class="s1">&#39;%B %d&#39;</span> - <span class="nv">$CONVERTER</span> -background none -fill white -kerning 0 -font Helvetica -pointsize 200 label:@- -trim <span class="nv">$workdir</span>/month.png
+<span class="c"># stack the day on top of the month</span>
+<span class="nv">$CONVERTER</span> <span class="nv">$workdir</span>/day.png <span class="nv">$workdir</span>/month.png -background none -trim -append <span class="nv">$workdir</span>/daymonth.png
+<span class="c"># rotate the result 90 degrees</span>
+<span class="nv">$CONVERTER</span> <span class="nv">$workdir</span>/daymonth.png -background none -trim -rotate 90 <span class="nv">$workdir</span>/daymonth90.png
+<span class="c"># stack the year on top of the rotated day/month and rotate the result -90 degrees</span>
+<span class="nv">$CONVERTER</span> <span class="nv">$workdir</span>/year.png <span class="nv">$workdir</span>/daymonth90.png -gravity northeast -background none -append -rotate -90 <span class="nv">$infile</span>
+<span class="c"># set the width and height variables</span>
+<span class="nv">ww</span><span class="o">=</span><span class="sb">`</span><span class="nv">$CONVERTER</span> <span class="nv">$infile</span> -format <span class="s2">&quot;%w&quot;</span> info:<span class="sb">`</span>
+<span class="nv">hh</span><span class="o">=</span><span class="sb">`</span><span class="nv">$CONVERTER</span> <span class="nv">$infile</span> -format <span class="s2">&quot;%h&quot;</span> info:<span class="sb">`</span>
+<span class="nv">hhr</span><span class="o">=</span><span class="sb">`</span><span class="nv">$CONVERTER</span> xc: -format <span class="s2">&quot;%[fx:$hh*40/50]&quot;</span> info:<span class="sb">`</span>
+<span class="c"># clone the original image, flip it, composite a gradient and append it below the original</span>
+<span class="nv">$CONVERTER</span> <span class="nv">$infile</span> <span class="se">\</span>
+<span class="se">\(</span> -size <span class="k">${</span><span class="nv">ww</span><span class="k">}</span>x0 xc:none <span class="se">\)</span> <span class="se">\</span>
+<span class="se">\(</span> -clone 0 -flip +repage <span class="se">\)</span> <span class="se">\</span>
+<span class="se">\(</span> -clone 0 -alpha extract -flip +repage <span class="se">\</span>
+-size <span class="k">${</span><span class="nv">ww</span><span class="k">}</span>x<span class="k">${</span><span class="nv">hh</span><span class="k">}</span> gradient: +level 0x50% <span class="se">\</span>
+-compose multiply -composite <span class="se">\)</span> <span class="se">\</span>
+<span class="se">\(</span> -clone 2 -clone 3 -alpha off -compose copy_opacity -composite <span class="se">\)</span> <span class="se">\</span>
+-delete 2,3 -channel rgba -alpha on -background none -append <span class="nv">$OUTFILE</span>
+<span class="nb">exit </span>0
+</code></pre>
+</div>
 
 <p>The script is adapted from one I found at <a href="http://www.imagemagick.org/discourse-server/viewtopic.php?f=1&amp;t=15371">imagemagick.org&rsquo;s forum</a>, and there&rsquo;s a good breakdown of how it works at the bottom of the thread.</p>
 

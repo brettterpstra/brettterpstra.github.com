@@ -64,9 +64,9 @@
 
 <p>Choosy, fortunately, has a url-handler for running different behaviors, which is detailed on the <a href="http://www.choosyosx.com/api">Choosy API page</a>. All you need to do is run this AppleScript in your favorite hotkey-triggered script-launching app:</p>
 
-<pre lang="applescript" escaped="true">
-open location "x-choosy://open//"
-</pre>
+<div class="highlight"><pre><code class="applescript"><span class="nb">open location</span> <span class="s2">&quot;x-choosy://open//&quot;</span>
+</code></pre>
+</div>
 
 <p><a href="http://brettterpstra.dev/wp-content/uploads/2011/01/ChoosyPrefPane.jpg"><img src="http://brettterpstra.dev/wp-content/uploads/2011/01/ChoosyPrefPane-300x232.jpg" alt="Choosy Preference Pane" title="Choosy Pref Pane" width="300" height="232" class="alignright size-medium wp-image-1662" /></a>That will trigger the Choosy popup HUD, which can be navigated by keyboard or mouse, where your full list of browsers shows up in your preferred order. Now, you&rsquo;re hotkey will do exactly what the settings in Choosy tell it to do. You can have it automatically pick your favorite browser if none are running, or offer you a choice of preferred or all browsers. Personally, if no browser is running, I like the choice of all browsers. I also tell Choosy to automatically pick the running browser with the highest preference level in my settings if more than one are running.</p>
 

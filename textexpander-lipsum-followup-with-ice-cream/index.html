@@ -60,51 +60,53 @@
 
 <p><a href="http://en.wikipedia.org/wiki/Why_the_lucky_stiff">_why&rsquo;s</a> Chunky Bacon<sup id="fnref:bacon"><a href="#fn:bacon" rel="footnote">1</a></sup> is nice, and Sailing Three Tuesdays<sup id="fnref:emo"><a href="#fn:emo" rel="footnote">2</a></sup> (whose slug is &ldquo;emo,&rdquo; appropriately) is hilarious. There&rsquo;s even one (Soylent Cream) which spits out fake identities<sup id="fnref:soylent"><a href="#fn:soylent" rel="footnote">3</a></sup>, and there are German and Czech flavors, too. Try them out on the website and then just paste a line like this in a <a href="http://smileonmymac.com/TextExpander/">TextExpander</a> snippet set to &ldquo;Shell Command&rdquo;:</p>
 
-<pre lang="bash" escaped="false">
-#!/bin/bash
-curl "http://loremipscream.com/flavors/chunky_bacon/serving.txt"
-</pre>
+<div class="highlight"><pre><code class="bash"><span class="c">#!/bin/bash</span>
+curl <span class="s2">&quot;http://loremipscream.com/flavors/chunky_bacon/serving.txt&quot;</span>
+</code></pre>
+</div>
 
 <p>That will spit out a nice, small chunk of random text in your preferred flavor. Of course, you could always make a few different snippets to suit any mood. For reference, here&rsquo;s <a href="http://loremipscream.com/api">the API info</a>, and here are the available flavors and their slugs:
-&lt;div class="collapse"&gt;
-&lt;pre lang="xml" escaped="true"&gt;
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;flavors&gt;
-  &lt;flavor&gt;
-    &lt;name&gt;Vanilla&lt;/name&gt;
-    &lt;slug&gt;vanilla&lt;/slug&gt;
-  &lt;/flavor&gt;
-  &lt;flavor&gt;
-    &lt;name&gt;Mint Chocolate Czech&lt;/name&gt;
-    &lt;slug&gt;mint&lt;/slug&gt;
-  &lt;/flavor&gt;
-  &lt;flavor&gt;
-    &lt;name&gt;Sailing Three Tuesdays&lt;/name&gt;
-    &lt;slug&gt;emo&lt;/slug&gt;
-  &lt;/flavor&gt;
-  &lt;flavor&gt;
-    &lt;name&gt;Soylent Cream&lt;/name&gt;
-    &lt;slug&gt;soylent&lt;/slug&gt;
-  &lt;/flavor&gt;
-  &lt;flavor&gt;
-    &lt;name&gt;Texas Toast&lt;/name&gt;
-    &lt;slug&gt;toast&lt;/slug&gt;
-  &lt;/flavor&gt;
-  &lt;flavor&gt;
-    &lt;name&gt;German Chocolate&lt;/name&gt;
-    &lt;slug&gt;chocolate&lt;/slug&gt;
-  &lt;/flavor&gt;
-  &lt;flavor&gt;
-    &lt;name&gt;Chunky Bacon&lt;/name&gt;
-    &lt;slug&gt;chunky_bacon&lt;/slug&gt;
-  &lt;/flavor&gt;
-  &lt;flavor&gt;
-    &lt;name&gt;Neapolitician&lt;/name&gt;
-    &lt;slug&gt;neapolitician&lt;/slug&gt;
-  &lt;/flavor&gt;
-&lt;/flavors&gt;
-&lt;/pre&gt;
-&lt;/div&gt;</p>
+&lt;div class="collapse"&gt;</p>
+
+<div class="highlight"><pre><code class="xml"><span class="ni">&amp;lt;</span>?xml version=<span class="ni">&amp;quot;</span>1.0<span class="ni">&amp;quot;</span> encoding=<span class="ni">&amp;quot;</span>UTF-8<span class="ni">&amp;quot;</span>?<span class="ni">&amp;gt;</span>
+<span class="ni">&amp;lt;</span>flavors<span class="ni">&amp;gt;</span>
+  <span class="ni">&amp;lt;</span>flavor<span class="ni">&amp;gt;</span>
+    <span class="ni">&amp;lt;</span>name<span class="ni">&amp;gt;</span>Vanilla<span class="ni">&amp;lt;</span>/name<span class="ni">&amp;gt;</span>
+    <span class="ni">&amp;lt;</span>slug<span class="ni">&amp;gt;</span>vanilla<span class="ni">&amp;lt;</span>/slug<span class="ni">&amp;gt;</span>
+  <span class="ni">&amp;lt;</span>/flavor<span class="ni">&amp;gt;</span>
+  <span class="ni">&amp;lt;</span>flavor<span class="ni">&amp;gt;</span>
+    <span class="ni">&amp;lt;</span>name<span class="ni">&amp;gt;</span>Mint Chocolate Czech<span class="ni">&amp;lt;</span>/name<span class="ni">&amp;gt;</span>
+    <span class="ni">&amp;lt;</span>slug<span class="ni">&amp;gt;</span>mint<span class="ni">&amp;lt;</span>/slug<span class="ni">&amp;gt;</span>
+  <span class="ni">&amp;lt;</span>/flavor<span class="ni">&amp;gt;</span>
+  <span class="ni">&amp;lt;</span>flavor<span class="ni">&amp;gt;</span>
+    <span class="ni">&amp;lt;</span>name<span class="ni">&amp;gt;</span>Sailing Three Tuesdays<span class="ni">&amp;lt;</span>/name<span class="ni">&amp;gt;</span>
+    <span class="ni">&amp;lt;</span>slug<span class="ni">&amp;gt;</span>emo<span class="ni">&amp;lt;</span>/slug<span class="ni">&amp;gt;</span>
+  <span class="ni">&amp;lt;</span>/flavor<span class="ni">&amp;gt;</span>
+  <span class="ni">&amp;lt;</span>flavor<span class="ni">&amp;gt;</span>
+    <span class="ni">&amp;lt;</span>name<span class="ni">&amp;gt;</span>Soylent Cream<span class="ni">&amp;lt;</span>/name<span class="ni">&amp;gt;</span>
+    <span class="ni">&amp;lt;</span>slug<span class="ni">&amp;gt;</span>soylent<span class="ni">&amp;lt;</span>/slug<span class="ni">&amp;gt;</span>
+  <span class="ni">&amp;lt;</span>/flavor<span class="ni">&amp;gt;</span>
+  <span class="ni">&amp;lt;</span>flavor<span class="ni">&amp;gt;</span>
+    <span class="ni">&amp;lt;</span>name<span class="ni">&amp;gt;</span>Texas Toast<span class="ni">&amp;lt;</span>/name<span class="ni">&amp;gt;</span>
+    <span class="ni">&amp;lt;</span>slug<span class="ni">&amp;gt;</span>toast<span class="ni">&amp;lt;</span>/slug<span class="ni">&amp;gt;</span>
+  <span class="ni">&amp;lt;</span>/flavor<span class="ni">&amp;gt;</span>
+  <span class="ni">&amp;lt;</span>flavor<span class="ni">&amp;gt;</span>
+    <span class="ni">&amp;lt;</span>name<span class="ni">&amp;gt;</span>German Chocolate<span class="ni">&amp;lt;</span>/name<span class="ni">&amp;gt;</span>
+    <span class="ni">&amp;lt;</span>slug<span class="ni">&amp;gt;</span>chocolate<span class="ni">&amp;lt;</span>/slug<span class="ni">&amp;gt;</span>
+  <span class="ni">&amp;lt;</span>/flavor<span class="ni">&amp;gt;</span>
+  <span class="ni">&amp;lt;</span>flavor<span class="ni">&amp;gt;</span>
+    <span class="ni">&amp;lt;</span>name<span class="ni">&amp;gt;</span>Chunky Bacon<span class="ni">&amp;lt;</span>/name<span class="ni">&amp;gt;</span>
+    <span class="ni">&amp;lt;</span>slug<span class="ni">&amp;gt;</span>chunky_bacon<span class="ni">&amp;lt;</span>/slug<span class="ni">&amp;gt;</span>
+  <span class="ni">&amp;lt;</span>/flavor<span class="ni">&amp;gt;</span>
+  <span class="ni">&amp;lt;</span>flavor<span class="ni">&amp;gt;</span>
+    <span class="ni">&amp;lt;</span>name<span class="ni">&amp;gt;</span>Neapolitician<span class="ni">&amp;lt;</span>/name<span class="ni">&amp;gt;</span>
+    <span class="ni">&amp;lt;</span>slug<span class="ni">&amp;gt;</span>neapolitician<span class="ni">&amp;lt;</span>/slug<span class="ni">&amp;gt;</span>
+  <span class="ni">&amp;lt;</span>/flavor<span class="ni">&amp;gt;</span>
+<span class="ni">&amp;lt;</span>/flavors<span class="ni">&amp;gt;</span>
+</code></pre>
+</div>
+
+<p>&lt;/div&gt;</p>
 
 <p>I should also take the opportunity to mention another cool take on the &ldquo;greeking&rdquo; text idea: <a href="http://kwisatz.hadera.ch/">Kwisatz Haderach</a>, which my friend (and <a href="http://www.tuaw.com/bloggers/kelly-guimont/">TUAW blogger</a>) <a href="http://thebananaverse.com/">Kelly Guimont</a> has been contributing to. Have a look, it&rsquo;s fun stuff. You can always make non-random TextExpander snippets out of whatever is going to be the most useful to you. Assuming Lorem Ipsum is useful to you, which is probably a poor assumption to make. I think we&rsquo;ll both survive this, though.</p>
 

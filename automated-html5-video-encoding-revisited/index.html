@@ -57,8 +57,9 @@
 		</div>
 		<h1 class="post-title"><a href="#">Automated HTML5 video encoding revisited</a></h1>
 		
-<p><img src="http://brettterpstra.dev/wp-content/uploads/2011/05/html5automatorTV-small.jpg" alt="HTML5 Automator" title="HTML5 Automator" width="328" height="257" class="alignright size-full wp-image-2296" />A little while ago I approached the subject of scripting <a href="http://brettterpstra.dev/automating-html5-video-encodes/">automated encoding for HTML5 video formats</a>. I started using the process regularly as I built the <a href="http://bundle.weblogzinc.com/video/">Blogsmith Bundle video site</a>. Pretty soon I got some help from friend and TUAW editor <a href="http://www.tuaw.com/bloggers/michael-rose">Mike Rose</a>, and working together we refined the script and improved the speed tremendously. It was built for use on Mac OS X, but with just a few lines modified, it should work on any *NIX system.
-<!--more--></p>
+<p><img src="http://brettterpstra.dev/wp-content/uploads/2011/05/html5automatorTV-small.jpg" alt="HTML5 Automator" title="HTML5 Automator" width="328" height="257" class="alignright size-full wp-image-2296" />A little while ago I approached the subject of scripting <a href="http://brettterpstra.dev/automating-html5-video-encodes/">automated encoding for HTML5 video formats</a>. I started using the process regularly as I built the <a href="http://bundle.weblogzinc.com/video/">Blogsmith Bundle video site</a>. Pretty soon I got some help from friend and TUAW editor <a href="http://www.tuaw.com/bloggers/michael-rose">Mike Rose</a>, and working together we refined the script and improved the speed tremendously. It was built for use on Mac OS X, but with just a few lines modified, it should work on any *NIX system.</p>
+
+<!--more-->
 
 <h3 id="what-it-does">What it does</h3>
 
@@ -100,121 +101,123 @@
 
 <p><a href="http://brettterpstra.dev/share/html5encode.sh.txt">View Raw</a> - <a href="http://brettterpstra.dev/share/html5encode.sh">Download</a></p>
 
-<pre lang="bash">
-#!/bin/bash
-#################################################################
-### html5encode.sh by Brett Terpstra and Mike Rose
-### Published 05/01/2011
-### Freely distributed, modifications welcomed (with attribution)
-#################################################################
-### Configuration ###############################################
-#################################################################
-MAXSIZE="960x540"
-DISPLAYWIDTH="600"
-DISPLAYHEIGHT="338"
-SSHURL="username@ssh.host.name"
-SSHDIR="/server/folder/target/for/rsync/"
-WEBDIR="/front-end/url/path/video/" # used for blog template
-LOGGING=true # send status messages and times to STDOUT and syslog
-GROWLLOG=false # duplicate messages to growl, if installed
-##################################################################
-### END Configuration ############################################
-##################################################################
+<div class="highlight"><pre><code class="bash"><span class="c">#!/bin/bash</span>
+<span class="c">#################################################################</span>
+<span class="c">### html5encode.sh by Brett Terpstra and Mike Rose</span>
+<span class="c">### Published 05/01/2011</span>
+<span class="c">### Freely distributed, modifications welcomed (with attribution)</span>
+<span class="c">#################################################################</span>
+<span class="c">### Configuration ###############################################</span>
+<span class="c">#################################################################</span>
+<span class="nv">MAXSIZE</span><span class="o">=</span><span class="s2">&quot;960x540&quot;</span>
+<span class="nv">DISPLAYWIDTH</span><span class="o">=</span><span class="s2">&quot;600&quot;</span>
+<span class="nv">DISPLAYHEIGHT</span><span class="o">=</span><span class="s2">&quot;338&quot;</span>
+<span class="nv">SSHURL</span><span class="o">=</span><span class="s2">&quot;username@ssh.host.name&quot;</span>
+<span class="nv">SSHDIR</span><span class="o">=</span><span class="s2">&quot;/server/folder/target/for/rsync/&quot;</span>
+<span class="nv">WEBDIR</span><span class="o">=</span><span class="s2">&quot;/front-end/url/path/video/&quot;</span> <span class="c"># used for blog template</span>
+<span class="nv">LOGGING</span><span class="o">=</span><span class="nb">true</span> <span class="c"># send status messages and times to STDOUT and syslog</span>
+<span class="nv">GROWLLOG</span><span class="o">=</span><span class="nb">false</span> <span class="c"># duplicate messages to growl, if installed</span>
+<span class="c">##################################################################</span>
+<span class="c">### END Configuration ############################################</span>
+<span class="c">##################################################################</span>
 
-# function to handle logging (if enabled) to STDOUT and STDERR 
-# as well as Growl (if enabled)
-function logit() {
-  if $LOGGING ; then
-    logger -st "HTML5 Encoder" "$1"
-    if $GROWLLOG ; then
-      /usr/local/bin/growlnotify -t "HTML5 Encoder" -a "Terminal" -m "$1"
-    fi
-  fi
-}
+<span class="c"># function to handle logging (if enabled) to STDOUT and STDERR </span>
+<span class="c"># as well as Growl (if enabled)</span>
+<span class="k">function </span>logit<span class="o">()</span> <span class="o">{</span>
+  <span class="k">if</span> <span class="nv">$LOGGING</span> ; <span class="k">then</span>
+<span class="k">    </span>logger -st <span class="s2">&quot;HTML5 Encoder&quot;</span> <span class="s2">&quot;$1&quot;</span>
+    <span class="k">if</span> <span class="nv">$GROWLLOG</span> ; <span class="k">then</span>
+      /usr/local/bin/growlnotify -t <span class="s2">&quot;HTML5 Encoder&quot;</span> -a <span class="s2">&quot;Terminal&quot;</span> -m <span class="s2">&quot;$1&quot;</span>
+    <span class="k">fi</span>
+<span class="k">  fi</span>
+<span class="o">}</span>
 
-# Count the inputs for log message
-if [[ $# -gt 1 ]]; then
-  logit "Starting batch conversion."
-  maintimer1=`date '+%s'`
-else
-  logit "Starting HTML5 Encoder"
-fi
+<span class="c"># Count the inputs for log message</span>
+<span class="k">if</span> <span class="o">[[</span> <span class="nv">$# </span>-gt 1 <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">  </span>logit <span class="s2">&quot;Starting batch conversion.&quot;</span>
+  <span class="nv">maintimer1</span><span class="o">=</span><span class="sb">`</span>date <span class="s1">&#39;+%s&#39;</span><span class="sb">`</span>
+<span class="k">else</span>
+<span class="k">  </span>logit <span class="s2">&quot;Starting HTML5 Encoder&quot;</span>
+<span class="k">fi</span>
 
-# Loop through each passed file
-for file in "$@"; do
-  timer1=`date '+%s'`
-  INPUT=$file
-  # Check that input file is H.264
-  isH264=`mdls -raw -name kMDItemCodecs $INPUT|grep H.264`
+<span class="c"># Loop through each passed file</span>
+<span class="k">for </span>file in <span class="s2">&quot;$@&quot;</span>; <span class="k">do</span>
+<span class="k">  </span><span class="nv">timer1</span><span class="o">=</span><span class="sb">`</span>date <span class="s1">&#39;+%s&#39;</span><span class="sb">`</span>
+  <span class="nv">INPUT</span><span class="o">=</span><span class="nv">$file</span>
+  <span class="c"># Check that input file is H.264</span>
+  <span class="nv">isH264</span><span class="o">=</span><span class="sb">`</span>mdls -raw -name kMDItemCodecs <span class="nv">$INPUT</span>|grep H.264<span class="sb">`</span>
 
-  if [ !$isH264 ] ; then
-    logit "$INPUT is not h.264"
-    continue
-  fi
+  <span class="k">if</span> <span class="o">[</span> !<span class="nv">$isH264</span> <span class="o">]</span> ; <span class="k">then</span>
+<span class="k">    </span>logit <span class="s2">&quot;$INPUT is not h.264&quot;</span>
+    <span class="k">continue</span>
+<span class="k">  fi</span>
 
-  DIRNAME=`dirname "$INPUT"`
-  FILENAME=`basename "$INPUT"`
-  BASENAME=${FILENAME%%.*}
-  logit "Conversion of $FILENAME started on `date '+%D'` at `date '+%r'`"
-  bytesize=`stat -f '%z' $FILENAME`
-  filesize=`echo "scale = 2 ; $bytesize/1048576"|bc -lq`
-  cd "$DIRNAME"
-  if [ -d "$BASENAME" ]; then
-    logit "Found $FILENAME, but directory $BASENAME already exists. Aborting"
-    continue
-  fi
-  mkdir "$BASENAME"
-  mv "$FILENAME" "$BASENAME/"
-  cd "$BASENAME"
-  if [[ ${FILENAME#*.} -eq "mov" ]]; then mv $FILENAME ${BASENAME}.mp4; fi  
-  FILENAME=${BASENAME}.mp4
-  /usr/local/bin/ffmpeg -i "$FILENAME" -b 614400 -s $MAXSIZE -aspect 16:9 "$BASENAME".webm
-  logit "Completed webm conversion"
-  /usr/local/bin/ffmpeg2theora --videoquality 5 --audioquality 1 --max_size $MAXSIZE "$FILENAME" -o "$BASENAME.ogv"
-  logit "Completed ogv conversion"
-  /usr/local/bin/ffmpeg -i "$FILENAME" -ss 0 -vframes 1 -vcodec mjpeg -f image2 "${BASENAME}Poster.jpg"
-  logit "Created poster image"
+<span class="k">  </span><span class="nv">DIRNAME</span><span class="o">=</span><span class="sb">`</span>dirname <span class="s2">&quot;$INPUT&quot;</span><span class="sb">`</span>
+  <span class="nv">FILENAME</span><span class="o">=</span><span class="sb">`</span>basename <span class="s2">&quot;$INPUT&quot;</span><span class="sb">`</span>
+  <span class="nv">BASENAME</span><span class="o">=</span><span class="k">${</span><span class="nv">FILENAME</span><span class="p">%%.*</span><span class="k">}</span>
+  logit <span class="s2">&quot;Conversion of $FILENAME started on `date &#39;+%D&#39;` at `date &#39;+%r&#39;`&quot;</span>
+  <span class="nv">bytesize</span><span class="o">=</span><span class="sb">`</span>stat -f <span class="s1">&#39;%z&#39;</span> <span class="nv">$FILENAME</span><span class="sb">`</span>
+  <span class="nv">filesize</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="s2">&quot;scale = 2 ; $bytesize/1048576&quot;</span>|bc -lq<span class="sb">`</span>
+  <span class="nb">cd</span> <span class="s2">&quot;$DIRNAME&quot;</span>
+  <span class="k">if</span> <span class="o">[</span> -d <span class="s2">&quot;$BASENAME&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">    </span>logit <span class="s2">&quot;Found $FILENAME, but directory $BASENAME already exists. Aborting&quot;</span>
+    <span class="k">continue</span>
+<span class="k">  fi</span>
+<span class="k">  </span>mkdir <span class="s2">&quot;$BASENAME&quot;</span>
+  mv <span class="s2">&quot;$FILENAME&quot;</span> <span class="s2">&quot;$BASENAME/&quot;</span>
+  <span class="nb">cd</span> <span class="s2">&quot;$BASENAME&quot;</span>
+  <span class="k">if</span> <span class="o">[[</span> <span class="k">${</span><span class="nv">FILENAME</span><span class="p">#*.</span><span class="k">}</span> -eq <span class="s2">&quot;mov&quot;</span> <span class="o">]]</span>; <span class="k">then </span>mv <span class="nv">$FILENAME</span> <span class="k">${</span><span class="nv">BASENAME</span><span class="k">}</span>.mp4; <span class="k">fi  </span>
+<span class="k">  </span><span class="nv">FILENAME</span><span class="o">=</span><span class="k">${</span><span class="nv">BASENAME</span><span class="k">}</span>.mp4
+  /usr/local/bin/ffmpeg -i <span class="s2">&quot;$FILENAME&quot;</span> -b 614400 -s <span class="nv">$MAXSIZE</span> -aspect 16:9 <span class="s2">&quot;$BASENAME&quot;</span>.webm
+  logit <span class="s2">&quot;Completed webm conversion&quot;</span>
+  /usr/local/bin/ffmpeg2theora --videoquality 5 --audioquality 1 --max_size <span class="nv">$MAXSIZE</span> <span class="s2">&quot;$FILENAME&quot;</span> -o <span class="s2">&quot;$BASENAME.ogv&quot;</span>
+  logit <span class="s2">&quot;Completed ogv conversion&quot;</span>
+  /usr/local/bin/ffmpeg -i <span class="s2">&quot;$FILENAME&quot;</span> -ss 0 -vframes 1 -vcodec mjpeg -f image2 <span class="s2">&quot;${BASENAME}Poster.jpg&quot;</span>
+  logit <span class="s2">&quot;Created poster image&quot;</span>
 
-  # Create a title from camelcased filename
-  TITLE=`echo "$BASENAME"|sed 's/\([A-Z][^A-Z]*\)/&amp; /g'|sed 's/ $//'`
-  SERVER=`echo "$SSHURL"|sed 's/^.*\@//'`
-  logit "Uploading to $SERVER..."
-  cd ..
-  rsync -v -r -e ssh "`pwd`/$BASENAME" $SSHURL:$SSHDIR
-  logit "Finished Uploading"
-  # remove trailing slash from $WEBDIR
-  WEBDIR=`echo "$WEBDIR"|sed 's/\/$//'`
-  cat &gt; "$BASENAME/$BASENAME.blog.markdown" &lt;&lt;-POSTTEMPLATE
-Type: Blog Post (Markdown)
-Blog: BlogsmithVideo
-Title: $TITLE
-Keywords: 
-Status: draft
-Pings: On
-Comments: On
-Category: Tutorial
+  <span class="c"># Create a title from camelcased filename</span>
+  <span class="nv">TITLE</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="s2">&quot;$BASENAME&quot;</span>|sed <span class="s1">&#39;s/\([A-Z][^A-Z]*\)/&amp; /g&#39;</span>|sed <span class="s1">&#39;s/ $//&#39;</span><span class="sb">`</span>
+  <span class="nv">SERVER</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="s2">&quot;$SSHURL&quot;</span>|sed <span class="s1">&#39;s/^.*\@//&#39;</span><span class="sb">`</span>
+  logit <span class="s2">&quot;Uploading to $SERVER...&quot;</span>
+  <span class="nb">cd</span> ..
+  rsync -v -r -e ssh <span class="s2">&quot;`pwd`/$BASENAME&quot;</span> <span class="nv">$SSHURL</span>:<span class="nv">$SSHDIR</span>
+  logit <span class="s2">&quot;Finished Uploading&quot;</span>
+  <span class="c"># remove trailing slash from $WEBDIR</span>
+  <span class="nv">WEBDIR</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="s2">&quot;$WEBDIR&quot;</span>|sed <span class="s1">&#39;s/\/$//&#39;</span><span class="sb">`</span>
+  cat &gt; <span class="s2">&quot;$BASENAME/$BASENAME.blog.markdown&quot;</span> <span class="s">&lt;&lt;-POSTTEMPLATE</span>
+<span class="s">Type: Blog Post (Markdown)</span>
+<span class="s">Blog: BlogsmithVideo</span>
+<span class="s">Title: $TITLE</span>
+<span class="s">Keywords: </span>
+<span class="s">Status: draft</span>
+<span class="s">Pings: On</span>
+<span class="s">Comments: On</span>
+<span class="s">Category: Tutorial</span>
 
-Synopsis
+<span class="s">Synopsis</span>
 
-[video mp4="$WEBDIR/$BASENAME/$BASENAME.mp4" ogg="$WEBDIR/$BASENAME/$BASENAME.ogv" webm="$WEBDIR/$BASENAME/$BASENAME.webm" poster="$WEBDIR/$BASENAME/${BASENAME}Poster.jpg" preload="true" width="$DISPLAYWIDTH" height="$DISPLAYHEIGHT"]
+<span class="s">[video mp4=&quot;$WEBDIR/$BASENAME/$BASENAME.mp4&quot; ogg=&quot;$WEBDIR/$BASENAME/$BASENAME.ogv&quot; webm=&quot;$WEBDIR/$BASENAME/$BASENAME.webm&quot; poster=&quot;$WEBDIR/$BASENAME/${BASENAME}Poster.jpg&quot; preload=&quot;true&quot; width=&quot;$DISPLAYWIDTH&quot; height=&quot;$DISPLAYHEIGHT&quot;]</span>
 
-<!--more-->
-Transcript
 
-POSTTEMPLATE
+<span class="s">&lt;!--more--&gt;</span>
 
-  open "$BASENAME/$BASENAME.blog.markdown" -a "TextMate.app"
-  timer2=`date '+%s'`
-  time=`echo "scale=2 ; ($timer2-$timer1)/60"|bc -lq`
-  logit "Conversion of $FILENAME complete"
-  logit "It took $time minutes to process a ${filesize}M MP4 to webm and ogv and upload to `echo "$SSHURL"|sed 's/^.*\@//'`."
-done
-if [[ $# -gt 1 ]]; then
-  maintimer2=`date '+%s'`
-  total=`echo "scale=2 ; ($maintimer2-$maintimer1)/60"|bc -lq`
-  logit "Batch conversion complete, total time $total minutes."
-fi
-</pre>
+<span class="s">Transcript</span>
+
+<span class="s">POSTTEMPLATE</span>
+
+  open <span class="s2">&quot;$BASENAME/$BASENAME.blog.markdown&quot;</span> -a <span class="s2">&quot;TextMate.app&quot;</span>
+  <span class="nv">timer2</span><span class="o">=</span><span class="sb">`</span>date <span class="s1">&#39;+%s&#39;</span><span class="sb">`</span>
+  <span class="nb">time</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="s2">&quot;scale=2 ; ($timer2-$timer1)/60&quot;</span>|bc -lq<span class="sb">`</span>
+  logit <span class="s2">&quot;Conversion of $FILENAME complete&quot;</span>
+  logit <span class="s2">&quot;It took $time minutes to process a ${filesize}M MP4 to webm and ogv and upload to `echo &quot;</span><span class="nv">$SSHURL</span><span class="s2">&quot;|sed &#39;s/^.*\@//&#39;`.&quot;</span>
+<span class="k">done</span>
+<span class="k">if</span> <span class="o">[[</span> <span class="nv">$# </span>-gt 1 <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">  </span><span class="nv">maintimer2</span><span class="o">=</span><span class="sb">`</span>date <span class="s1">&#39;+%s&#39;</span><span class="sb">`</span>
+  <span class="nv">total</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="s2">&quot;scale=2 ; ($maintimer2-$maintimer1)/60&quot;</span>|bc -lq<span class="sb">`</span>
+  logit <span class="s2">&quot;Batch conversion complete, total time $total minutes.&quot;</span>
+<span class="k">fi</span>
+</code></pre>
+</div>
 
 <p>Hopefully this will make a few people&rsquo;s lives easier. Mike and I have battle tested it and it seems to be a pretty great fit for our needs. If you modify it for your own needs, please share (with credit) so that it can become as well-rounded as possible!</p>
 <div class="footnotes">

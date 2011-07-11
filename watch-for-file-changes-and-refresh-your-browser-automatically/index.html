@@ -78,59 +78,59 @@
 
 <p>Here&rsquo;s the command line version:</p>
 
-<pre lang="ruby" filename="watch.rb" escaped="true">
-#!/usr/bin/env ruby
-# watch.rb by Brett Terpstra, 2011 &lt;http://brettterpstra.dev&gt;
-# with credit to Carlo Zottmann &lt;https://github.com/carlo/haml-sass-file-watcher&gt;
+<div class="highlight"><pre><code class="ruby"><span class="c1">#!/usr/bin/env ruby</span>
+<span class="c1"># watch.rb by Brett Terpstra, 2011 &amp;lt;http://brettterpstra.dev&amp;gt;</span>
+<span class="c1"># with credit to Carlo Zottmann &amp;lt;https://github.com/carlo/haml-sass-file-watcher&amp;gt;</span>
 
-trap(&quot;SIGINT&quot;) { exit }
+<span class="nb">trap</span><span class="p">(</span><span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="no">SIGINT</span><span class="o">&amp;</span><span class="n">quot</span><span class="p">;)</span> <span class="p">{</span> <span class="nb">exit</span> <span class="p">}</span>
 
-if ARGV.length &lt; 2
-  puts &quot;Usage: #{$0} watch_folder keyword&quot;
-  puts &quot;Example: #{$0} . mywebproject&quot;
-  exit
-end
+<span class="k">if</span> <span class="no">ARGV</span><span class="o">.</span><span class="n">length</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="mi">2</span>
+  <span class="nb">puts</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="no">Usage</span><span class="p">:</span> <span class="c1">#{$0} watch_folder keyword&amp;quot;</span>
+  <span class="nb">puts</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="no">Example</span><span class="p">:</span> <span class="c1">#{$0} . mywebproject&amp;quot;</span>
+  <span class="nb">exit</span>
+<span class="k">end</span>
 
-dev_extension = 'dev'
-filetypes = ['css','html','htm','php','rb','erb','less','js']
-watch_folder = ARGV[0]
-keyword = ARGV[1]
-puts &quot;Watching #{watch_folder} and subfolders for changes in project files...&quot;
+<span class="n">dev_extension</span> <span class="o">=</span> <span class="s1">&#39;dev&#39;</span>
+<span class="n">filetypes</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;css&#39;</span><span class="p">,</span><span class="s1">&#39;html&#39;</span><span class="p">,</span><span class="s1">&#39;htm&#39;</span><span class="p">,</span><span class="s1">&#39;php&#39;</span><span class="p">,</span><span class="s1">&#39;rb&#39;</span><span class="p">,</span><span class="s1">&#39;erb&#39;</span><span class="p">,</span><span class="s1">&#39;less&#39;</span><span class="p">,</span><span class="s1">&#39;js&#39;</span><span class="o">]</span>
+<span class="n">watch_folder</span> <span class="o">=</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+<span class="n">keyword</span> <span class="o">=</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>
+<span class="nb">puts</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="no">Watching</span> <span class="c1">#{watch_folder} and subfolders for changes in project files...&amp;quot;</span>
 
-while true do
-  files = []
-  filetypes.each {|type|
-    files += Dir.glob( File.join( watch_folder, &quot;**&quot;, &quot;*.#{type}&quot; ) )
-  }
-  new_hash = files.collect {|f| [ f, File.stat(f).mtime.to_i ] }
-  hash ||= new_hash
-  diff_hash = new_hash - hash
+<span class="k">while</span> <span class="kp">true</span> <span class="k">do</span>
+  <span class="n">files</span> <span class="o">=</span> <span class="o">[]</span>
+  <span class="n">filetypes</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span><span class="o">|</span><span class="n">type</span><span class="o">|</span>
+    <span class="n">files</span> <span class="o">+=</span> <span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span> <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">watch_folder</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="o">**&amp;</span><span class="n">quot</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="o">*.</span><span class="c1">#{type}&amp;quot; ) )</span>
+  <span class="p">}</span>
+  <span class="n">new_hash</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">collect</span> <span class="p">{</span><span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="o">[</span> <span class="n">f</span><span class="p">,</span> <span class="no">File</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">mtime</span><span class="o">.</span><span class="n">to_i</span> <span class="o">]</span> <span class="p">}</span>
+  <span class="nb">hash</span> <span class="o">||=</span> <span class="n">new_hash</span>
+  <span class="n">diff_hash</span> <span class="o">=</span> <span class="n">new_hash</span> <span class="o">-</span> <span class="nb">hash</span>
 
-  unless diff_hash.empty?
-    hash = new_hash
+  <span class="k">unless</span> <span class="n">diff_hash</span><span class="o">.</span><span class="n">empty?</span>
+    <span class="nb">hash</span> <span class="o">=</span> <span class="n">new_hash</span>
 
-    diff_hash.each do |df|
-      puts &quot;Detected change in #{df[0]}, refreshing&quot;
-      %x{osascript&lt;&lt;ENDGAME
-        	tell application &quot;Safari&quot;
-          	set windowList to every window
-          	repeat with aWindow in windowList
-          		set tabList to every tab of aWindow
-          		repeat with atab in tabList
-          			if (URL of atab contains &quot;#{keyword}&quot;) then
-          			  tell atab to do javascript &quot;window.location.reload()&quot;
-          			end if
-          		end repeat
-          	end repeat
-        	end tell
-ENDGAME
-}
-    end
-  end
+    <span class="n">diff_hash</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">df</span><span class="o">|</span>
+      <span class="nb">puts</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="no">Detected</span> <span class="n">change</span> <span class="k">in</span> <span class="c1">#{df[0]}, refreshing&amp;quot;</span>
+      <span class="sx">%x{osascript&amp;lt;&amp;lt;ENDGAME</span>
+<span class="sx">        	tell application &amp;quot;Safari&amp;quot;</span>
+<span class="sx">          	set windowList to every window</span>
+<span class="sx">          	repeat with aWindow in windowList</span>
+<span class="sx">          		set tabList to every tab of aWindow</span>
+<span class="sx">          		repeat with atab in tabList</span>
+<span class="sx">          			if (URL of atab contains &amp;quot;</span><span class="si">#{</span><span class="n">keyword</span><span class="si">}</span><span class="sx">&amp;quot;) then</span>
+<span class="sx">          			  tell atab to do javascript &amp;quot;window.location.reload()&amp;quot;</span>
+<span class="sx">          			end if</span>
+<span class="sx">          		end repeat</span>
+<span class="sx">          	end repeat</span>
+<span class="sx">        	end tell</span>
+<span class="sx">ENDGAME</span>
+<span class="sx">}</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
 
-  sleep 1
-end
-</pre>
+  <span class="nb">sleep</span> <span class="mi">1</span>
+<span class="k">end</span>
+</code></pre>
+</div>
 
 <h2 id="installing">Installing</h2>
 
@@ -148,28 +148,28 @@ end
 
 <p>Chrome has decent AppleScript support these days, so changing this script to work with it is trivial. Just replace the AppleScript portion (beginning with &ldquo;tell application&hellip;&rdquo;) with the following:</p>
 
-<pre lang="applescript" escaped="true">
-tell application &quot;Google Chrome&quot;
-	set windowList to every window
-	repeat with aWindow in windowList
-		set tabList to every tab of aWindow
-		repeat with atab in tabList
-			if (URL of atab contains &quot;#{keyword}&quot;) then
-				tell atab to reload
-			end if
-		end repeat
-	end repeat
-end tell
-</pre>
+<div class="highlight"><pre><code class="applescript"><span class="k">tell</span> <span class="nb">application</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">Google</span> <span class="nv">Chrome</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+	<span class="k">set</span> <span class="nv">windowList</span> <span class="k">to</span> <span class="nb">every</span> <span class="na">window</span>
+	<span class="k">repeat</span> <span class="nv">with</span> <span class="nv">aWindow</span> <span class="k">in</span> <span class="nv">windowList</span>
+		<span class="k">set</span> <span class="nv">tabList</span> <span class="k">to</span> <span class="nb">every</span> <span class="no">tab</span> <span class="k">of</span> <span class="nv">aWindow</span>
+		<span class="k">repeat</span> <span class="nv">with</span> <span class="nv">atab</span> <span class="k">in</span> <span class="nv">tabList</span>
+			<span class="k">if</span> <span class="p">(</span><span class="nv">URL</span> <span class="k">of</span> <span class="nv">atab</span> <span class="ow">contains</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="c">#{keyword}&amp;quot;) then</span>
+				<span class="k">tell</span> <span class="nv">atab</span> <span class="k">to</span> <span class="nv">reload</span>
+			<span class="k">end</span> <span class="k">if</span>
+		<span class="k">end</span> <span class="k">repeat</span>
+	<span class="k">end</span> <span class="k">repeat</span>
+<span class="k">end</span> <span class="k">tell</span>
+</code></pre>
+</div>
 
 <p>Firefox is a little less elegant, as far as I know, and requires System Events scripting to refresh a page. If you know a better way, I&rsquo;d love to hear it, but here&rsquo;s a basic script for reloading the front page. You might as well delete the keyword portions of the script/workflow if you go this route, they won&rsquo;t be applicable:</p>
 
-<pre lang="applescript" escaped="true">
- tell app &quot;Firefox&quot; to activate
- tell app &quot;System Events&quot;
-   keystroke &quot;r&quot; using command down
- end tell
-</pre>
+<div class="highlight"><pre><code class="applescript"> <span class="k">tell</span> <span class="nv">app</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">Firefox</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="k">to</span> <span class="nb">activate</span>
+ <span class="k">tell</span> <span class="nv">app</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">System</span> <span class="nv">Events</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+   <span class="nv">keystroke</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">r</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="nv">using</span> <span class="nv">command</span> <span class="nv">down</span>
+ <span class="k">end</span> <span class="k">tell</span>
+</code></pre>
+</div>
 
 <p>I won&rsquo;t detail any other browsers; if you&rsquo;re doing web development in something more exotic, I&rsquo;ll assume you know how to script it.</p>
 

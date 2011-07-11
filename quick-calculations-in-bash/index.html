@@ -66,50 +66,50 @@
 
 <p>So here&rsquo;s what I&rsquo;ve got for the calculator. It strips any character that&rsquo;s not grade-school math out and normalizes spaces, which works well for my needs. You can actually just trash the whole second line and pass &ldquo;$@&rdquo; to bc if you want to use additional symbols. The second function in this block calls the first and strips newlines, good for integration elsewhere. You can also alias either of these to a question mark for fast access (inspired by Allan) with <code>alias ?="calc"</code> in your <code>.bash_profile</code>. That&rsquo;s where these functions are likely to go as well. If you want to try them out, paste them into ~/.bash_profile, save it, run <code>source ~/.bash_profile</code> in Terminal and then type <code>calc 3+(5*2)</code> or whatever you like.</p>
 
-<pre lang="bash" escaped="true" filename="calc.sh">
-function calc() {
-  equat=$(echo ${@//[^0-9\.\+\/\*\(\)]/ }| sed &#x27;s/[ \t]*//g&#x27;)
-  echo $equat|bc -lq
-}
+<div class="highlight"><pre><code class="bash"><span class="k">function </span>calc<span class="o">()</span> <span class="o">{</span>
+  <span class="nv">equat</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="k">${</span><span class="p">@//[^0-9\.\+\/\*\(\)]/ </span><span class="k">}</span>| sed &amp;#x27;s/<span class="o">[</span> <span class="se">\t</span><span class="o">]</span>*//g&amp;#x27;<span class="k">)</span>
+  <span class="nb">echo</span> <span class="nv">$equat</span>|bc -lq
+<span class="o">}</span>
 
-## just for fun, ccalc trims the newline 
-## and copies the result directly to the clipboard
-function ccalc () {
-  calc $@|tr -d &#x27;\n&#x27;|pbcopy
-}
-</pre>
+<span class="c">## just for fun, ccalc trims the newline </span>
+<span class="c">## and copies the result directly to the clipboard</span>
+<span class="k">function </span>ccalc <span class="o">()</span> <span class="o">{</span>
+  calc <span class="nv">$@</span>|tr -d &amp;#x27;<span class="se">\n</span>&amp;#x27;|pbcopy
+<span class="o">}</span>
+</code></pre>
+</div>
 
 <p>Things get tricky if you need to control the number of decimal places you have in the result. You need to pass additional commands to <code>bc</code>, which appears to require some heredoc magic. This works for me (the scale=4 sets it to four decimal places):</p>
 
-<pre lang="bash" escaped="true">
-function calc2() {
-  bc -l &lt;&lt; EOF
-scale=4
-$@
+<div class="highlight"><pre><code class="bash"><span class="k">function </span>calc2<span class="o">()</span> <span class="o">{</span>
+  bc -l &amp;lt;&amp;lt; EOF
+<span class="nv">scale</span><span class="o">=</span>4
+<span class="nv">$@</span>
 quit
 EOF
-}
-</pre>
+<span class="o">}</span>
+</code></pre>
+</div>
 
 <p>Next up is <code>tally()</code>, a function that does what it says. You can either pass it a list of numbers, or run it and let it go into interactive mode. It will let you type numbers separated by returns, spaces or a combination, as long as there&rsquo;s a separation. When you press &ldquo;=&rdquo; it adds up all of the numbers you&rsquo;ve entered. I wanted it for when people start giving me numbers and amounts on the phone. And yes, I can do it in LaunchBar (et al), but like I said, sometimes I just get a bug to do it the hard way. The only thing I hate about this implementation is that you can&rsquo;t use the default mapping of the Backspace key, as everything is interpreted raw. You have to run <code>read</code> in readline mode to avoid this, but that means you can&rsquo;t use Enter anymore. That&rsquo;s the kind of thing that makes me spend an hour trying to solve it. This version is my compromise; you can try it with the &ldquo;-e&rdquo; argument and see if you prefer backspace to enter. Same installation: paste it, source and run it.</p>
 
-<pre lang="bash" escaped="true" filename="total.sh">
-function tally() {
-  if [[ $# == 0 ]]; then
-    echo &quot;Enter numbers, press = for sum:&quot;
-    read -d &quot;=&quot;
-    input=$REPLY
-    echo &quot;================&quot;
-  else
-    input=&quot;$@&quot;
-  fi
-  sum=0
-  for i in $input; do 
-    sum=$sum+$i
-  done
-  echo $sum|bc -l
-}
-</pre>
+<div class="highlight"><pre><code class="bash"><span class="k">function </span>tally<span class="o">()</span> <span class="o">{</span>
+  <span class="k">if</span> <span class="o">[[</span> <span class="nv">$# </span><span class="o">==</span> 0 <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">    </span><span class="nb">echo</span> &amp;quot;Enter numbers, <span class="nv">press</span> <span class="o">=</span> <span class="k">for </span>sum:&amp;quot;
+    <span class="nb">read</span> -d &amp;quot;<span class="o">=</span>&amp;quot;
+    <span class="nv">input</span><span class="o">=</span><span class="nv">$REPLY</span>
+    <span class="nb">echo</span> &amp;quot;<span class="o">================</span>&amp;quot;
+  <span class="k">else</span>
+<span class="k">    </span><span class="nv">input</span><span class="o">=</span>&amp;quot;<span class="nv">$@</span>&amp;quot;
+  <span class="k">fi</span>
+<span class="k">  </span><span class="nv">sum</span><span class="o">=</span>0
+  <span class="k">for </span>i in <span class="nv">$input</span>; <span class="k">do </span>
+<span class="k">    </span><span class="nv">sum</span><span class="o">=</span><span class="nv">$sum</span>+<span class="nv">$i</span>
+  <span class="k">done</span>
+<span class="k">  </span><span class="nb">echo</span> <span class="nv">$sum</span>|bc -l
+<span class="o">}</span>
+</code></pre>
+</div>
 
 <p>And that, ladies and gentleman, is your dose of stupid Bash tricks for the evening. Good night.</p>
 

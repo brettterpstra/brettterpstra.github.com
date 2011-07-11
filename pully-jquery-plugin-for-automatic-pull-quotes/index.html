@@ -67,19 +67,19 @@
 
 <p>In its simplest usage, you can take a paragraph which contains a span with a class of .pullquote (for example) and call it like this:</p>
 
-<pre lang="javascript">
-$(document).ready(function() {
-	$('.pullquote').pully()
-});
-</pre>
+<div class="highlight"><pre><code class="javascript"><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.pullquote&#39;</span><span class="p">).</span><span class="nx">pully</span><span class="p">()</span>
+<span class="p">});</span>
+</code></pre>
+</div>
 
 <p>Here&rsquo;s an example of Pully being run with all options. This call will take an <code>&lt;em&gt;</code> block inside of a <code>&lt;strong&gt;</code> element and turn it into the pullquote. It will insert the new element at the beginning of the enclosing paragraph and apply the class &ldquo;ppullquote&rdquo; to it:</p>
 
-<pre lang="javascript">
-$(document).ready(function() {
-	$('p strong&gt;em').pully({'prependtoparent':'p','newclass':'ppullquote'});
-});
-</pre>
+<div class="highlight"><pre><code class="javascript"><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;p strong&gt;em&#39;</span><span class="p">).</span><span class="nx">pully</span><span class="p">({</span><span class="s1">&#39;prependtoparent&#39;</span><span class="o">:</span><span class="s1">&#39;p&#39;</span><span class="p">,</span><span class="s1">&#39;newclass&#39;</span><span class="o">:</span><span class="s1">&#39;ppullquote&#39;</span><span class="p">});</span>
+<span class="p">});</span>
+</code></pre>
+</div>
 
 <p>You&rsquo;ll need to provide your own CSS. Unless otherwise specified, your pullquote will have a class of &ldquo;pullyquote,&rdquo; to which you can apply whatever styles are most fitting. I borrowed some styles from <a href="http://type-a-file.com/">type-a-file</a> for the demo, the pertinent portions are included in the main source of the demo page.</p>
 

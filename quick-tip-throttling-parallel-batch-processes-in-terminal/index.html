@@ -63,14 +63,14 @@
 
 <p>Take, for example, a little script I run to add thumbnails to weblocs I have laying around. It looks something like this:</p>
 
-<pre lang="bash" escaped="false">
-mdfind -onlyin ~/Dropbox/Sync/Bookmark/ \
-'(! ( ((kMDItemOMUserTags == "*donotthumbnail*"cd) \
-|| (kOMUserTags == "*donotthumbnail*"cd) ) ) \
-&amp;&amp; (kMDItemFSHasCustomIcon = "0") \
-&amp;&amp; (kMDItemContentType == "*webloc*"cd))' - while read file; \
-do /usr/local/bin/setWeblocThumb "$file" ; done
-</pre>
+<div class="highlight"><pre><code class="bash">mdfind -onlyin ~/Dropbox/Sync/Bookmark/ <span class="se">\</span>
+<span class="s1">&#39;(! ( ((kMDItemOMUserTags == &quot;*donotthumbnail*&quot;cd) \</span>
+<span class="s1">|| (kOMUserTags == &quot;*donotthumbnail*&quot;cd) ) ) \</span>
+<span class="s1">&amp;&amp; (kMDItemFSHasCustomIcon = &quot;0&quot;) \</span>
+<span class="s1">&amp;&amp; (kMDItemContentType == &quot;*webloc*&quot;cd))&#39;</span> - <span class="k">while </span><span class="nb">read </span>file; <span class="se">\</span>
+<span class="k">do</span> /usr/local/bin/setWeblocThumb <span class="s2">&quot;$file&quot;</span> ; <span class="k">done</span>
+</code></pre>
+</div>
 
 <p>It&rsquo;s a one-liner, you&rsquo;d want to reassemble it to run it (remove the backslashes at the line ends and join them all together), but it uses mdfind to search my shared bookmarks folder for recent items which don&rsquo;t already have a custom thumbnail, passes them to <a href="http://hasseg.org/setWeblocThumb/">setWeblocThumb</a> and processes them&hellip; one at a time. I know my machine and my bandwidth can handle more than that, but if the list is 50+ long, that&rsquo;s a lot of processes doing some relatively intensive labor. It would grind my machine to a halt. Yes, I tried it just to be sure.</p>
 
@@ -78,13 +78,13 @@ do /usr/local/bin/setWeblocThumb "$file" ; done
 
 <p>My new command looks like:</p>
 
-<pre lang="bash" escaped="false">
-mdfind -onlyin /Users/ttscoff/Dropbox/Sync/Bookmark/ \
-'(! ( ((kMDItemOMUserTags == "*donotthumbnail*"cd) \
-|| (kOMUserTags == "*donotthumbnail*"cd) ) ) \
-&amp;&amp; (kMDItemFSHasCustomIcon = "0") \
-&amp;&amp; (kMDItemContentType == "*webloc*"cd))'| parallel -j 8 -r "/usr/local/bin/setWeblocThumb"
-</pre>
+<div class="highlight"><pre><code class="bash">mdfind -onlyin /Users/ttscoff/Dropbox/Sync/Bookmark/ <span class="se">\</span>
+<span class="s1">&#39;(! ( ((kMDItemOMUserTags == &quot;*donotthumbnail*&quot;cd) \</span>
+<span class="s1">|| (kOMUserTags == &quot;*donotthumbnail*&quot;cd) ) ) \</span>
+<span class="s1">&amp;&amp; (kMDItemFSHasCustomIcon = &quot;0&quot;) \</span>
+<span class="s1">&amp;&amp; (kMDItemContentType == &quot;*webloc*&quot;cd))&#39;</span>| parallel -j 8 -r <span class="s2">&quot;/usr/local/bin/setWeblocThumb&quot;</span>
+</code></pre>
+</div>
 
 <p>Seriously, if you&rsquo;re doing anything in batch you should <a href="http://pebblesinthesand.wordpress.com/2008/05/22/a-srcipt-for-running-processes-in-parallel-in-bash/">check Parallel out</a>, or show me an even better one. Parallel made my morning, and by keeping CPU from maxing I actually got through some batches even faster. I&rsquo;m sure there are other elegant ways of handling this. Let &lsquo;em rip.</p>
 

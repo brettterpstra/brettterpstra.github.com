@@ -87,11 +87,15 @@
   </li>
   <li>
     <p>Put the following code into it:</p>
-
-    <pre lang="bash">
-#!/bin/bash
-env DYLD_FRAMEWORK_PATH=/Applications/WebKit.app/Contents/Frameworks/10.6/ WEBKIT_UNSET_DYLD_FRAMEWORK_PATH=YES /Applications/CSSEdit.app/Contents/MacOS/_CSSEdit</pre>
   </li>
+</ul>
+
+<div class="highlight"><pre><code class="bash"><span class="c">#!/bin/bash</span>
+env <span class="nv">DYLD_FRAMEWORK_PATH</span><span class="o">=</span>/Applications/WebKit.app/Contents/Frameworks/10.6/ <span class="nv">WEBKIT_UNSET_DYLD_FRAMEWORK_PATH</span><span class="o">=</span>YES /Applications/CSSEdit.app/Contents/MacOS/_CSSEdit
+</code></pre>
+</div>
+
+<ul>
   <li>
     <p>Save the file, close it, and make it executable:</p>
 

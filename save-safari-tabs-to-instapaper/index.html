@@ -62,49 +62,49 @@
 
 <p>After that, the rest of the script is a routine for <a href="http://en.wikipedia.org/wiki/Percent-encoding">url encoding</a> that I <a href="http://harvey.nu/applescript_url_encode_routine.html">nicked here</a>. It&rsquo;s called when setting both the <code>_title</code> and <code>_url</code> variables to make the <a href="http://curl.haxx.se/">curl</a> call from the shell work. I haven&rsquo;t tested this extensively yet, but it&rsquo;s worked for everything I&rsquo;ve tried. A title with odd characters in it could potentially cause problems. You can always add a shell-escaping routine&hellip;</p>
 
-<pre lang="applescript" escaped="true" filename="TabsToInstapaper.applescript">
-property _user : &quot;yourusername&quot;
-property _pass : &quot;yourpassword&quot;
+<div class="highlight"><pre><code class="applescript"><span class="k">property</span> <span class="err">_user</span> <span class="p">:</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">yourusername</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+<span class="k">property</span> <span class="err">_pass</span> <span class="p">:</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">yourpassword</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
 
-tell application &quot;Safari&quot;
-	repeat with _tab in tabs of front window
-		set _title to my urlencode(name of _tab)
-		set _url to my urlencode(URL of _tab)
-		set _script to (&not;
-			&quot;curl &#x27;https://www.instapaper.com/api/add?username=&quot;&not;
-			&amp; _user &amp; &quot;&amp;password=&quot; &amp; _pass &amp; &quot;&amp;url=&quot; &amp; _url &amp; &quot;&amp;title=&quot; &amp; _title &amp; &quot;&#x27;&quot;)
-		set output to do shell script _script
-	end repeat
-end tell
+<span class="k">tell</span> <span class="nb">application</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">Safari</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+	<span class="k">repeat</span> <span class="nv">with</span> <span class="err">_tab</span> <span class="k">in</span> <span class="nv">tabs</span> <span class="k">of</span> <span class="nb">front</span> <span class="na">window</span>
+		<span class="k">set</span> <span class="err">_title</span> <span class="k">to</span> <span class="k">my</span> <span class="nv">urlencode</span><span class="p">(</span><span class="na">name</span> <span class="k">of</span> <span class="err">_tab</span><span class="p">)</span>
+		<span class="k">set</span> <span class="err">_url</span> <span class="k">to</span> <span class="k">my</span> <span class="nv">urlencode</span><span class="p">(</span><span class="nv">URL</span> <span class="k">of</span> <span class="err">_tab</span><span class="p">)</span>
+		<span class="k">set</span> <span class="err">_script</span> <span class="k">to</span> <span class="p">(</span><span class="o">&amp;</span><span class="ow">not</span><span class="err">;</span>
+			<span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">curl</span> <span class="o">&amp;</span><span class="c">#x27;https://www.instapaper.com/api/add?username=&amp;quot;&amp;not;</span>
+			<span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="err">_user</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span><span class="nv">password</span><span class="o">=&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="err">_pass</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span><span class="nv">url</span><span class="o">=&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="err">_url</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span><span class="na">title</span><span class="o">=&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="err">_title</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="o">&amp;</span><span class="c">#x27;&amp;quot;)</span>
+		<span class="k">set</span> <span class="nv">output</span> <span class="k">to</span> <span class="nb">do shell script</span> <span class="err">_script</span>
+	<span class="k">end</span> <span class="k">repeat</span>
+<span class="k">end</span> <span class="k">tell</span>
 
-on urlencode(theText)
-	set theTextEnc to &quot;&quot;
-	repeat with eachChar in characters of theText
-		set useChar to eachChar
-		set eachCharNum to ASCII number of eachChar
-		if eachCharNum = 32 then
-			set useChar to &quot; &quot;
-		else if (eachCharNum &ne; 42) and (eachCharNum &ne; 95) and&not;
-			(eachCharNum &lt; 45 or eachCharNum &gt; 46) and (eachCharNum &lt; 48 or eachCharNum &gt; 57)&not;
-			and (eachCharNum &lt; 65 or eachCharNum &gt; 90) and (eachCharNum &lt; 97 or eachCharNum &gt; 122) then
-			set firstDig to round (eachCharNum / 16) rounding down
-			set secondDig to eachCharNum mod 16
-			if firstDig &gt; 9 then
-				set aNum to firstDig   55
-				set firstDig to ASCII character aNum
-			end if
-			if secondDig &gt; 9 then
-				set aNum to secondDig   55
-				set secondDig to ASCII character aNum
-			end if
-			set numHex to (&quot;%&quot; &amp; (firstDig as string) &amp; (secondDig as string)) as string
-			set useChar to numHex
-		end if
-		set theTextEnc to theTextEnc &amp; useChar as string
-	end repeat
-	return theTextEnc
-end urlencode
-</pre>
+<span class="k">on</span> <span class="nv">urlencode</span><span class="p">(</span><span class="nv">theText</span><span class="p">)</span>
+	<span class="k">set</span> <span class="nv">theTextEnc</span> <span class="k">to</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+	<span class="k">repeat</span> <span class="nv">with</span> <span class="nv">eachChar</span> <span class="k">in</span> <span class="nb">characters</span> <span class="k">of</span> <span class="nv">theText</span>
+		<span class="k">set</span> <span class="nv">useChar</span> <span class="k">to</span> <span class="nv">eachChar</span>
+		<span class="k">set</span> <span class="nv">eachCharNum</span> <span class="k">to</span> <span class="nb">ASCII number</span> <span class="k">of</span> <span class="nv">eachChar</span>
+		<span class="k">if</span> <span class="nv">eachCharNum</span> <span class="o">=</span> <span class="mi">32</span> <span class="k">then</span>
+			<span class="k">set</span> <span class="nv">useChar</span> <span class="k">to</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+		<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nv">eachCharNum</span> <span class="o">&amp;</span><span class="nv">ne</span><span class="err">;</span> <span class="mi">42</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nv">eachCharNum</span> <span class="o">&amp;</span><span class="nv">ne</span><span class="err">;</span> <span class="mi">95</span><span class="p">)</span> <span class="ow">and</span><span class="o">&amp;</span><span class="ow">not</span><span class="err">;</span>
+			<span class="p">(</span><span class="nv">eachCharNum</span> <span class="o">&amp;</span><span class="nv">lt</span><span class="err">;</span> <span class="mi">45</span> <span class="ow">or</span> <span class="nv">eachCharNum</span> <span class="o">&amp;</span><span class="nv">gt</span><span class="err">;</span> <span class="mi">46</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nv">eachCharNum</span> <span class="o">&amp;</span><span class="nv">lt</span><span class="err">;</span> <span class="mi">48</span> <span class="ow">or</span> <span class="nv">eachCharNum</span> <span class="o">&amp;</span><span class="nv">gt</span><span class="err">;</span> <span class="mi">57</span><span class="p">)</span><span class="o">&amp;</span><span class="ow">not</span><span class="err">;</span>
+			<span class="ow">and</span> <span class="p">(</span><span class="nv">eachCharNum</span> <span class="o">&amp;</span><span class="nv">lt</span><span class="err">;</span> <span class="mi">65</span> <span class="ow">or</span> <span class="nv">eachCharNum</span> <span class="o">&amp;</span><span class="nv">gt</span><span class="err">;</span> <span class="mi">90</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nv">eachCharNum</span> <span class="o">&amp;</span><span class="nv">lt</span><span class="err">;</span> <span class="mi">97</span> <span class="ow">or</span> <span class="nv">eachCharNum</span> <span class="o">&amp;</span><span class="nv">gt</span><span class="err">;</span> <span class="mi">122</span><span class="p">)</span> <span class="k">then</span>
+			<span class="k">set</span> <span class="nv">firstDig</span> <span class="k">to</span> <span class="nb">round</span> <span class="p">(</span><span class="nv">eachCharNum</span> <span class="o">/</span> <span class="mi">16</span><span class="p">)</span> <span class="nv">rounding</span> <span class="nv">down</span>
+			<span class="k">set</span> <span class="nv">secondDig</span> <span class="k">to</span> <span class="nv">eachCharNum</span> <span class="ow">mod</span> <span class="mi">16</span>
+			<span class="k">if</span> <span class="nv">firstDig</span> <span class="o">&amp;</span><span class="nv">gt</span><span class="err">;</span> <span class="mi">9</span> <span class="k">then</span>
+				<span class="k">set</span> <span class="nv">aNum</span> <span class="k">to</span> <span class="nv">firstDig</span>   <span class="mi">55</span>
+				<span class="k">set</span> <span class="nv">firstDig</span> <span class="k">to</span> <span class="nb">ASCII character</span> <span class="nv">aNum</span>
+			<span class="k">end</span> <span class="k">if</span>
+			<span class="k">if</span> <span class="nv">secondDig</span> <span class="o">&amp;</span><span class="nv">gt</span><span class="err">;</span> <span class="mi">9</span> <span class="k">then</span>
+				<span class="k">set</span> <span class="nv">aNum</span> <span class="k">to</span> <span class="nv">secondDig</span>   <span class="mi">55</span>
+				<span class="k">set</span> <span class="nv">secondDig</span> <span class="k">to</span> <span class="nb">ASCII character</span> <span class="nv">aNum</span>
+			<span class="k">end</span> <span class="k">if</span>
+			<span class="k">set</span> <span class="nv">numHex</span> <span class="k">to</span> <span class="p">(</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;%</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="p">(</span><span class="nv">firstDig</span> <span class="k">as </span><span class="nc">string</span><span class="p">)</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="p">(</span><span class="nv">secondDig</span> <span class="k">as </span><span class="nc">string</span><span class="p">))</span> <span class="k">as </span><span class="nc">string</span>
+			<span class="k">set</span> <span class="nv">useChar</span> <span class="k">to</span> <span class="nv">numHex</span>
+		<span class="k">end</span> <span class="k">if</span>
+		<span class="k">set</span> <span class="nv">theTextEnc</span> <span class="k">to</span> <span class="nv">theTextEnc</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="nv">useChar</span> <span class="k">as </span><span class="nc">string</span>
+	<span class="k">end</span> <span class="k">repeat</span>
+	<span class="no">return</span> <span class="nv">theTextEnc</span>
+<span class="k">end</span> <span class="nv">urlencode</span>
+</code></pre>
+</div>
 
 
 	</div>

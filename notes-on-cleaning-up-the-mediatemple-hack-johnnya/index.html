@@ -73,7 +73,8 @@
 <p>What you&rsquo;ll find in the rendered source is a little function that uses an array of colors and urls to generate somewhat random redirects. A url called &lsquo;edisonsnightclub&rsquo; is always in the mix, so that&rsquo;s what I search for. The redirect has the side-effect of triggering Firefox&rsquo;s security warnings, which is a fair sight better than just sending clients off to malicious sites. However, it appears to only execute the code for search engine bots, so it could potentially go unnoticed on your site for quite some time.</p>
 
 <!--more-->
-<p>### Cleanup ###</p>
+
+<h3 id="cleanup">Cleanup</h3>
 
 <p>I did my cleanup job hastily, and didn&rsquo;t track everything as well as I should have. There were lines inserted into main template PHP files which I just quickly deleted. These always began with <code>$o=</code>, so that became my server-wide search pattern (more on that in a second). This didn&rsquo;t only affect WordPress, it also hit my MODx sites and the exploit would probably hit static sites or any other CMS just fine, so check everything.</p>
 

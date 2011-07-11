@@ -62,6 +62,7 @@ I do a lot in Terminal. Sometimes, it&rsquo;s easier. Sometimes it&rsquo;s faste
 <p>I&rsquo;m using the <code>PROMPT_COMMAND</code> variable to run a few quick functions to generate the prompt. It doesn&rsquo;t do anything processor-intensive, so I haven&rsquo;t seen any lag caused by this one (unlike some of my previous experiments). <code>PROMPT_COMMAND</code> is set to call a function called, appropriately, <code>prompt_command()</code>. This, in turn, calls a few external functions defined in my <code>.bash_profile</code>. To use it, just stick all of the code below into your <code>.bash_profile</code>, and modify it as you see fit. Be sure to replace any definitions of <code>PROMPT_COMMAND</code> or <code>PS1</code>.</p>
 
 <!--more-->
+
 <p>The prompt has a few unique features, and some &ldquo;hidden&rdquo; features:</p>
 
 <ul>
@@ -76,59 +77,60 @@ I do a lot in Terminal. Sometimes, it&rsquo;s easier. Sometimes it&rsquo;s faste
 
 <p>All of the colors used in the prompt are defined as shell variables. In the final line of the <code>prompt_command</code> function, you can modify the colors just by replacing the color names in the line. That should be pretty self-explanatory.</p>
 
-<pre lang="bash" filename="bashprompt.sh">
-prompt_command () {
-    if [ $? -eq 0 ]; then # set an error string for the prompt, if applicable
-        ERRPROMPT=" "
-    else
-        ERRPROMPT='-&gt;($?) '
-    fi
-    if [ "\$(type -t __git_ps1)" ]; then # if we're in a Git repo, show current branch
-        BRANCH="\$(__git_ps1 '[ %s ] ')"
-    fi
-    local TIME=`fmt_time` # format time for prompt string
-    local LOAD=`uptime|awk '{min=NF-2;print $min}'`
-    local GREEN="\[\033[0;32m\]"
-    local CYAN="\[\033[0;36m\]"
-    local BCYAN="\[\033[1;36m\]"
-    local BLUE="\[\033[0;34m\]"
-    local GRAY="\[\033[0;37m\]"
-    local DKGRAY="\[\033[1;30m\]"
-    local WHITE="\[\033[1;37m\]"
-    local RED="\[\033[0;31m\]"
-    # return color to Terminal setting for text color
-    local DEFAULT="\[\033[0;39m\]"
-    # set the titlebar to the last 2 fields of pwd
-    local TITLEBAR='\[\e]2;`pwdtail`\a'
-    export PS1="\[${TITLEBAR}\]${CYAN}[ ${BCYAN}\u${GREEN}@${BCYAN}\
-\h${DKGRAY}(${LOAD}) ${WHITE}${TIME} ${CYAN}]${RED}$ERRPROMPT${GRAY}\
-\w\n${GREEN}${BRANCH}${DEFAULT}$ "
-}
-PROMPT_COMMAND=prompt_command
+<div class="highlight"><pre><code class="bash">prompt_command <span class="o">()</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">[</span> <span class="nv">$?</span> -eq 0 <span class="o">]</span>; <span class="k">then</span> <span class="c"># set an error string for the prompt, if applicable</span>
+        <span class="nv">ERRPROMPT</span><span class="o">=</span><span class="s2">&quot; &quot;</span>
+    <span class="k">else</span>
+<span class="k">        </span><span class="nv">ERRPROMPT</span><span class="o">=</span><span class="s1">&#39;-&amp;gt;($?) &#39;</span>
+    <span class="k">fi</span>
+<span class="k">    if</span> <span class="o">[</span> <span class="s2">&quot;\$(type -t __git_ps1)&quot;</span> <span class="o">]</span>; <span class="k">then</span> <span class="c"># if we&#39;re in a Git repo, show current branch</span>
+        <span class="nv">BRANCH</span><span class="o">=</span><span class="s2">&quot;\$(__git_ps1 &#39;[ %s ] &#39;)&quot;</span>
+    <span class="k">fi</span>
+<span class="k">    </span><span class="nb">local </span><span class="nv">TIME</span><span class="o">=</span><span class="sb">`</span>fmt_time<span class="sb">`</span> <span class="c"># format time for prompt string</span>
+    <span class="nb">local </span><span class="nv">LOAD</span><span class="o">=</span><span class="sb">`</span>uptime|awk <span class="s1">&#39;{min=NF-2;print $min}&#39;</span><span class="sb">`</span>
+    <span class="nb">local </span><span class="nv">GREEN</span><span class="o">=</span><span class="s2">&quot;\[\033[0;32m\]&quot;</span>
+    <span class="nb">local </span><span class="nv">CYAN</span><span class="o">=</span><span class="s2">&quot;\[\033[0;36m\]&quot;</span>
+    <span class="nb">local </span><span class="nv">BCYAN</span><span class="o">=</span><span class="s2">&quot;\[\033[1;36m\]&quot;</span>
+    <span class="nb">local </span><span class="nv">BLUE</span><span class="o">=</span><span class="s2">&quot;\[\033[0;34m\]&quot;</span>
+    <span class="nb">local </span><span class="nv">GRAY</span><span class="o">=</span><span class="s2">&quot;\[\033[0;37m\]&quot;</span>
+    <span class="nb">local </span><span class="nv">DKGRAY</span><span class="o">=</span><span class="s2">&quot;\[\033[1;30m\]&quot;</span>
+    <span class="nb">local </span><span class="nv">WHITE</span><span class="o">=</span><span class="s2">&quot;\[\033[1;37m\]&quot;</span>
+    <span class="nb">local </span><span class="nv">RED</span><span class="o">=</span><span class="s2">&quot;\[\033[0;31m\]&quot;</span>
+    <span class="c"># return color to Terminal setting for text color</span>
+    <span class="nb">local </span><span class="nv">DEFAULT</span><span class="o">=</span><span class="s2">&quot;\[\033[0;39m\]&quot;</span>
+    <span class="c"># set the titlebar to the last 2 fields of pwd</span>
+    <span class="nb">local </span><span class="nv">TITLEBAR</span><span class="o">=</span><span class="s1">&#39;\[\e]2;`pwdtail`\a&#39;</span>
+    <span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s2">&quot;\[${TITLEBAR}\]${CYAN}[ ${BCYAN}\u${GREEN}@${BCYAN}\</span>
+<span class="s2">\h${DKGRAY}(${LOAD}) ${WHITE}${TIME} ${CYAN}]${RED}$ERRPROMPT${GRAY}\</span>
+<span class="s2">\w\n${GREEN}${BRANCH}${DEFAULT}$ &quot;</span>
+<span class="o">}</span>
+<span class="nv">PROMPT_COMMAND</span><span class="o">=</span>prompt_command
 
-fmt_time () { #format time just the way I likes it
-    if [ `date +%p` = "PM" ]; then
-        meridiem="pm"
-    else
-        meridiem="am"
-    fi
-    date +"%l:%M:%S$meridiem"|sed 's/ //g'
-}
-pwdtail () { #returns the last 2 fields of the working directory
-    pwd|awk -F/ '{nlast = NF -1;print $nlast"/"$NF}'
-}
-chkload () { #gets the current 1m avg CPU load
-    local CURRLOAD=`uptime|awk '{print $8}'`
-    if [ "$CURRLOAD" &gt; "1" ]; then
-        local OUTP="HIGH"
-    elif [ "$CURRLOAD" &lt; "1" ]; then
-        local OUTP="NORMAL"
-    else
-        local OUTP="UNKNOWN"
-    fi
-    echo $CURRLOAD
-}
-</pre>
+fmt_time <span class="o">()</span> <span class="o">{</span> <span class="c">#format time just the way I likes it</span>
+    <span class="k">if</span> <span class="o">[</span> <span class="sb">`</span>date +%p<span class="sb">`</span> <span class="o">=</span> <span class="s2">&quot;PM&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">        </span><span class="nv">meridiem</span><span class="o">=</span><span class="s2">&quot;pm&quot;</span>
+    <span class="k">else</span>
+<span class="k">        </span><span class="nv">meridiem</span><span class="o">=</span><span class="s2">&quot;am&quot;</span>
+    <span class="k">fi</span>
+<span class="k">    </span>date +<span class="s2">&quot;%l:%M:%S$meridiem&quot;</span>|sed <span class="s1">&#39;s/ //g&#39;</span>
+<span class="o">}</span>
+pwdtail <span class="o">()</span> <span class="o">{</span> <span class="c">#returns the last 2 fields of the working directory</span>
+    <span class="nb">pwd</span>|awk -F/ <span class="s1">&#39;{nlast = NF -1;print $nlast&quot;/&quot;$NF}&#39;</span>
+<span class="o">}</span>
+chkload <span class="o">()</span> <span class="o">{</span> <span class="c">#gets the current 1m avg CPU load</span>
+    <span class="nb">local </span><span class="nv">CURRLOAD</span><span class="o">=</span><span class="sb">`</span>uptime|awk <span class="s1">&#39;{print $8}&#39;</span><span class="sb">`</span>
+    <span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$CURRLOAD&quot;</span> &amp;gt; <span class="s2">&quot;1&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">        </span><span class="nb">local </span><span class="nv">OUTP</span><span class="o">=</span><span class="s2">&quot;HIGH&quot;</span>
+    <span class="k">elif</span> <span class="o">[</span> <span class="s2">&quot;$CURRLOAD&quot;</span> &amp;lt; <span class="s2">&quot;1&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">        </span><span class="nb">local </span><span class="nv">OUTP</span><span class="o">=</span><span class="s2">&quot;NORMAL&quot;</span>
+    <span class="k">else</span>
+<span class="k">        </span><span class="nb">local </span><span class="nv">OUTP</span><span class="o">=</span><span class="s2">&quot;UNKNOWN&quot;</span>
+    <span class="k">fi</span>
+<span class="k">    </span><span class="nb">echo</span> <span class="nv">$CURRLOAD</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
 
 	</div>
 	<div class="nextprev clearfix">

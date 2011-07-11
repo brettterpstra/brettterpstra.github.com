@@ -61,6 +61,7 @@
 <p>In case you&rsquo;re wondering why I&rsquo;m using the wrong tag for my acronyms, the HTML5 spec pretty much does away with the &lt;acronym&gt; tag, and &lt;abbr&gt; appears to be the new, all-purpose solution. It&rsquo;s not perfectly semantic, but there doesn&rsquo;t seem to be an ideal solution for acronyms in the spec. This command is really geared toward using the &lt;abbr&gt; for acronyms, but you could easily alter it to insert an &lt;acronym&gt; tag (especially if your doctype is anything other than &lsquo;html&rsquo;), and it works pretty well for just quickly creating an actual abbreviation, too. It just doesn&rsquo;t try to guess how to abbreviate anything other than apparent acronyms, but it gives you Snippet tab stops for quick manual editing. If you run it with no selection, it will create a blank &lt;abbr&gt; tag you can tab through and fill in.</p>
 
 <!--more-->
+
 <p>To use the command, just create a new TextMate Command in the Bundle Editor, preferably in your own personal bundle (create a new bundle with your name, if you need to). Set the Input to &ldquo;Selected Text&rdquo; or &ldquo;Word&rdquo;, and the output to Insert as Snippet. Assign a key equivalent if you like. Since it&rsquo;s outputting HTML, it probably makes sense to set the Scope Selector field to &ldquo;text.html&rdquo;, but who knows, you may prefer to use it outside of normal HTML source documents. Once it&rsquo;s set up, add the code below.</p>
 
 <p>&lt;div markdown=0&gt;</p>

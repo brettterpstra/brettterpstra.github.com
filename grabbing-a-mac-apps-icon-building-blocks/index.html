@@ -96,20 +96,20 @@ sips -s format jpeg "/Applications/$APP.app/Contents/Resources/$ICON.icns" --out
 
 <p>Now we have the basic pieces we can use to build a script to automate this from the command line. Here&rsquo;s an example which expects the application name as the only argument, properly cased:</p>
 
-<pre lang="bash" filename="grabicon.sh" escaped="true">
-#!/bin/bash
+<div class="highlight"><pre><code class="bash"><span class="c">#!/bin/bash</span>
 
-APP=`echo $1|sed -e 's/\.app$//'`
-# Removes &quot;.app&quot; if it was passed
+<span class="nv">APP</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="nv">$1</span>|sed -e <span class="s1">&#39;s/\.app$//&#39;</span><span class="sb">`</span>
+<span class="c"># Removes &amp;quot;.app&amp;quot; if it was passed</span>
 
-ICON=`defaults read /Applications/$APP.app/Contents/Info CFBundleIconFile|sed -e 's/\.icns$//'`
-# Removes &quot;.icns&quot; if the Info.plist value includes it
-# Harcoded for /Applications, needs to be rewritten for other locations or droplets
+<span class="nv">ICON</span><span class="o">=</span><span class="sb">`</span>defaults <span class="nb">read</span> /Applications/<span class="nv">$APP</span>.app/Contents/Info CFBundleIconFile|sed -e <span class="s1">&#39;s/\.icns$//&#39;</span><span class="sb">`</span>
+<span class="c"># Removes &amp;quot;.icns&amp;quot; if the Info.plist value includes it</span>
+<span class="c"># Harcoded for /Applications, needs to be rewritten for other locations or droplets</span>
 
-## Save icon on Desktop in JPEG format, resized to 256 max width/height
-OUTFILE=&quot;$HOME/Desktop/${APP}_icon.jpg&quot;
-/usr/bin/sips -s format jpeg &quot;/Applications/$APP.app/Contents/Resources/$ICON.icns&quot; --out $OUTFILE
-</pre>
+<span class="c">## Save icon on Desktop in JPEG format, resized to 256 max width/height</span>
+<span class="nv">OUTFILE</span><span class="o">=</span>&amp;quot;<span class="nv">$HOME</span>/Desktop/<span class="k">${</span><span class="nv">APP</span><span class="k">}</span>_icon.jpg&amp;quot;
+/usr/bin/sips -s format jpeg &amp;quot;/Applications/<span class="nv">$APP</span>.app/Contents/Resources/<span class="nv">$ICON</span>.icns&amp;quot; --out <span class="nv">$OUTFILE</span>
+</code></pre>
+</div>
 
 <h2 id="extra-credit-image-optimization">Extra credit: image optimization</h2>
 
@@ -119,22 +119,22 @@ OUTFILE=&quot;$HOME/Desktop/${APP}_icon.jpg&quot;
 
 <p>Assuming we&rsquo;re using an application and not a CLI utility, we can use the <code>open</code> command to send the resulting file to the app. We can also avoid some confusion by initially saving the converted icon file to a default temporary directory and then opening it from there. Here&rsquo;s a revised script that does that, then opens the final image in Acorn for quick resizing and saving to any location. We&rsquo;ll use the PNG format to preserve the original transparency, and you can substitute any graphics application for Acorn:</p>
 
-<pre lang="bash" filename="grabiconpng.sh" escaped="true">
-#!/bin/bash
+<div class="highlight"><pre><code class="bash"><span class="c">#!/bin/bash</span>
 
-APP=`echo $1|sed -e 's/\.app$//'`
-# Removes &quot;.app&quot; if it was passed
+<span class="nv">APP</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="nv">$1</span>|sed -e <span class="s1">&#39;s/\.app$//&#39;</span><span class="sb">`</span>
+<span class="c"># Removes &amp;quot;.app&amp;quot; if it was passed</span>
 
-ICON=`defaults read /Applications/$APP.app/Contents/Info CFBundleIconFile|sed -e 's/\.icns$//'`
-# Removes &quot;.icns&quot; if the Info.plist has it
-# Harcoded for /Applications, needs to be rewritten for other locations or droplets
+<span class="nv">ICON</span><span class="o">=</span><span class="sb">`</span>defaults <span class="nb">read</span> /Applications/<span class="nv">$APP</span>.app/Contents/Info CFBundleIconFile|sed -e <span class="s1">&#39;s/\.icns$//&#39;</span><span class="sb">`</span>
+<span class="c"># Removes &amp;quot;.icns&amp;quot; if the Info.plist has it</span>
+<span class="c"># Harcoded for /Applications, needs to be rewritten for other locations or droplets</span>
 
-## Output file to a temp directory (TMPDIR) as a PNG and open in Acorn for resizing and conversion
+<span class="c">## Output file to a temp directory (TMPDIR) as a PNG and open in Acorn for resizing and conversion</span>
 
-OUTFILE=&quot;$TMPDIR${APP}_icon.png&quot;
-sips -s format png &quot;/Applications/$APP.app/Contents/Resources/$ICON.icns&quot; --out $OUTFILE
-open -a &quot;Acorn.app&quot; $OUTFILE
-</pre>
+<span class="nv">OUTFILE</span><span class="o">=</span>&amp;quot;<span class="nv">$TMPDIR</span><span class="k">${</span><span class="nv">APP</span><span class="k">}</span>_icon.png&amp;quot;
+sips -s format png &amp;quot;/Applications/<span class="nv">$APP</span>.app/Contents/Resources/<span class="nv">$ICON</span>.icns&amp;quot; --out <span class="nv">$OUTFILE</span>
+open -a &amp;quot;Acorn.app&amp;quot; <span class="nv">$OUTFILE</span>
+</code></pre>
+</div>
 
 <p>I think you get the idea. You can take this script and easily adjust the output format and destination application. In the <a href="http://brettterpstra.dev/grabbing-a-mac-apps-icon-advanced-bash-usage-2/">next post</a>, we&rsquo;ll cover making this into a fully customized Bash function, with some extra goodies.</p>
 <div class="footnotes">

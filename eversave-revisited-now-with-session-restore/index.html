@@ -59,9 +59,11 @@
 		
 <p>Safari 5 has brought several solutions for managing lists of open tabs, from the simple (like my <a href="http://brettterpstra.dev/2010/06/18/tablinks-safari-extension/">TabLinks extension</a>) to full session-management capabilities (see the beautiful <a href="http://dl.dropbox.com/u/8247646/sessions/index.html">Sessions extension</a>). However, I&rsquo;ve found I still like using my <a href="http://brettterpstra.dev/2010/03/06/saving-safari-browsing-sessions-to-evernote/">EverSave script</a> in many situations, primarily because it allows me to annotate, tag and sync my important sessions for later retrieval. One thing&rsquo;s been bugging me, though, and that&rsquo;s the inability to do a mass restore on a tab list (i.e. open them all at once).</p>
 
-<p>When I decided to fix this, the first issue was that when EverSave creates the Evernote note, it lets Evernote convert the list from HTML to Rich Text. Once it&rsquo;s stored in Rich Text Format (RTF), manipulating it via any shell language, including AppleScript, becomes quite difficult. It&rsquo;s not impossible, but I quickly decided it wasn&rsquo;t a route I wanted to wander down. Here&rsquo;s what I <strong>did</strong> do&hellip;
+<p>When I decided to fix this, the first issue was that when EverSave creates the Evernote note, it lets Evernote convert the list from HTML to Rich Text. Once it&rsquo;s stored in Rich Text Format (RTF), manipulating it via any shell language, including AppleScript, becomes quite difficult. It&rsquo;s not impossible, but I quickly decided it wasn&rsquo;t a route I wanted to wander down. Here&rsquo;s what I <strong>did</strong> do&hellip;</p>
+
 <!--more-->
-### Saving tabs to Evernote</p>
+
+<h3 id="saving-tabs-to-evernote">Saving tabs to Evernote</h3>
 
 <p>What I ended up doing was modifying what EverSave stored, and including the actual URL in the visible text of the note. It&rsquo;s not the prettiest solution, but it&rsquo;s the only way that this particular system will work. I did my best to minimize the visual presence of the URL using the rudimentary markup that Evernote actually pays attention to. The final product looks like this:</p>
 
@@ -71,43 +73,43 @@
 
 <p>Be sure to continue reading after the script to see how we handle the &ldquo;restore&rdquo; functionality.</p>
 
-<pre lang="applescript" escaped="true" filename="EverSave.applescript">
-property _template : &quot;&lt;li&gt;&lt;strong&gt;&lt;a href=&quot;%url&quot;&gt;&amp;uArr;&lt;/a&gt; %name&lt;/strong&gt; &lt; &lt;small&gt;%url&lt;/small&gt; &gt;&quot;
+<div class="highlight"><pre><code class="applescript"><span class="k">property</span> <span class="err">_template</span> <span class="p">:</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="o">&amp;</span><span class="nv">lt</span><span class="err">;</span><span class="nv">li</span><span class="o">&amp;</span><span class="nv">gt</span><span class="err">;</span><span class="o">&amp;</span><span class="nv">lt</span><span class="err">;</span><span class="nv">strong</span><span class="o">&amp;</span><span class="nv">gt</span><span class="err">;</span><span class="o">&amp;</span><span class="nv">lt</span><span class="err">;</span><span class="nv">a</span> <span class="nv">href</span><span class="o">=&amp;</span><span class="nv">quot</span><span class="err">;%</span><span class="nv">url</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="o">&amp;</span><span class="nv">gt</span><span class="err">;</span><span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span><span class="nv">uArr</span><span class="err">;</span><span class="o">&amp;</span><span class="nv">lt</span><span class="err">;</span><span class="o">/</span><span class="nv">a</span><span class="o">&amp;</span><span class="nv">gt</span><span class="err">;</span> <span class="err">%</span><span class="na">name</span><span class="o">&amp;</span><span class="nv">lt</span><span class="err">;</span><span class="o">/</span><span class="nv">strong</span><span class="o">&amp;</span><span class="nv">gt</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">lt</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">lt</span><span class="err">;</span><span class="nv">small</span><span class="o">&amp;</span><span class="nv">gt</span><span class="err">;%</span><span class="nv">url</span><span class="o">&amp;</span><span class="nv">lt</span><span class="err">;</span><span class="o">/</span><span class="nv">small</span><span class="o">&amp;</span><span class="nv">gt</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">gt</span><span class="err">;</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
 
---search and replace function for template
-on snr(tofind, toreplace, TheString)
-	set ditd to text item delimiters
-	set text item delimiters to tofind
-	set textItems to text items of TheString
-	set text item delimiters to toreplace
-	if (class of TheString is string) then
-		set res to textItems as string
-	else -- if (class of TheString is Unicode text) then
-		set res to textItems as Unicode text
-	end if
-	set text item delimiters to ditd
-	return res
-end snr
+<span class="c">--search and replace function for template</span>
+<span class="k">on</span> <span class="nv">snr</span><span class="p">(</span><span class="nv">tofind</span><span class="p">,</span> <span class="nv">toreplace</span><span class="p">,</span> <span class="nv">TheString</span><span class="p">)</span>
+	<span class="k">set</span> <span class="nv">ditd</span> <span class="k">to</span> <span class="no">text item delimiters</span>
+	<span class="k">set</span> <span class="no">text item delimiters</span> <span class="k">to</span> <span class="nv">tofind</span>
+	<span class="k">set</span> <span class="nv">textItems</span> <span class="k">to</span> <span class="nb">text</span> <span class="nb">items</span> <span class="k">of</span> <span class="nv">TheString</span>
+	<span class="k">set</span> <span class="no">text item delimiters</span> <span class="k">to</span> <span class="nv">toreplace</span>
+	<span class="k">if</span> <span class="p">(</span><span class="na">class</span> <span class="k">of</span> <span class="nv">TheString</span> <span class="ow">is</span> <span class="nv">string</span><span class="p">)</span> <span class="k">then</span>
+		<span class="k">set</span> <span class="nv">res</span> <span class="k">to</span> <span class="nv">textItems</span> <span class="k">as </span><span class="nc">string</span>
+	<span class="k">else</span> <span class="c">-- if (class of TheString is Unicode text) then</span>
+		<span class="k">set</span> <span class="nv">res</span> <span class="k">to</span> <span class="nv">textItems</span> <span class="k">as </span><span class="nc">Unicode text</span>
+	<span class="k">end</span> <span class="k">if</span>
+	<span class="k">set</span> <span class="no">text item delimiters</span> <span class="k">to</span> <span class="nv">ditd</span>
+	<span class="no">return</span> <span class="nv">res</span>
+<span class="k">end</span> <span class="nv">snr</span>
 
-set prettyDate to do shell script &quot;date '+%A, %B %d, %Y at %l:%M %p'&quot;
-set theTitle to &quot;Bookmarks &quot; &amp; prettyDate
-set urlList to &quot;&lt;ul&gt;&quot;
+<span class="k">set</span> <span class="nv">prettyDate</span> <span class="k">to</span> <span class="nb">do shell script</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">date</span> <span class="err">&#39;</span><span class="o">+</span><span class="err">%</span><span class="nv">A</span><span class="p">,</span> <span class="err">%</span><span class="nv">B</span> <span class="err">%</span><span class="nv">d</span><span class="p">,</span> <span class="err">%</span><span class="nv">Y</span> <span class="nb">at</span> <span class="err">%</span><span class="nv">l</span><span class="p">:</span><span class="err">%</span><span class="nv">M</span> <span class="err">%</span><span class="nv">p</span><span class="err">&#39;</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+<span class="k">set</span> <span class="nv">theTitle</span> <span class="k">to</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">Bookmarks</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="nv">prettyDate</span>
+<span class="k">set</span> <span class="nv">urlList</span> <span class="k">to</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="o">&amp;</span><span class="nv">lt</span><span class="err">;</span><span class="nv">ul</span><span class="o">&amp;</span><span class="nv">gt</span><span class="err">;</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
 
-tell application &quot;Safari&quot;
-	set tabList to every tab of front window
-	repeat with aTab in tabList
-		set aLink to _template
-		set aLink to my snr(&quot;%name&quot;, name of aTab, aLink)
-		set aLink to my snr(&quot;%url&quot;, URL of aTab, aLink)
-		set urlList to urlList &amp; aLink &amp; return
-	end repeat
-end tell
-set urlList to urlList &amp; &quot;&lt;/ul&gt;&quot;
+<span class="k">tell</span> <span class="nb">application</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">Safari</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+	<span class="k">set</span> <span class="nv">tabList</span> <span class="k">to</span> <span class="nb">every</span> <span class="no">tab</span> <span class="k">of</span> <span class="nb">front</span> <span class="na">window</span>
+	<span class="k">repeat</span> <span class="nv">with</span> <span class="nv">aTab</span> <span class="k">in</span> <span class="nv">tabList</span>
+		<span class="k">set</span> <span class="nv">aLink</span> <span class="k">to</span> <span class="err">_template</span>
+		<span class="k">set</span> <span class="nv">aLink</span> <span class="k">to</span> <span class="k">my</span> <span class="nv">snr</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;%</span><span class="na">name</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="p">,</span> <span class="na">name</span> <span class="k">of</span> <span class="nv">aTab</span><span class="p">,</span> <span class="nv">aLink</span><span class="p">)</span>
+		<span class="k">set</span> <span class="nv">aLink</span> <span class="k">to</span> <span class="k">my</span> <span class="nv">snr</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;%</span><span class="nv">url</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="p">,</span> <span class="nv">URL</span> <span class="k">of</span> <span class="nv">aTab</span><span class="p">,</span> <span class="nv">aLink</span><span class="p">)</span>
+		<span class="k">set</span> <span class="nv">urlList</span> <span class="k">to</span> <span class="nv">urlList</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="nv">aLink</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="no">return</span>
+	<span class="k">end</span> <span class="k">repeat</span>
+<span class="k">end</span> <span class="k">tell</span>
+<span class="k">set</span> <span class="nv">urlList</span> <span class="k">to</span> <span class="nv">urlList</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="o">&amp;</span><span class="nv">lt</span><span class="err">;</span><span class="o">/</span><span class="nv">ul</span><span class="o">&amp;</span><span class="nv">gt</span><span class="err">;</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
 
-tell application &quot;Evernote&quot;
-	set theNote to create note with html urlList title theTitle notebook &quot;Bookmarks&quot;
-end tell
-</pre>
+<span class="k">tell</span> <span class="nb">application</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">Evernote</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+	<span class="k">set</span> <span class="nv">theNote</span> <span class="k">to</span> <span class="nv">create</span> <span class="nv">note</span> <span class="nv">with</span> <span class="nv">html</span> <span class="nv">urlList</span> <span class="na">title</span> <span class="nv">theTitle</span> <span class="nv">notebook</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">Bookmarks</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+<span class="k">end</span> <span class="k">tell</span>
+</code></pre>
+</div>
 
 <p>I have this script saved as &ldquo;EverSave.scpt&rdquo; in my <code>~/Library/Scripts/Applications/Safari</code> folder (create it if you don&rsquo;t have it), and launch it using <a href="http://www.red-sweater.com/fastscripts/">FastScripts</a> with a Command-Shift-S shortcut. Safari doesn&rsquo;t have anything bound to that key-combo, and it&rsquo;s easy to remember (Save As in most programs).</p>
 
@@ -129,26 +131,26 @@ end tell
 
 <p>Here&rsquo;s the code for the service:</p>
 
-<pre lang="ruby" filename="EverRestore.rb" escaped="true">
-ARGF.each do |f|
-    links = f.scan /&lt; (https?://.*?) &gt;/mi
-    # The above scans specifically for the angle brackets in my template. 
-    # If you remove those from the output of EverSave, be sure to update
-    # the regular expression accordingly.
-    if links.empty? then
-        exit
-    else
-        links.each {|link| %x{osascript -e &#x27;open location &quot;#{link[0]}&quot;&#x27;}}
-        # links.each {|link| %x{osascript -e &#x27;tell application &quot;Safari&quot; to open location &quot;#{link[0]}&quot;&#x27;} }
-    end
-end
-</pre>
+<div class="highlight"><pre><code class="ruby"><span class="no">ARGF</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span>
+    <span class="n">links</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">scan</span><span class="sr"> /&amp;lt; (https?:/</span><span class="o">/.</span><span class="n">*</span><span class="sc">?)</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">/</span><span class="n">mi</span>
+    <span class="c1"># The above scans specifically for the angle brackets in my template. </span>
+    <span class="c1"># If you remove those from the output of EverSave, be sure to update</span>
+    <span class="c1"># the regular expression accordingly.</span>
+    <span class="k">if</span> <span class="n">links</span><span class="o">.</span><span class="n">empty?</span> <span class="k">then</span>
+        <span class="nb">exit</span>
+    <span class="k">else</span>
+        <span class="n">links</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span><span class="o">|</span><span class="n">link</span><span class="o">|</span> <span class="sx">%x{osascript -e &amp;#x27;open location &amp;quot;</span><span class="si">#{</span><span class="n">link</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="si">}</span><span class="sx">&amp;quot;&amp;#x27;}</span><span class="p">}</span>
+        <span class="c1"># links.each {|link| %x{osascript -e &amp;#x27;tell application &amp;quot;Safari&amp;quot; to open location &amp;quot;#{link[0]}&amp;quot;&amp;#x27;} }</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+</div>
 
 <p>The simple regular expression in line 2 does scan specifically for the angle brackets I used in the new EverSave template. That just relieves some complexity. If you want a regular expression that doesn&rsquo;t require the angle brackets, try replacing line 2 with this:</p>
 
-<pre lang="ruby" escaped="true">
-links = f.scan /(https?://([^s&quot;,;]+)..{2,4}(/[^s&quot;,;!]+))/mi
-</pre>
+<div class="highlight"><pre><code class="ruby"><span class="n">links</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">scan</span><span class="sr"> /(https?:/</span><span class="o">/</span><span class="p">(</span><span class="o">[^</span><span class="n">s</span><span class="o">&amp;</span><span class="n">quot</span><span class="p">;,;</span><span class="o">]+</span><span class="p">)</span><span class="o">.</span><span class="n">.</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">}(</span><span class="sr">/[^s&amp;quot;,;!]+))/mi</span>
+</code></pre>
+</div>
 
 <p>Once it&rsquo;s saved in Automator, it should be available when you select text in Evernote. If there are visible URLs in the selected text, running this Service will open them in tabs in Safari (or your default browser). You can selectively open certain urls by only selecting the lines that contain the ones you want to open. Non-contiguous selections will require a little text editing, of course.</p>
 

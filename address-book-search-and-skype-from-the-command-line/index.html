@@ -61,12 +61,12 @@
 
 <p>So, I&rsquo;m toying with that this morning and I get a sudden urge to be able to make a Skype phone call from the command line. I added a -p flag to <code>aboo</code> which only returns entries which have a phone number. A little <code>awk</code> on the output, and you can get a menu of people to send straight to a function that can call them with Skype. I&rsquo;ll skip the middle part for now, but here&rsquo;s a bash function for dialing a number. It accepts multiple formats of strings and tries to turn it into a standardized format for Skype (+15554321111). Usage: <code>skype 5555551111</code> or <code>skype "(555) 555 5124"</code> (it will strip the extra characters, makes it easier to paste and dial quickly).</p>
 
-<pre lang="bash" escaped="true" filename="dialskype.sh">
-skype () {
-  number=`echo $1|sed 's/[\(\)\+ \-]//g'|sed 's/^1//'|sed 's/^/+1/'`
-  osascript -e &quot;tell application \&quot;Skype\&quot; to send command \&quot;CALL $number\&quot; script name \&quot;CLIDIALER\&quot;&quot;
-}
-</pre>
+<div class="highlight"><pre><code class="bash">skype <span class="o">()</span> <span class="o">{</span>
+  <span class="nv">number</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="nv">$1</span>|sed <span class="s1">&#39;s/[\(\)\+ \-]//g&#39;</span>|sed <span class="s1">&#39;s/^1//&#39;</span>|sed <span class="s1">&#39;s/^/+1/&#39;</span><span class="sb">`</span>
+  osascript -e &amp;quot;tell application <span class="se">\&amp;</span>quot;Skype<span class="se">\&amp;</span>quot; to send <span class="nb">command</span> <span class="se">\&amp;</span>quot;CALL <span class="nv">$number</span><span class="se">\&amp;</span>quot; script name <span class="se">\&amp;</span>quot;CLIDIALER<span class="se">\&amp;</span>quot;&amp;quot;
+<span class="o">}</span>
+</code></pre>
+</div>
 
 <p>I normally make most of my Skype calls from LaunchBar, but this will come in handy every once in a while when I&rsquo;m already working in Terminal. Thought it might be handy for someone else, too.</p>
 

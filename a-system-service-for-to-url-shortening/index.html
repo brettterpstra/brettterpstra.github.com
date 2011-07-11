@@ -68,25 +68,25 @@
   <li>Use it.</li>
 </ul>
 
-<pre lang="ruby" filename="tourlshortener.rb">
-require 'net/http'
-require 'cgi'
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">&#39;net/http&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;cgi&#39;</span>
 
-input = STDIN.read
-http = Net::HTTP.new('to.')
-path = '/'
+<span class="n">input</span> <span class="o">=</span> <span class="no">STDIN</span><span class="o">.</span><span class="n">read</span>
+<span class="n">http</span> <span class="o">=</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;to.&#39;</span><span class="p">)</span>
+<span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span>
 
-data = "url=#{CGI.escape(input.strip)}"
-headers = {'Content-Type' =&gt; 'application/x-www-form-urlencoded'}
+<span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;url=</span><span class="si">#{</span><span class="no">CGI</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">input</span><span class="o">.</span><span class="n">strip</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;application/x-www-form-urlencoded&#39;</span><span class="p">}</span>
 
-resp, data = http.post(path, data, headers)
+<span class="n">resp</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="p">)</span>
 
-if resp.code.to_i == 200
-  print data.split(/value="/)[1].split(/"/)[0]
-else
-  print input
-end
-</pre>
+<span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">to_i</span> <span class="o">==</span> <span class="mi">200</span>
+  <span class="nb">print</span> <span class="n">data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">/value=&quot;/</span><span class="p">)</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">split</span><span class="p">(</span><span class="sr">/&quot;/</span><span class="p">)</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+<span class="k">else</span>
+  <span class="nb">print</span> <span class="n">input</span>
+<span class="k">end</span>
+</code></pre>
+</div>
 
 <p>Basically, anything you can do to or with text or files using a major scripting language, you can make into a Snow Leopard service. Now that I&rsquo;ve set the bar this low, I&rsquo;d love to see what new Services everyone else is cooking up!</p>
 
@@ -94,13 +94,14 @@ end
 
 <p><strong>Update 2:</strong> Here, this one&rsquo;s shorter and more useful :)</p>
 
-<pre lang="ruby" filename="isgdshortener.rb">
-require 'open-uri'
-require 'cgi'
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">&#39;open-uri&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;cgi&#39;</span>
 
-input = STDIN.read
-print open("http://is.gd/api.php?longurl=#{CGI.escape(input.strip)}").read
-</pre>
+<span class="n">input</span> <span class="o">=</span> <span class="no">STDIN</span><span class="o">.</span><span class="n">read</span>
+<span class="nb">print</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;http://is.gd/api.php?longurl=</span><span class="si">#{</span><span class="no">CGI</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">input</span><span class="o">.</span><span class="n">strip</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span>
+</code></pre>
+</div>
+
 
 	</div>
 	<div class="nextprev clearfix">

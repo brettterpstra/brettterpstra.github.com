@@ -64,21 +64,22 @@
 
 <p>Only the first parameter is required, so your task at least has a title. If you have two, it expects that the second is a date of some kind, and anything in the third will be added as a note.</p>
 
-<p>Here&rsquo;s the code&hellip;
-<!--more--></p>
+<p>Here&rsquo;s the code&hellip;</p>
 
-<pre lang="bash" filename="thingsfunction.sh" escaped="true">
-function td() {
-  if [ $# -lt 1 ]; then return 1;fi
-  if [ $# -gt 1 ]; then
-    duedate=`php -r &quot;date_default_timezone_set('America/Chicago');echo date('m/d/y',strtotime('$2'));&quot;`
-    duedate=&quot;,due date:date \&quot;$duedate\&quot;&quot;
-  fi
-  osascript -e &quot;tell application \&quot;Things\&quot;&quot; \
-  -e &quot;make new to do at list \&quot;Inbox\&quot; with properties {name:\&quot;$1\&quot;,notes:\&quot;$3\&quot;$duedate}&quot; \
-  -e &quot;end tell&quot;
-}
-</pre>
+<!--more-->
+
+<div class="highlight"><pre><code class="bash"><span class="k">function </span>td<span class="o">()</span> <span class="o">{</span>
+  <span class="k">if</span> <span class="o">[</span> <span class="nv">$# </span>-lt 1 <span class="o">]</span>; <span class="k">then return </span>1;fi
+  <span class="k">if</span> <span class="o">[</span> <span class="nv">$# </span>-gt 1 <span class="o">]</span>; <span class="k">then</span>
+<span class="k">    </span><span class="nv">duedate</span><span class="o">=</span><span class="sb">`</span>php -r &amp;quot;date_default_timezone_set<span class="o">(</span><span class="s1">&#39;America/Chicago&#39;</span><span class="o">)</span>;<span class="nb">echo </span>date<span class="o">(</span><span class="s1">&#39;m/d/y&#39;</span>,strtotime<span class="o">(</span><span class="s1">&#39;$2&#39;</span><span class="o">))</span>;&amp;quot;<span class="sb">`</span>
+    <span class="nv">duedate</span><span class="o">=</span>&amp;quot;,due date:date <span class="se">\&amp;</span>quot;<span class="nv">$duedate</span><span class="se">\&amp;</span>quot;&amp;quot;
+  <span class="k">fi</span>
+<span class="k">  </span>osascript -e &amp;quot;tell application <span class="se">\&amp;</span>quot;Things<span class="se">\&amp;</span>quot;&amp;quot; <span class="se">\</span>
+  -e &amp;quot;make new to <span class="k">do </span>at list <span class="se">\&amp;</span>quot;Inbox<span class="se">\&amp;</span>quot; with properties <span class="o">{</span>name:<span class="se">\&amp;</span>quot;<span class="nv">$1</span><span class="se">\&amp;</span>quot;,notes:<span class="se">\&amp;</span>quot;<span class="nv">$3</span><span class="se">\&amp;</span>quot;<span class="nv">$duedate</span><span class="o">}</span>&amp;quot; <span class="se">\</span>
+  -e &amp;quot;end tell&amp;quot;
+<span class="o">}</span>
+</code></pre>
+</div>
 
 <p>Just paste it at the end of your ~/.bash_profile and type <code>source ~/.bash_profile</code> to read it in. If you use it, I&rsquo;d love to hear about it, and if you improve it, let me know what you did differently!</p>
 

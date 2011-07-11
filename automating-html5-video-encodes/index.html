@@ -90,48 +90,48 @@
 
 <p>Here&rsquo;s the script, hope it helps someone else, too:</p>
 
-<pre lang="bash" filename="html5encode.sh" escaped="true">
-#!/bin/bash
-# html5encode.sh
-# Brett Terpstra, 2011 - http://brettterpstra.dev/automating-html5-video-encodes
-# Requires ffmpeg and ffmpeg2theora
-##################
-### CONFIG #######
-MAXSIZE=&quot;960x540&quot;
-SSHURL=&quot;username@your.webserver.com&quot;
-SSHDIR=&quot;/www/video/media/&quot;
-### END CONFIG ###
+<div class="highlight"><pre><code class="bash"><span class="c">#!/bin/bash</span>
+<span class="c"># html5encode.sh</span>
+<span class="c"># Brett Terpstra, 2011 - http://brettterpstra.dev/automating-html5-video-encodes</span>
+<span class="c"># Requires ffmpeg and ffmpeg2theora</span>
+<span class="c">##################</span>
+<span class="c">### CONFIG #######</span>
+<span class="nv">MAXSIZE</span><span class="o">=</span>&amp;quot;960x540&amp;quot;
+<span class="nv">SSHURL</span><span class="o">=</span>&amp;quot;username@your.webserver.com&amp;quot;
+<span class="nv">SSHDIR</span><span class="o">=</span>&amp;quot;/www/video/media/&amp;quot;
+<span class="c">### END CONFIG ###</span>
 
-INPUT=$1
-DIRNAME=`dirname &quot;$INPUT&quot;`
-FILENAME=`basename &quot;$INPUT&quot;`
-BASENAME=${FILENAME%%.*}
+<span class="nv">INPUT</span><span class="o">=</span><span class="nv">$1</span>
+<span class="nv">DIRNAME</span><span class="o">=</span><span class="sb">`</span>dirname &amp;quot;<span class="nv">$INPUT</span>&amp;quot;<span class="sb">`</span>
+<span class="nv">FILENAME</span><span class="o">=</span><span class="sb">`</span>basename &amp;quot;<span class="nv">$INPUT</span>&amp;quot;<span class="sb">`</span>
+<span class="nv">BASENAME</span><span class="o">=</span><span class="k">${</span><span class="nv">FILENAME</span><span class="p">%%.*</span><span class="k">}</span>
 
-cd &quot;$DIRNAME&quot;
-if [ -d &quot;$BASENAME&quot; ]; then
-  # /usr/local/bin/growlnotify -s -i &quot;Terminal.app&quot; -m &quot;Found $FILENAME, but directory $BASENAME already exists. Aborting&quot;
-  exit 1
-fi
-mkdir &quot;$BASENAME&quot;
-mv &quot;$FILENAME&quot; &quot;$BASENAME/&quot;
-cd &quot;$BASENAME&quot;
+<span class="nb">cd</span> &amp;quot;<span class="nv">$DIRNAME</span>&amp;quot;
+<span class="k">if</span> <span class="o">[</span> -d &amp;quot;<span class="nv">$BASENAME</span>&amp;quot; <span class="o">]</span>; <span class="k">then</span>
+  <span class="c"># /usr/local/bin/growlnotify -s -i &amp;quot;Terminal.app&amp;quot; -m &amp;quot;Found $FILENAME, but directory $BASENAME already exists. Aborting&amp;quot;</span>
+  <span class="nb">exit </span>1
+<span class="k">fi</span>
+mkdir &amp;quot;<span class="nv">$BASENAME</span>&amp;quot;
+mv &amp;quot;<span class="nv">$FILENAME</span>&amp;quot; &amp;quot;<span class="nv">$BASENAME</span>/&amp;quot;
+<span class="nb">cd</span> &amp;quot;<span class="nv">$BASENAME</span>&amp;quot;
 
-/usr/local/bin/ffmpeg -pass 1 -passlogfile &quot;$FILENAME&quot; -threads 16  -keyint_min 0 \
--g 250 -skip_threshold 0 -qmin 1 -qmax 51 -i &quot;$FILENAME&quot; -vcodec libvpx -b 614400 \
--s $MAXSIZE -aspect 16:9 -an -y temp.webm
+/usr/local/bin/ffmpeg -pass 1 -passlogfile &amp;quot;<span class="nv">$FILENAME</span>&amp;quot; -threads 16  -keyint_min 0 <span class="se">\</span>
+-g 250 -skip_threshold 0 -qmin 1 -qmax 51 -i &amp;quot;<span class="nv">$FILENAME</span>&amp;quot; -vcodec libvpx -b 614400 <span class="se">\</span>
+-s <span class="nv">$MAXSIZE</span> -aspect 16:9 -an -y temp.webm
 
-/usr/local/bin/ffmpeg -pass 2 -passlogfile &quot;$FILENAME&quot; -threads 16  -keyint_min 0 \
--g 250 -skip_threshold 0 -qmin 1 -qmax 51 -i &quot;$FILENAME&quot; -vcodec libvpx -b 614400 \
--s $MAXSIZE -aspect 16:9 -acodec libvorbis -y &quot;$BASENAME&quot;.webm
+/usr/local/bin/ffmpeg -pass 2 -passlogfile &amp;quot;<span class="nv">$FILENAME</span>&amp;quot; -threads 16  -keyint_min 0 <span class="se">\</span>
+-g 250 -skip_threshold 0 -qmin 1 -qmax 51 -i &amp;quot;<span class="nv">$FILENAME</span>&amp;quot; -vcodec libvpx -b 614400 <span class="se">\</span>
+-s <span class="nv">$MAXSIZE</span> -aspect 16:9 -acodec libvorbis -y &amp;quot;<span class="nv">$BASENAME</span>&amp;quot;.webm
 
 rm temp.webm
 rm *.log
 
-/usr/local/bin/ffmpeg2theora --videoquality 5 --audioquality 1 --max_size $MAXSIZE &quot;$FILENAME&quot; -o &quot;$BASENAME.ogv&quot;
-/usr/local/bin/ffmpeg -i &quot;$FILENAME&quot; -ss 0 -vframes 1 -vcodec mjpeg -f image2 &quot;${BASENAME}Poster.jpg&quot;
-cd ..
-rsync -v -r -e ssh &quot;`pwd`/$BASENAME&quot; $SSHURL:$SSHDIR
-</pre>
+/usr/local/bin/ffmpeg2theora --videoquality 5 --audioquality 1 --max_size <span class="nv">$MAXSIZE</span> &amp;quot;<span class="nv">$FILENAME</span>&amp;quot; -o &amp;quot;<span class="nv">$BASENAME</span>.ogv&amp;quot;
+/usr/local/bin/ffmpeg -i &amp;quot;<span class="nv">$FILENAME</span>&amp;quot; -ss 0 -vframes 1 -vcodec mjpeg -f image2 &amp;quot;<span class="k">${</span><span class="nv">BASENAME</span><span class="k">}</span>Poster.jpg&amp;quot;
+<span class="nb">cd</span> ..
+rsync -v -r -e ssh &amp;quot;<span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>/<span class="nv">$BASENAME</span>&amp;quot; <span class="nv">$SSHURL</span>:<span class="nv">$SSHDIR</span>
+</code></pre>
+</div>
 
 <p>The Hazel rule I&rsquo;m running simply looks for files in the bucket folder with the <code>.mp4</code> extension and passes them to the shell script.</p>
 

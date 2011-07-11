@@ -74,92 +74,92 @@
 
 <p>Open this script in your AppleScript editor: <a href="applescript://com.apple.scripteditor?action=new&amp;script=on%20handle_string(lbText)%0A%09set%20_res%20to%20urlencode(lbText)%0A%09--%20to%20return%20the%20result%20to%20launchbar%20instead%20of%20copying%20it%20substitute%0A%09--%20the%20next%20line%20for%20the%20line%20after%20it%20(set%20the%20clipboard%20to%20_res)%0A%09--%20open%20location%20%22x-launchbar:select?string=%22%20&amp;%20urlencode(_res)%0A%09set%20the%20clipboard%20to%20_res%0Aend%20handle_string%0A%0Aon%20run%0A%09set%20the%20clipboard%20to%20urlencode(the%20clipboard%20as%20text)%0Aend%20run%0A%0Aon%20urlencode(theText)%20--%20http://harvey.nu/applescript_url_encode_routine.html%0A%09set%20theTextEnc%20to%20%22%22%0A%09repeat%20with%20eachChar%20in%20characters%20of%20theText%0A%09%09set%20useChar%20to%20eachChar%0A%09%09set%20eachCharNum%20to%20ASCII%20number%20of%20eachChar%0A%09%09if%20eachCharNum%20=%2032%20then%0A%09%09%09set%20useChar%20to%20%22+%22%0A%09%09else%20if%20(eachCharNum%20%E2%89%A0%2042)%20and%20(eachCharNum%20%E2%89%A0%2095)%20and%20(eachCharNum%20%3C%2045%20or%20eachCharNum%20%3E%2046)%20and%20(eachCharNum%20%3C%2048%20or%20eachCharNum%20%3E%2057)%20and%20(eachCharNum%20%3C%2065%20or%20eachCharNum%20%3E%2090)%20and%20(eachCharNum%20%3C%2097%20or%20eachCharNum%20%3E%20122)%20then%0A%09%09%09set%20firstDig%20to%20round%20(eachCharNum%20/%2016)%20rounding%20down%0A%09%09%09set%20secondDig%20to%20eachCharNum%20mod%2016%0A%09%09%09if%20firstDig%20%3E%209%20then%0A%09%09%09%09set%20aNum%20to%20firstDig%20+%2055%0A%09%09%09%09set%20firstDig%20to%20ASCII%20character%20aNum%0A%09%09%09end%20if%0A%09%09%09if%20secondDig%20%3E%209%20then%0A%09%09%09%09set%20aNum%20to%20secondDig%20+%2055%0A%09%09%09%09set%20secondDig%20to%20ASCII%20character%20aNum%0A%09%09%09end%20if%0A%09%09%09set%20numHex%20to%20(%22%25%22%20&amp;%20(firstDig%20as%20string)%20&amp;%20(secondDig%20as%20string))%20as%20string%0A%09%09%09set%20useChar%20to%20numHex%0A%09%09end%20if%0A%09%09set%20theTextEnc%20to%20theTextEnc%20&amp;%20useChar%20as%20string%0A%09end%20repeat%0A%09return%20theTextEnc%0Aend%20urlencode">URLEncode.applescript</a></p>
 
-<pre lang="applescript" escaped="true" filename="URLEncode.applescript">
-on handle_string(lbText)
-	set _res to urlencode(lbText)
-	-- to return the result to launchbar instead of copying it substitute
-	-- the next line for the line after it (set the clipboard to _res)
-	-- open location &quot;x-launchbar:select?string=&quot; &amp; urlencode(_res)
-	set the clipboard to _res
-end handle_string
+<div class="highlight"><pre><code class="applescript"><span class="k">on</span> <span class="nv">handle_string</span><span class="p">(</span><span class="nv">lbText</span><span class="p">)</span>
+	<span class="k">set</span> <span class="err">_res</span> <span class="k">to</span> <span class="nv">urlencode</span><span class="p">(</span><span class="nv">lbText</span><span class="p">)</span>
+	<span class="c">-- to return the result to launchbar instead of copying it substitute</span>
+	<span class="c">-- the next line for the line after it (set the clipboard to _res)</span>
+	<span class="c">-- open location &amp;quot;x-launchbar:select?string=&amp;quot; &amp;amp; urlencode(_res)</span>
+	<span class="nb">set the clipboard to</span> <span class="err">_res</span>
+<span class="k">end</span> <span class="nv">handle_string</span>
 
-on run
-	set the clipboard to urlencode(the clipboard as text)
-end run
+<span class="k">on</span> <span class="nb">run</span>
+	<span class="nb">set the clipboard to</span> <span class="nv">urlencode</span><span class="p">(</span><span class="nb">the clipboard</span> <span class="k">as </span><span class="nc">text</span><span class="p">)</span>
+<span class="k">end</span> <span class="nb">run</span>
 
-on urlencode(theText) -- http://harvey.nu/applescript_url_encode_routine.html
-	set theTextEnc to &quot;&quot;
-	repeat with eachChar in characters of theText
-		set useChar to eachChar
-		set eachCharNum to ASCII number of eachChar
-		if eachCharNum = 32 then
-			set useChar to &quot;+&quot;
-		else if (eachCharNum &ne; 42) and (eachCharNum &ne; 95) and (eachCharNum &lt; 45 or eachCharNum &gt; 46) and (eachCharNum &lt; 48 or eachCharNum &gt; 57) and (eachCharNum &lt; 65 or eachCharNum &gt; 90) and (eachCharNum &lt; 97 or eachCharNum &gt; 122) then
-			set firstDig to round (eachCharNum / 16) rounding down
-			set secondDig to eachCharNum mod 16
-			if firstDig &gt; 9 then
-				set aNum to firstDig + 55
-				set firstDig to ASCII character aNum
-			end if
-			if secondDig &gt; 9 then
-				set aNum to secondDig + 55
-				set secondDig to ASCII character aNum
-			end if
-			set numHex to (&quot;%&quot; &amp; (firstDig as string) &amp; (secondDig as string)) as string
-			set useChar to numHex
-		end if
-		set theTextEnc to theTextEnc &amp; useChar as string
-	end repeat
-	return theTextEnc
-end urlencode
-</pre>
+<span class="k">on</span> <span class="nv">urlencode</span><span class="p">(</span><span class="nv">theText</span><span class="p">)</span> <span class="c">-- http://harvey.nu/applescript_url_encode_routine.html</span>
+	<span class="k">set</span> <span class="nv">theTextEnc</span> <span class="k">to</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+	<span class="k">repeat</span> <span class="nv">with</span> <span class="nv">eachChar</span> <span class="k">in</span> <span class="nb">characters</span> <span class="k">of</span> <span class="nv">theText</span>
+		<span class="k">set</span> <span class="nv">useChar</span> <span class="k">to</span> <span class="nv">eachChar</span>
+		<span class="k">set</span> <span class="nv">eachCharNum</span> <span class="k">to</span> <span class="nb">ASCII number</span> <span class="k">of</span> <span class="nv">eachChar</span>
+		<span class="k">if</span> <span class="nv">eachCharNum</span> <span class="o">=</span> <span class="mi">32</span> <span class="k">then</span>
+			<span class="k">set</span> <span class="nv">useChar</span> <span class="k">to</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="o">+&amp;</span><span class="nv">quot</span><span class="err">;</span>
+		<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nv">eachCharNum</span> <span class="o">&amp;</span><span class="nv">ne</span><span class="err">;</span> <span class="mi">42</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nv">eachCharNum</span> <span class="o">&amp;</span><span class="nv">ne</span><span class="err">;</span> <span class="mi">95</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nv">eachCharNum</span> <span class="o">&amp;</span><span class="nv">lt</span><span class="err">;</span> <span class="mi">45</span> <span class="ow">or</span> <span class="nv">eachCharNum</span> <span class="o">&amp;</span><span class="nv">gt</span><span class="err">;</span> <span class="mi">46</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nv">eachCharNum</span> <span class="o">&amp;</span><span class="nv">lt</span><span class="err">;</span> <span class="mi">48</span> <span class="ow">or</span> <span class="nv">eachCharNum</span> <span class="o">&amp;</span><span class="nv">gt</span><span class="err">;</span> <span class="mi">57</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nv">eachCharNum</span> <span class="o">&amp;</span><span class="nv">lt</span><span class="err">;</span> <span class="mi">65</span> <span class="ow">or</span> <span class="nv">eachCharNum</span> <span class="o">&amp;</span><span class="nv">gt</span><span class="err">;</span> <span class="mi">90</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nv">eachCharNum</span> <span class="o">&amp;</span><span class="nv">lt</span><span class="err">;</span> <span class="mi">97</span> <span class="ow">or</span> <span class="nv">eachCharNum</span> <span class="o">&amp;</span><span class="nv">gt</span><span class="err">;</span> <span class="mi">122</span><span class="p">)</span> <span class="k">then</span>
+			<span class="k">set</span> <span class="nv">firstDig</span> <span class="k">to</span> <span class="nb">round</span> <span class="p">(</span><span class="nv">eachCharNum</span> <span class="o">/</span> <span class="mi">16</span><span class="p">)</span> <span class="nv">rounding</span> <span class="nv">down</span>
+			<span class="k">set</span> <span class="nv">secondDig</span> <span class="k">to</span> <span class="nv">eachCharNum</span> <span class="ow">mod</span> <span class="mi">16</span>
+			<span class="k">if</span> <span class="nv">firstDig</span> <span class="o">&amp;</span><span class="nv">gt</span><span class="err">;</span> <span class="mi">9</span> <span class="k">then</span>
+				<span class="k">set</span> <span class="nv">aNum</span> <span class="k">to</span> <span class="nv">firstDig</span> <span class="o">+</span> <span class="mi">55</span>
+				<span class="k">set</span> <span class="nv">firstDig</span> <span class="k">to</span> <span class="nb">ASCII character</span> <span class="nv">aNum</span>
+			<span class="k">end</span> <span class="k">if</span>
+			<span class="k">if</span> <span class="nv">secondDig</span> <span class="o">&amp;</span><span class="nv">gt</span><span class="err">;</span> <span class="mi">9</span> <span class="k">then</span>
+				<span class="k">set</span> <span class="nv">aNum</span> <span class="k">to</span> <span class="nv">secondDig</span> <span class="o">+</span> <span class="mi">55</span>
+				<span class="k">set</span> <span class="nv">secondDig</span> <span class="k">to</span> <span class="nb">ASCII character</span> <span class="nv">aNum</span>
+			<span class="k">end</span> <span class="k">if</span>
+			<span class="k">set</span> <span class="nv">numHex</span> <span class="k">to</span> <span class="p">(</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;%</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="p">(</span><span class="nv">firstDig</span> <span class="k">as </span><span class="nc">string</span><span class="p">)</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="p">(</span><span class="nv">secondDig</span> <span class="k">as </span><span class="nc">string</span><span class="p">))</span> <span class="k">as </span><span class="nc">string</span>
+			<span class="k">set</span> <span class="nv">useChar</span> <span class="k">to</span> <span class="nv">numHex</span>
+		<span class="k">end</span> <span class="k">if</span>
+		<span class="k">set</span> <span class="nv">theTextEnc</span> <span class="k">to</span> <span class="nv">theTextEnc</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="nv">useChar</span> <span class="k">as </span><span class="nc">string</span>
+	<span class="k">end</span> <span class="k">repeat</span>
+	<span class="no">return</span> <span class="nv">theTextEnc</span>
+<span class="k">end</span> <span class="nv">urlencode</span>
+</code></pre>
+</div>
 
 <h2 id="url-decode">URL Decode</h2>
 
 <p>Open this script in your AppleScript editor: <a href="applescript://com.apple.scripteditor?action=new&amp;script=on%20handle_string(lbText)%0A%09set%20_res%20to%20urldecode(lbText)%0A%09--%20to%20return%20the%20result%20to%20launchbar%20instead%20of%20copying%20it%20substitute%0A%09--%20the%20next%20line%20for%20the%20line%20after%20it%20(set%20the%20clipboard%20to%20_res)%0A%09--%20open%20location%20%22x-launchbar:select?string=%22&amp;urldecode(_res)%0A%09set%20the%20clipboard%20to%20_res%0Aend%20handle_string%0A%0Aon%20run%0A%09set%20the%20clipboard%20to%20urldecode(the%20clipboard%20as%20text)%0Aend%20run%0A%0Aon%20urldecode(theText)%20--%20http://harvey.nu/applescript_url_decode_routine.html%0A%09set%20sDst%20to%20%22%22%0A%09set%20sHex%20to%20%220123456789ABCDEF%22%0A%09set%20i%20to%201%0A%09repeat%20while%20i%20%E2%89%A4%20length%20of%20theText%0A%09%09set%20c%20to%20character%20i%20of%20theText%0A%09%09if%20c%20=%20%22+%22%20then%0A%09%09%09set%20sDst%20to%20sDst%20&amp;%20%22%20%22%0A%09%09else%20if%20c%20=%20%22%25%22%20then%0A%09%09%09if%20i%20%3E%20((length%20of%20theText)%20-%202)%20then%0A%09%09%09%09display%20dialog%20(%22Invalid%20URL%20Encoded%20string%20-%20missing%20hex%20char%22)%20buttons%20%7B%22Crap...%22%7D%20with%20icon%20stop%0A%09%09%09%09return%20%22%22%0A%09%09%09end%20if%0A%09%09%09set%20iCVal1%20to%20(offset%20of%20(character%20(i%20+%201)%20of%20theText)%20in%20sHex)%20-%201%0A%09%09%09set%20iCVal2%20to%20(offset%20of%20(character%20(i%20+%202)%20of%20theText)%20in%20sHex)%20-%201%0A%09%09%09if%20iCVal1%20=%20-1%20or%20iCVal2%20=%20-1%20then%0A%09%09%09%09display%20dialog%20(%22Invalid%20URL%20Encoded%20string%20-%20not%202%20hex%20chars%20after%20%25%20sign%22)%20buttons%20%7B%22Crap...%22%7D%20with%20icon%20stop%0A%09%09%09%09return%20%22%22%0A%09%09%09end%20if%0A%09%09%09set%20sDst%20to%20sDst%20&amp;%20(ASCII%20character%20(iCVal1%20*%2016%20+%20iCVal2))%0A%09%09%09set%20i%20to%20i%20+%202%0A%09%09else%0A%09%09%09set%20sDst%20to%20sDst%20&amp;%20c%0A%09%09end%20if%0A%09%09set%20i%20to%20i%20+%201%0A%09end%20repeat%0A%09return%20sDst%0Aend%20urldecode">URLDecode.applescript</a></p>
 
-<pre lang="applescript" escaped="true" filename="URLDecode.applescript">
-on handle_string(lbText)
-	set _res to urldecode(lbText)
-	-- to return the result to launchbar instead of copying it substitute
-	-- the next line for the line after it (set the clipboard to _res)
-	-- open location &quot;x-launchbar:select?string=&quot;&amp;urldecode(_res)
-	set the clipboard to _res
-end handle_string
+<div class="highlight"><pre><code class="applescript"><span class="k">on</span> <span class="nv">handle_string</span><span class="p">(</span><span class="nv">lbText</span><span class="p">)</span>
+	<span class="k">set</span> <span class="err">_res</span> <span class="k">to</span> <span class="nv">urldecode</span><span class="p">(</span><span class="nv">lbText</span><span class="p">)</span>
+	<span class="c">-- to return the result to launchbar instead of copying it substitute</span>
+	<span class="c">-- the next line for the line after it (set the clipboard to _res)</span>
+	<span class="c">-- open location &amp;quot;x-launchbar:select?string=&amp;quot;&amp;amp;urldecode(_res)</span>
+	<span class="nb">set the clipboard to</span> <span class="err">_res</span>
+<span class="k">end</span> <span class="nv">handle_string</span>
 
-on run
-	set the clipboard to urldecode(the clipboard as text)
-end run
+<span class="k">on</span> <span class="nb">run</span>
+	<span class="nb">set the clipboard to</span> <span class="nv">urldecode</span><span class="p">(</span><span class="nb">the clipboard</span> <span class="k">as </span><span class="nc">text</span><span class="p">)</span>
+<span class="k">end</span> <span class="nb">run</span>
 
-on urldecode(theText) -- http://harvey.nu/applescript_url_decode_routine.html
-	set sDst to &quot;&quot;
-	set sHex to &quot;0123456789ABCDEF&quot;
-	set i to 1
-	repeat while i &le; length of theText
-		set c to character i of theText
-		if c = &quot;+&quot; then
-			set sDst to sDst &amp; &quot; &quot;
-		else if c = &quot;%&quot; then
-			if i &gt; ((length of theText) - 2) then
-				display dialog (&quot;Invalid URL Encoded string - missing hex char&quot;) buttons {&quot;Crap...&quot;} with icon stop
-				return &quot;&quot;
-			end if
-			set iCVal1 to (offset of (character (i + 1) of theText) in sHex) - 1
-			set iCVal2 to (offset of (character (i + 2) of theText) in sHex) - 1
-			if iCVal1 = -1 or iCVal2 = -1 then
-				display dialog (&quot;Invalid URL Encoded string - not 2 hex chars after % sign&quot;) buttons {&quot;Crap...&quot;} with icon stop
-				return &quot;&quot;
-			end if
-			set sDst to sDst &amp; (ASCII character (iCVal1 * 16 + iCVal2))
-			set i to i + 2
-		else
-			set sDst to sDst &amp; c
-		end if
-		set i to i + 1
-	end repeat
-	return sDst
-end urldecode
-</pre>
+<span class="k">on</span> <span class="nv">urldecode</span><span class="p">(</span><span class="nv">theText</span><span class="p">)</span> <span class="c">-- http://harvey.nu/applescript_url_decode_routine.html</span>
+	<span class="k">set</span> <span class="nv">sDst</span> <span class="k">to</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+	<span class="k">set</span> <span class="nv">sHex</span> <span class="k">to</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="mi">0123456789</span><span class="err">ABCDEF</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+	<span class="k">set</span> <span class="nv">i</span> <span class="k">to</span> <span class="mi">1</span>
+	<span class="k">repeat</span> <span class="k">while</span> <span class="nv">i</span> <span class="o">&amp;</span><span class="nv">le</span><span class="err">;</span> <span class="nv">length</span> <span class="k">of</span> <span class="nv">theText</span>
+		<span class="k">set</span> <span class="nv">c</span> <span class="k">to</span> <span class="nb">character</span> <span class="nv">i</span> <span class="k">of</span> <span class="nv">theText</span>
+		<span class="k">if</span> <span class="nv">c</span> <span class="o">=</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="o">+&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="k">then</span>
+			<span class="k">set</span> <span class="nv">sDst</span> <span class="k">to</span> <span class="nv">sDst</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+		<span class="k">else</span> <span class="k">if</span> <span class="nv">c</span> <span class="o">=</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;%</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span> <span class="k">then</span>
+			<span class="k">if</span> <span class="nv">i</span> <span class="o">&amp;</span><span class="nv">gt</span><span class="err">;</span> <span class="p">((</span><span class="nv">length</span> <span class="k">of</span> <span class="nv">theText</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="k">then</span>
+				<span class="nb">display dialog</span> <span class="p">(</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">Invalid</span> <span class="nv">URL</span> <span class="nv">Encoded</span> <span class="nv">string</span> <span class="o">-</span> <span class="nv">missing</span> <span class="nv">hex</span> <span class="nv">char</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="p">)</span> <span class="nb">buttons</span> <span class="p">{</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">Crap</span><span class="p">...</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="p">}</span> <span class="nv">with</span> <span class="nv">icon</span> <span class="nb">stop</span>
+				<span class="no">return</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+			<span class="k">end</span> <span class="k">if</span>
+			<span class="k">set</span> <span class="nv">iCVal1</span> <span class="k">to</span> <span class="p">(</span><span class="nb">offset</span> <span class="k">of</span> <span class="p">(</span><span class="nb">character</span> <span class="p">(</span><span class="nv">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">of</span> <span class="nv">theText</span><span class="p">)</span> <span class="k">in</span> <span class="nv">sHex</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+			<span class="k">set</span> <span class="nv">iCVal2</span> <span class="k">to</span> <span class="p">(</span><span class="nb">offset</span> <span class="k">of</span> <span class="p">(</span><span class="nb">character</span> <span class="p">(</span><span class="nv">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="k">of</span> <span class="nv">theText</span><span class="p">)</span> <span class="k">in</span> <span class="nv">sHex</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+			<span class="k">if</span> <span class="nv">iCVal1</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="nv">iCVal2</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="k">then</span>
+				<span class="nb">display dialog</span> <span class="p">(</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">Invalid</span> <span class="nv">URL</span> <span class="nv">Encoded</span> <span class="nv">string</span> <span class="o">-</span> <span class="ow">not</span> <span class="mi">2</span> <span class="nv">hex</span> <span class="nv">chars</span> <span class="nb">after</span> <span class="err">%</span> <span class="nv">sign</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="p">)</span> <span class="nb">buttons</span> <span class="p">{</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="nv">Crap</span><span class="p">...</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="p">}</span> <span class="nv">with</span> <span class="nv">icon</span> <span class="nb">stop</span>
+				<span class="no">return</span> <span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span><span class="o">&amp;</span><span class="nv">quot</span><span class="err">;</span>
+			<span class="k">end</span> <span class="k">if</span>
+			<span class="k">set</span> <span class="nv">sDst</span> <span class="k">to</span> <span class="nv">sDst</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="p">(</span><span class="nb">ASCII character</span> <span class="p">(</span><span class="nv">iCVal1</span> <span class="o">*</span> <span class="mi">16</span> <span class="o">+</span> <span class="nv">iCVal2</span><span class="p">))</span>
+			<span class="k">set</span> <span class="nv">i</span> <span class="k">to</span> <span class="nv">i</span> <span class="o">+</span> <span class="mi">2</span>
+		<span class="k">else</span>
+			<span class="k">set</span> <span class="nv">sDst</span> <span class="k">to</span> <span class="nv">sDst</span> <span class="o">&amp;</span><span class="nv">amp</span><span class="err">;</span> <span class="nv">c</span>
+		<span class="k">end</span> <span class="k">if</span>
+		<span class="k">set</span> <span class="nv">i</span> <span class="k">to</span> <span class="nv">i</span> <span class="o">+</span> <span class="mi">1</span>
+	<span class="k">end</span> <span class="k">repeat</span>
+	<span class="no">return</span> <span class="nv">sDst</span>
+<span class="k">end</span> <span class="nv">urldecode</span>
+</code></pre>
+</div>
 
 <div class="footnotes">
   <ol>

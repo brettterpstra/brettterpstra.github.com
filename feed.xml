@@ -4,7 +4,7 @@
  <title>Brett Terpstra</title>
  <link href="http://jek.brettterpstra.dev/feed.xml" rel="self"/>
  <link href="http://jek.brettterpstra.dev"/>
- <updated>2011-07-11T06:22:01-05:00</updated>
+ <updated>2011-07-11T06:47:05-05:00</updated>
  <id>http://jek.brettterpstra.dev/</id>
  <author>
    <name>Brett Terpstra</name>
@@ -4637,18 +4637,7 @@ $(document).ready(function() {
 
 &lt;p&gt;The main riff is courtesy of my friend Adele Murray. We jammed on it once long ago; it was actually my impetus for learning palm muting. Hopefully she doesn&amp;rsquo;t mind me using it in this little scratchpad experiment&amp;hellip;&lt;/p&gt;
 
-&lt;object classid=&quot;clsid:D27CDB6E-AE6D-11cf-96B8-444553540000&quot; width=&quot;470&quot; height=&quot;25&quot; id=&quot;single-3590&quot; name=&quot;single-3590&quot;&gt;
-	&lt;param name=&quot;movie&quot; value=&quot;http://cdn.brettterpstra.com/share/player.swf&quot; /&gt;
-	&lt;param name=&quot;allowfullscreen&quot; value=&quot;true&quot; /&gt;
-	&lt;param name=&quot;allowscriptaccess&quot; value=&quot;always&quot; /&gt;
-	&lt;param name=&quot;wmode&quot; value=&quot;transparent&quot; /&gt;
-	&lt;param name=&quot;flashvars&quot; value=&quot;file=http://cdn.brettterpstra.com/share/InconsequentialMartyr.mp3&amp;amp;controlbar=top&amp;amp;skin=http://cdn.brettterpstra.com/share/stormtrooper/stormtrooper.xml&quot; /&gt;
-	&amp;lt;audio controls preload='auto'&amp;gt;
-		&lt;source src=&quot;http://cdn.brettterpstra.com/share/InconsequentialMartyr.mp3&quot; type=&quot;audio/mp3&quot; /&gt;
-		&lt;source src=&quot;http://cdn.brettterpstra.com/share/InconsequentialMartyr.ogg&quot; type=&quot;audio/ogg&quot; /&gt;
-	
-&lt;/object&gt;
-&lt;p&gt;&lt;a href=&quot;http://cdn.brettterpstra.com/share/InconsequentialMartyr.mp3&quot;&gt;Download Inconsequential Martyr by Brett Terpstra&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Liquid error: undefined method `downcase&amp;rsquo; for nil:NilClass&lt;/p&gt;
 
 &lt;!--more--&gt;
 
@@ -4837,18 +4826,7 @@ end
 
 &lt;p&gt;This track, though, is actually the banner track for the collection I&amp;rsquo;ve slowly been building here. It started as a sequel to &lt;a href=&quot;http://brettterpstra.dev/sad-songs-part-2-junky-angel/&quot;&gt;Junky Angel&lt;/a&gt;, but grew into something of its own pretty quickly. It&amp;rsquo;s about love and heartbreak, and the initial feeling of moving from major cities to small towns. I wrote a lot of those after I got back here. I&amp;rsquo;ll let &amp;ldquo;Something Precious&amp;rdquo; tell the rest of the story.&lt;/p&gt;
 
-&lt;object classid=&quot;clsid:D27CDB6E-AE6D-11cf-96B8-444553540000&quot; width=&quot;470&quot; height=&quot;25&quot; id=&quot;single-1571&quot; name=&quot;single-1571&quot;&gt;
-	&lt;param name=&quot;movie&quot; value=&quot;http://cdn.brettterpstra.com/share/player.swf&quot; /&gt;
-	&lt;param name=&quot;allowfullscreen&quot; value=&quot;true&quot; /&gt;
-	&lt;param name=&quot;allowscriptaccess&quot; value=&quot;always&quot; /&gt;
-	&lt;param name=&quot;wmode&quot; value=&quot;transparent&quot; /&gt;
-	&lt;param name=&quot;flashvars&quot; value=&quot;file=http://cdn.brettterpstra.com/share/SomethingPrecious.mp3&amp;amp;controlbar=top&amp;amp;skin=http://cdn.brettterpstra.com/share/stormtrooper/stormtrooper.xml&quot; /&gt;
-	&amp;lt;audio controls preload='auto'&amp;gt;
-		&lt;source src=&quot;http://cdn.brettterpstra.com/share/SomethingPrecious.mp3&quot; type=&quot;audio/mp3&quot; /&gt;
-		&lt;source src=&quot;http://cdn.brettterpstra.com/share/SomethingPrecious.ogg&quot; type=&quot;audio/ogg&quot; /&gt;
-	
-&lt;/object&gt;
-&lt;p&gt;&lt;a href=&quot;http://cdn.brettterpstra.com/share/SomethingPrecious.mp3&quot;&gt;Download Something Precious (Dies) by Brett Terpstra&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Liquid error: undefined method `downcase&amp;rsquo; for nil:NilClass&lt;/p&gt;
 
 &lt;!--more--&gt;
 
@@ -5853,18 +5831,7 @@ defaults write com.macromates.textmate NSUserKeyEquivalents -dict-add &quot;Refo
 
 &lt;p&gt;I&amp;rsquo;m posting the lyrics after the player, as this is an older recording and I don&amp;rsquo;t think my mix on the vocals was optimal for making out all of the words. I&amp;rsquo;m going to go back and add lyrics to the others in this series as well, when I get a chance. &lt;/p&gt;
 
-&lt;object classid=&quot;clsid:D27CDB6E-AE6D-11cf-96B8-444553540000&quot; width=&quot;470&quot; height=&quot;25&quot; id=&quot;single-6464&quot; name=&quot;single-6464&quot;&gt;
-	&lt;param name=&quot;movie&quot; value=&quot;http://cdn.brettterpstra.com/share/player.swf&quot; /&gt;
-	&lt;param name=&quot;allowfullscreen&quot; value=&quot;true&quot; /&gt;
-	&lt;param name=&quot;allowscriptaccess&quot; value=&quot;always&quot; /&gt;
-	&lt;param name=&quot;wmode&quot; value=&quot;transparent&quot; /&gt;
-	&lt;param name=&quot;flashvars&quot; value=&quot;file=http://cdn.brettterpstra.com/share/BlueBags.mp3&amp;amp;controlbar=top&amp;amp;skin=http://cdn.brettterpstra.com/share/stormtrooper/stormtrooper.xml&quot; /&gt;
-	&amp;lt;audio controls preload='auto'&amp;gt;
-		&lt;source src=&quot;http://cdn.brettterpstra.com/share/BlueBags.mp3&quot; type=&quot;audio/mp3&quot; /&gt;
-		&lt;source src=&quot;http://cdn.brettterpstra.com/share/BlueBags.ogg&quot; type=&quot;audio/ogg&quot; /&gt;
-	
-&lt;/object&gt;
-&lt;p&gt;&lt;a href=&quot;http://cdn.brettterpstra.com/share/BlueBags.mp3&quot;&gt;Download Blue Bags by Brett Terpstra&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Liquid error: undefined method `downcase&amp;rsquo; for nil:NilClass&lt;/p&gt;
 
 &lt;!--more--&gt;
 
@@ -6180,18 +6147,7 @@ body .GleeReaped {
 
 &lt;p&gt;The lyrics and music were written by me, and I did the vocals, but the guitar &lt;em&gt;and&lt;/em&gt; the recording chops on this one belong entirely to my friend Randy Kline (one of the best musicians I&amp;rsquo;ve ever known). Thanks for checking it out.&lt;/p&gt;
 
-&lt;object classid=&quot;clsid:D27CDB6E-AE6D-11cf-96B8-444553540000&quot; width=&quot;470&quot; height=&quot;25&quot; id=&quot;single-8130&quot; name=&quot;single-8130&quot;&gt;
-	&lt;param name=&quot;movie&quot; value=&quot;http://cdn.brettterpstra.com/share/player.swf&quot; /&gt;
-	&lt;param name=&quot;allowfullscreen&quot; value=&quot;true&quot; /&gt;
-	&lt;param name=&quot;allowscriptaccess&quot; value=&quot;always&quot; /&gt;
-	&lt;param name=&quot;wmode&quot; value=&quot;transparent&quot; /&gt;
-	&lt;param name=&quot;flashvars&quot; value=&quot;file=http://cdn.brettterpstra.com/share/JunkyAngel.mp3&amp;amp;controlbar=top&amp;amp;skin=http://cdn.brettterpstra.com/share/stormtrooper/stormtrooper.xml&quot; /&gt;
-	&amp;lt;audio controls preload='auto'&amp;gt;
-		&lt;source src=&quot;http://cdn.brettterpstra.com/share/JunkyAngel.mp3&quot; type=&quot;audio/mp3&quot; /&gt;
-		&lt;source src=&quot;http://cdn.brettterpstra.com/share/JunkyAngel.ogg&quot; type=&quot;audio/ogg&quot; /&gt;
-	
-&lt;/object&gt;
-&lt;p&gt;&lt;a href=&quot;http://cdn.brettterpstra.com/share/JunkyAngel.mp3&quot;&gt;Download Junky Angel by Brett Terpstra&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Liquid error: undefined method `downcase&amp;rsquo; for nil:NilClass&lt;/p&gt;
 
 &lt;p&gt;Next one&amp;rsquo;s a little more upbeat, I promise.&lt;/p&gt;
 </content>
@@ -6430,19 +6386,7 @@ add_filter( 'get_comment_author' , 'change_comment_author' );
 
 &lt;p&gt;Without further ado, I offer &amp;ldquo;Alone Again.&amp;rdquo;&lt;/p&gt;
 
-&lt;object classid=&quot;clsid:D27CDB6E-AE6D-11cf-96B8-444553540000&quot; width=&quot;470&quot; height=&quot;25&quot; id=&quot;single-8320&quot; name=&quot;single-8320&quot;&gt;
-	&lt;param name=&quot;movie&quot; value=&quot;http://cdn.brettterpstra.com/share/player.swf&quot; /&gt;
-	&lt;param name=&quot;allowfullscreen&quot; value=&quot;true&quot; /&gt;
-	&lt;param name=&quot;allowscriptaccess&quot; value=&quot;always&quot; /&gt;
-	&lt;param name=&quot;wmode&quot; value=&quot;transparent&quot; /&gt;
-	&lt;param name=&quot;flashvars&quot; value=&quot;file=http://cdn.brettterpstra.com/share/AloneAgain.mp3&amp;amp;controlbar=top&amp;amp;skin=http://cdn.brettterpstra.com/share/stormtrooper/stormtrooper.xml&quot; /&gt;
-	&amp;lt;audio controls preload='auto'&amp;gt;
-		&lt;source src=&quot;http://cdn.brettterpstra.com/share/AloneAgain.mp3&quot; type=&quot;audio/mp3&quot; /&gt;
-		&lt;source src=&quot;http://cdn.brettterpstra.com/share/AloneAgain.ogg&quot; type=&quot;audio/ogg&quot; /&gt;
-	
-&lt;/object&gt;
-&lt;p&gt;&lt;a href=&quot;http://cdn.brettterpstra.com/share/AloneAgain.mp3&quot;&gt;Download Alone Again by Brett Terpstra&lt;/a&gt;&lt;/p&gt;
-
+&lt;p&gt;Liquid error: undefined method `downcase&amp;rsquo; for nil:NilClass&lt;/p&gt;
 </content>
  </entry>
  

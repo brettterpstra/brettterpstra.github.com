@@ -1,9 +1,8 @@
 (function($){
 	// Sidebar Tabs:
-	if ($().tabs) {
-		$("#side-tabs").tabs();
-	}
-
+	
+	$("#side-tabs").tabs();
+	
 	// Clear search form value on focus:
 	$('#search input').focus(function () {
 		if (this.value == this.defaultValue) {

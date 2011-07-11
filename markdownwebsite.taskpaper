@@ -1,5 +1,6 @@
 Markdown Website:
 	- lighbox for all image links
+	- Wufoo contact form
 	- convert | to - in link titles @done
 	- merge categories @done
 	- add project post type
@@ -12,7 +13,7 @@ Markdown Website:
 	- minify as part of render @done
 	- implement LESS conversion @done
 	- basic archives
-	- comments?
+	- comments? @done
 	- make the excerpt command preserve footnotes (or remove them)
 Plugins:
 	- Plugin to combine css and js when config.deploy is true

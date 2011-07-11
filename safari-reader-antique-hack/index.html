@@ -20,12 +20,6 @@
 	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
 	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
 	<!-- <link rel="stylesheet" href="/css/screen.min.css" media="screen" type="text/css"/> -->
-
-	<!-- Javascript -->
-	<script src="/js/jquery.min.js" type="text/javascript"></script>
-	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
-	<script src="/js/scripts.js" type="text/javascript"></script>
-
 	<!--[if IE 6]>
 	<link href="/css/ie.css" rel="stylesheet" media="screen" type="text/css" />
 	<![endif]-->
@@ -41,7 +35,8 @@
 		<li><a class="current home" href="/">Home</a></li>
 		<li><a href="/categories/">Categories</a></li>
 		<li><a href="/tags/">Tags</a></li>
-		<li><a href="/portfolio/">Projects</a></li>
+		<li><a href="/contact/">Contact</a></li>
+    <!-- <li><a href="/portfolio/">Projects</a></li> -->
 		<li><a href="/about/">About</a></li>
 	</ul>
 </div><!-- end: #nav -->
@@ -94,13 +89,13 @@
   </li>
 </ul>
 
-<p>[caption id=&rdquo;attachment_563&rdquo; align=&rdquo;aligncenter&rdquo; width=&rdquo;300&rdquo; caption=&rdquo;Page break closeup&rdquo;]<a href="http://brettterpstra.dev/wp-content/uploads/2010/06/SafariNewFullFramePageBreak.jpg"><img src="http://brettterpstra.dev/wp-content/uploads/2010/06/SafariNewFullFramePageBreak-300x70.jpg" alt="Safari Reader Antique hack page break closeup" title="Safari Reader Antique hack page break closeup" width="300" height="70" class="size-medium wp-image-563" /></a>[/caption]</p>
+<p><a href="http://brettterpstra.dev/wp-content/uploads/2010/06/SafariNewFullFramePageBreak.jpg"><img src="http://brettterpstra.dev/wp-content/uploads/2010/06/SafariNewFullFramePageBreak-300x70.jpg" alt="Safari Reader Antique hack page break closeup" title="Safari Reader Antique hack page break closeup" width="300" height="70" class="size-medium wp-image-563" /></a></p>
 
 <p>If you want to try out the style, &lt;a href=&rdquo;[download id=&rdquo;10&rdquo; format=&rdquo;2&rdquo;]&rdquo;&gt;download it here&lt;/a&gt; (with background image), or grab the &lt;a href=&rdquo;[download id=&rdquo;12&rdquo; format=&rdquo;2&rdquo;]&rdquo;&gt;version with no background image&lt;/a&gt;, and open the archive. Inside you&rsquo;ll find a file called Reader.html. The file you&rsquo;re going to replace (back it up somewhere safe first) is <code>/Applications/Safari.app/Contents/Resources/Reader.html</code>. If you don&rsquo;t know how to do this from Terminal, you can just do it in Finder: go to your Applications folder and locate Safari, then right click on it and choose &ldquo;Show Package Contents.&rdquo; That will open a new window with the inner workings of Safari inside it. Open the folder called Contents, and then the Resources folder inside of that. Locate the file Reader.html and drag it out to your desktop (that&rsquo;s your original, keep it safe). Then drag the new Reader.html file you downloaded into the Resources folder. Restart Safari and try it out!</p>
 
 <p>Some gory details about the process follow&hellip;</p>
 
-<p>[caption id=&rdquo;attachment_566&rdquo; align=&rdquo;aligncenter&rdquo; width=&rdquo;410&rdquo; caption=&rdquo;Antique HUD with Evernote button&rdquo;]<img src="http://brettterpstra.dev/wp-content/uploads/2010/06/SafariReaderNewFullFrameHUD.jpg" alt="Safari Reader Antique hack HUD" title="Safari Reader HUD" width="410" height="119" class="size-full wp-image-566" />[/caption]</p>
+<p><img src="http://brettterpstra.dev/wp-content/uploads/2010/06/SafariReaderNewFullFrameHUD.jpg" alt="Safari Reader Antique hack HUD" title="Safari Reader HUD" width="410" height="119" class="size-full wp-image-566" /></p>
 
 <p>I added a button to the HUD as a proof-of-concept. It doesn&rsquo;t do anything very useful yet, the current one just loads the title and URL in the Evernote web clipper in a new tab/window. It would be far more useful if I could get the in-page web clipper to work, but when Reader loads, &ldquo;Reader.html&rdquo; becomes the current location and title. You can access the original information using the ReaderJS object (<code>ReaderJS.originalURL</code> for example), but Evernote&rsquo;s web clipper doesn&rsquo;t let you pass those in, it wants to find them itself. I played around with loading the entire contents of the Reader-rendered page into an iFrame and calling it from there, but I gave up on that after a while. The default print and email functions have success doing something similar; it&rsquo;s more the Evernote clipper that&rsquo;s dragging me down. Anyway, you can add Javascript right in the Reader.html file and insert a button to call it. It&rsquo;s easy.</p>
 
@@ -247,6 +242,11 @@
 		</div>
 	</div><!-- end: #footer -->
 </div><!-- end: #footer-wrapper -->
+	<!-- Javascript -->
+	<script src="/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+	
   <script type="text/javascript">
       /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
       var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname

@@ -4,7 +4,7 @@
  <title>Brett Terpstra</title>
  <link href="http://jek.brettterpstra.dev/feed.xml" rel="self"/>
  <link href="http://jek.brettterpstra.dev"/>
- <updated>2011-07-10T19:48:36-05:00</updated>
+ <updated>2011-07-10T20:42:57-05:00</updated>
  <id>http://jek.brettterpstra.dev/</id>
  <author>
    <name>Brett Terpstra</name>
@@ -262,7 +262,7 @@ edmd () {
    <link href="hhttp://jek.brettterpstra.dev/thanks-wwdc"/>
    <updated>2011-06-10T00:00:00-05:00</updated>
    <id>http://jek.brettterpstra.dev/thanks-wwdc</id>
-   <content type="html">&lt;p&gt;[caption id=&amp;rdquo;&amp;rdquo; align=&amp;rdquo;alignright&amp;rdquo; width=&amp;rdquo;240&amp;rdquo; caption=&amp;rdquo;The TUAW Dev Interviews&amp;rdquo;]&lt;a href=&quot;http://www.flickr.com/photos/circlesixdesign/5817563710/sizes/l/in/photostream/&quot;&gt;&lt;img alt=&quot;Photo of the TUAW Dev Interviews setup&quot; src=&quot;http://farm3.static.flickr.com/2386/5817563710_b08dfee385_m_d.jpg&quot; title=&quot;The TUAW Dev Interviews&quot; width=&quot;240&quot; height=&quot;160&quot; /&gt;&lt;/a&gt;[/caption]&lt;/p&gt;
+   <content type="html">&lt;p&gt;&lt;a href=&quot;http://www.flickr.com/photos/circlesixdesign/5817563710/sizes/l/in/photostream/&quot;&gt;&lt;img alt=&quot;Photo of the TUAW Dev Interviews setup&quot; src=&quot;http://farm3.static.flickr.com/2386/5817563710_b08dfee385_m_d.jpg&quot; title=&quot;The TUAW Dev Interviews&quot; width=&quot;240&quot; height=&quot;160&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;Thanks to everyone I met at WWDC this year and to the friends I got to see for a great time. San Francisco was as beautiful as ever and the Mac and iOS development communities are, as usual, full of new and brilliant ideas. It&amp;rsquo;s always heartening to see. TUAW and MacTech will be posting the result of our blogging work at WWDC over the next few weeks.&lt;/p&gt;
 
@@ -405,7 +405,7 @@ edmd () {
    <updated>2011-05-22T00:00:00-05:00</updated>
    <id>http://jek.brettterpstra.dev/the-mac-and-ios-mind-mapping-app-extravaganza</id>
    <content type="html">
-&lt;p&gt;[caption id=&amp;rdquo;attachment_2344&amp;rdquo; align=&amp;rdquo;alignright&amp;rdquo; width=&amp;rdquo;300&amp;rdquo; caption=&amp;rdquo;Courtesy of &amp;lt;a href=&amp;quot;http://www.buzan.com.au/learning/mindmapgallery.html&amp;quot;&amp;gt;Buzan Center Australia&amp;lt;/a&amp;gt;.&amp;rdquo;]&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2011/05/creative-intelligence-mindmap.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2011/05/creative-intelligence-mindmap-300x235.jpg&quot; alt=&quot;Mind map example&quot; title=&quot;Creative intelligence mindmap&quot; width=&quot;300&quot; height=&quot;235&quot; class=&quot;size-medium wp-image-2344&quot; /&gt;&lt;/a&gt;[/caption]&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2011/05/creative-intelligence-mindmap.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2011/05/creative-intelligence-mindmap-300x235.jpg&quot; alt=&quot;Mind map example&quot; title=&quot;Creative intelligence mindmap&quot; width=&quot;300&quot; height=&quot;235&quot; class=&quot;size-medium wp-image-2344&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;Most of my projects start out as &lt;a href=&quot;http://en.wikipedia.org/wiki/Mind_map&quot;&gt;mind maps&lt;/a&gt; (which I may have &lt;a href=&quot;http://www.tuaw.com/tag/mind+mapping/&quot;&gt;mentioned before&lt;/a&gt;). Whether it&amp;rsquo;s a packing list, a blog post or a TextMate bundle, I find it easiest to organize my (often scattered) thoughts using what &lt;a href=&quot;http://en.wikipedia.org/wiki/Tony_Buzan&quot;&gt;Tony Buzan&lt;/a&gt; calls &lt;a href=&quot;http://www.yourweeklytutor.com/2009/10/mind-maps-are-expression-of-radiant.html&quot;&gt;radiant thinking&lt;/a&gt;. Lists and outlines are rarely as effective as the non-linear format of a mind map. For me, if it involves brainstorming, it involves mind maps.&lt;/p&gt;
 
@@ -964,7 +964,7 @@ fi
 
 &lt;!--more--&gt;
 
-&lt;p&gt;[caption id=&amp;rdquo;attachment_2228&amp;rdquo; align=&amp;rdquo;alignright&amp;rdquo; width=&amp;rdquo;300&amp;rdquo; caption=&amp;rdquo;Click for big.&amp;rdquo;]&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2011/04/MarkdownQuickTagsScreenshot4-23.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2011/04/MarkdownQuickTagsScreenshot4-23-300x213.jpg&quot; alt=&quot;Markdown QuickTags Screenshot&quot; title=&quot;Markdown QuickTags Screenshot&quot; width=&quot;300&quot; height=&quot;213&quot; class=&quot;size-medium wp-image-2228&quot; /&gt;&lt;/a&gt;[/caption]&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2011/04/MarkdownQuickTagsScreenshot4-23.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2011/04/MarkdownQuickTagsScreenshot4-23-300x213.jpg&quot; alt=&quot;Markdown QuickTags Screenshot&quot; title=&quot;Markdown QuickTags Screenshot&quot; width=&quot;300&quot; height=&quot;213&quot; class=&quot;size-medium wp-image-2228&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;It&amp;rsquo;s a plugin with a powerful Markdown editor that replaces the WordPress HTML view. It provides auto-pairing, wrapping, link detection, smart list continuation, reference link title completion and much more. &lt;/p&gt;
 
@@ -4637,7 +4637,7 @@ $(document).ready(function() {
 
 &lt;p&gt;The main riff is courtesy of my friend Adele Murray. We jammed on it once long ago; it was actually my impetus for learning palm muting. Hopefully she doesn&amp;rsquo;t mind me using it in this little scratchpad experiment&amp;hellip;&lt;/p&gt;
 
-&lt;object classid=&quot;clsid:D27CDB6E-AE6D-11cf-96B8-444553540000&quot; width=&quot;470&quot; height=&quot;25&quot; id=&quot;single-2254&quot; name=&quot;single-2254&quot;&gt;
+&lt;object classid=&quot;clsid:D27CDB6E-AE6D-11cf-96B8-444553540000&quot; width=&quot;470&quot; height=&quot;25&quot; id=&quot;single-740&quot; name=&quot;single-740&quot;&gt;
 	&lt;param name=&quot;movie&quot; value=&quot;http://cdn.brettterpstra.com/share/player.swf&quot; /&gt;
 	&lt;param name=&quot;allowfullscreen&quot; value=&quot;true&quot; /&gt;
 	&lt;param name=&quot;allowscriptaccess&quot; value=&quot;always&quot; /&gt;
@@ -4837,7 +4837,7 @@ end
 
 &lt;p&gt;This track, though, is actually the banner track for the collection I&amp;rsquo;ve slowly been building here. It started as a sequel to &lt;a href=&quot;http://brettterpstra.dev/sad-songs-part-2-junky-angel/&quot;&gt;Junky Angel&lt;/a&gt;, but grew into something of its own pretty quickly. It&amp;rsquo;s about love and heartbreak, and the initial feeling of moving from major cities to small towns. I wrote a lot of those after I got back here. I&amp;rsquo;ll let &amp;ldquo;Something Precious&amp;rdquo; tell the rest of the story.&lt;/p&gt;
 
-&lt;object classid=&quot;clsid:D27CDB6E-AE6D-11cf-96B8-444553540000&quot; width=&quot;470&quot; height=&quot;25&quot; id=&quot;single-4406&quot; name=&quot;single-4406&quot;&gt;
+&lt;object classid=&quot;clsid:D27CDB6E-AE6D-11cf-96B8-444553540000&quot; width=&quot;470&quot; height=&quot;25&quot; id=&quot;single-9318&quot; name=&quot;single-9318&quot;&gt;
 	&lt;param name=&quot;movie&quot; value=&quot;http://cdn.brettterpstra.com/share/player.swf&quot; /&gt;
 	&lt;param name=&quot;allowfullscreen&quot; value=&quot;true&quot; /&gt;
 	&lt;param name=&quot;allowscriptaccess&quot; value=&quot;always&quot; /&gt;
@@ -4952,8 +4952,8 @@ function td() {
 
 &lt;p&gt;Neat.&lt;/p&gt;
 
-&lt;p&gt;[caption id=&amp;rdquo;attachment&lt;em&gt;1084&amp;rdquo; align=&amp;rdquo;alignleft&amp;rdquo; width=&amp;rdquo;150&amp;rdquo; caption=&amp;rdquo;Prompt screen on iPad&amp;rdquo;]&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/promptdownipadpromptscreen.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/promptdownipadpromptscreen-150x150.jpg&quot; alt=&quot;&quot; title=&quot;PromptDown prompt screen on iPad&quot; width=&quot;150&quot; height=&quot;150&quot; class=&quot;size-thumbnail wp-image-1084&quot; /&gt;&lt;/a&gt;[/caption]
-[caption id=&amp;rdquo;attachment&lt;/em&gt;1085&amp;rdquo; align=&amp;rdquo;alignleft&amp;rdquo; width=&amp;rdquo;150&amp;rdquo; caption=&amp;rdquo;Edit screen on iPhone 4&amp;rdquo;]&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/promptdowniphone4.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/promptdowniphone4-150x150.jpg&quot; alt=&quot;Screenshot of PromptDown on iPhone 4&quot; title=&quot;PromptDown on iPhone 4&quot; width=&quot;150&quot; height=&quot;150&quot; class=&quot;size-thumbnail wp-image-1085&quot; /&gt;&lt;/a&gt;[/caption]&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/promptdownipadpromptscreen.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/promptdownipadpromptscreen-150x150.jpg&quot; alt=&quot;&quot; title=&quot;PromptDown prompt screen on iPad&quot; width=&quot;150&quot; height=&quot;150&quot; class=&quot;size-thumbnail wp-image-1084&quot; /&gt;&lt;/a&gt;
+&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/promptdowniphone4.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/promptdowniphone4-150x150.jpg&quot; alt=&quot;Screenshot of PromptDown on iPhone 4&quot; title=&quot;PromptDown on iPhone 4&quot; width=&quot;150&quot; height=&quot;150&quot; class=&quot;size-thumbnail wp-image-1085&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 </content>
  </entry>
  
@@ -4963,8 +4963,8 @@ function td() {
    <updated>2010-10-07T00:00:00-05:00</updated>
    <id>http://jek.brettterpstra.dev/promptdown-markdown-teleprompter</id>
    <content type="html">
-&lt;p&gt;[caption id=&amp;rdquo;attachment&lt;em&gt;1072&amp;rdquo; align=&amp;rdquo;alignleft&amp;rdquo; width=&amp;rdquo;150&amp;rdquo; caption=&amp;rdquo;PromptDown Edit Screen&amp;rdquo;]&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/PromptDownEditScreen.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/PromptDownEditScreen-150x150.jpg&quot; alt=&quot;PromptDown Edit Screen&quot; title=&quot;PromptDown Edit Screen&quot; width=&quot;150&quot; height=&quot;150&quot; class=&quot;size-thumbnail wp-image-1072&quot; /&gt;&lt;/a&gt;[/caption]
-[caption id=&amp;rdquo;attachment&lt;/em&gt;1074&amp;rdquo; align=&amp;rdquo;alignleft&amp;rdquo; width=&amp;rdquo;150&amp;rdquo; caption=&amp;rdquo;PromptDown Prompt Screen&amp;rdquo;]&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/PromptDownPromptScreen.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/PromptDownPromptScreen-150x150.jpg&quot; alt=&quot;PromptDown Prompt Screen&quot; title=&quot;PromptDown Prompt Screen&quot; width=&quot;150&quot; height=&quot;150&quot; class=&quot;size-thumbnail wp-image-1074&quot; /&gt;&lt;/a&gt;[/caption]&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/PromptDownEditScreen.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/PromptDownEditScreen-150x150.jpg&quot; alt=&quot;PromptDown Edit Screen&quot; title=&quot;PromptDown Edit Screen&quot; width=&quot;150&quot; height=&quot;150&quot; class=&quot;size-thumbnail wp-image-1072&quot; /&gt;&lt;/a&gt;
+&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/PromptDownPromptScreen.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/PromptDownPromptScreen-150x150.jpg&quot; alt=&quot;PromptDown Prompt Screen&quot; title=&quot;PromptDown Prompt Screen&quot; width=&quot;150&quot; height=&quot;150&quot; class=&quot;size-thumbnail wp-image-1074&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;&lt;em&gt;Be sure to &lt;a href=&quot;http://brettterpstra.dev/promptdown-for-ios-mobile-markdown-teleprompter/&quot;&gt;check out version 2&lt;/a&gt;, with iOS support (iPhone/iPad)!&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
 
@@ -5181,9 +5181,9 @@ Group staff
 
 &lt;p&gt;Have fun, hopefully my horrible waste of time will be someone else&amp;rsquo;s inspiration&amp;hellip;&lt;/p&gt;
 
-&lt;p&gt;[caption id=&amp;rdquo;attachment&lt;em&gt;1045&amp;rdquo; align=&amp;rdquo;alignleft&amp;rdquo; width=&amp;rdquo;150&amp;rdquo; caption=&amp;rdquo; Main Screen&amp;rdquo;]&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/homecontrolhomescreen.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/homecontrolhomescreen-150x150.jpg&quot; alt=&quot;Screenshot of HomeControl Main Screen&quot; title=&quot;HomeControl Main Screen&quot; width=&quot;150&quot; height=&quot;150&quot; class=&quot;size-thumbnail wp-image-1045&quot; /&gt;&lt;/a&gt;[/caption]
-[caption id=&amp;rdquo;attachment&lt;/em&gt;1042&amp;rdquo; align=&amp;rdquo;alignleft&amp;rdquo; width=&amp;rdquo;150&amp;rdquo; caption=&amp;rdquo;Applications Screen&amp;rdquo;]&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/homecontrolapplications.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/homecontrolapplications-150x150.jpg&quot; alt=&quot;Screenshot of HomeControl Applications Screen&quot; title=&quot;HomeControl Applications Screen&quot; width=&quot;150&quot; height=&quot;150&quot; class=&quot;size-thumbnail wp-image-1042&quot; /&gt;&lt;/a&gt;[/caption]
-[caption id=&amp;rdquo;attachment_1046&amp;rdquo; align=&amp;rdquo;alignleft&amp;rdquo; width=&amp;rdquo;150&amp;rdquo; caption=&amp;rdquo;iTunes controls&amp;rdquo;]&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/homecontrolitunes.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/homecontrolitunes-150x150.jpg&quot; alt=&quot;Screenshot of HomeControl iTunes controls&quot; title=&quot;HomeControl iTunes controls&quot; width=&quot;150&quot; height=&quot;150&quot; class=&quot;size-thumbnail wp-image-1046&quot; /&gt;&lt;/a&gt;[/caption]&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/homecontrolhomescreen.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/homecontrolhomescreen-150x150.jpg&quot; alt=&quot;Screenshot of HomeControl Main Screen&quot; title=&quot;HomeControl Main Screen&quot; width=&quot;150&quot; height=&quot;150&quot; class=&quot;size-thumbnail wp-image-1045&quot; /&gt;&lt;/a&gt;
+&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/homecontrolapplications.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/homecontrolapplications-150x150.jpg&quot; alt=&quot;Screenshot of HomeControl Applications Screen&quot; title=&quot;HomeControl Applications Screen&quot; width=&quot;150&quot; height=&quot;150&quot; class=&quot;size-thumbnail wp-image-1042&quot; /&gt;&lt;/a&gt;
+&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/homecontrolitunes.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/10/homecontrolitunes-150x150.jpg&quot; alt=&quot;Screenshot of HomeControl iTunes controls&quot; title=&quot;HomeControl iTunes controls&quot; width=&quot;150&quot; height=&quot;150&quot; class=&quot;size-thumbnail wp-image-1046&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;download&quot;&gt;Download&lt;/h3&gt;
 
@@ -5211,8 +5211,8 @@ Group staff
 ### Before and After ###&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;[caption id=&amp;rdquo;attachment&lt;em&gt;1029&amp;rdquo; align=&amp;rdquo;alignleft&amp;rdquo; width=&amp;rdquo;150&amp;rdquo; caption=&amp;rdquo;HootSuite Original Blue Steel&amp;rdquo;]&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2010/09/HootSuiteNoMods.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/09/HootSuiteNoMods-150x150.jpg&quot; alt=&quot;HootSuite Original Blue Steel Screenshot&quot; title=&quot;HootSuiteNoMods&quot; width=&quot;150&quot; height=&quot;150&quot; class=&quot;size-thumbnail wp-image-1029&quot; /&gt;&lt;/a&gt;[/caption]
-[caption id=&amp;rdquo;attachment&lt;/em&gt;1031&amp;rdquo; align=&amp;rdquo;alignleft&amp;rdquo; width=&amp;rdquo;150&amp;rdquo; caption=&amp;rdquo;HootSuite with User Style&amp;rdquo;]&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2010/09/HootSuiteWithMods.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/09/HootSuiteWithMods-150x150.jpg&quot; alt=&quot;HootSuite with User Style Screenshot&quot; title=&quot;HootSuiteWithMods&quot; width=&quot;150&quot; height=&quot;150&quot; class=&quot;size-thumbnail wp-image-1031&quot; /&gt;&lt;/a&gt;[/caption]&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2010/09/HootSuiteNoMods.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/09/HootSuiteNoMods-150x150.jpg&quot; alt=&quot;HootSuite Original Blue Steel Screenshot&quot; title=&quot;HootSuiteNoMods&quot; width=&quot;150&quot; height=&quot;150&quot; class=&quot;size-thumbnail wp-image-1029&quot; /&gt;&lt;/a&gt;
+&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2010/09/HootSuiteWithMods.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/09/HootSuiteWithMods-150x150.jpg&quot; alt=&quot;HootSuite with User Style Screenshot&quot; title=&quot;HootSuiteWithMods&quot; width=&quot;150&quot; height=&quot;150&quot; class=&quot;size-thumbnail wp-image-1031&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;in-safari-5&quot;&gt;In Safari 5&lt;/h3&gt;
 
@@ -5853,7 +5853,7 @@ defaults write com.macromates.textmate NSUserKeyEquivalents -dict-add &quot;Refo
 
 &lt;p&gt;I&amp;rsquo;m posting the lyrics after the player, as this is an older recording and I don&amp;rsquo;t think my mix on the vocals was optimal for making out all of the words. I&amp;rsquo;m going to go back and add lyrics to the others in this series as well, when I get a chance. &lt;/p&gt;
 
-&lt;object classid=&quot;clsid:D27CDB6E-AE6D-11cf-96B8-444553540000&quot; width=&quot;470&quot; height=&quot;25&quot; id=&quot;single-8765&quot; name=&quot;single-8765&quot;&gt;
+&lt;object classid=&quot;clsid:D27CDB6E-AE6D-11cf-96B8-444553540000&quot; width=&quot;470&quot; height=&quot;25&quot; id=&quot;single-2848&quot; name=&quot;single-2848&quot;&gt;
 	&lt;param name=&quot;movie&quot; value=&quot;http://cdn.brettterpstra.com/share/player.swf&quot; /&gt;
 	&lt;param name=&quot;allowfullscreen&quot; value=&quot;true&quot; /&gt;
 	&lt;param name=&quot;allowscriptaccess&quot; value=&quot;always&quot; /&gt;
@@ -6180,7 +6180,7 @@ body .GleeReaped {
 
 &lt;p&gt;The lyrics and music were written by me, and I did the vocals, but the guitar &lt;em&gt;and&lt;/em&gt; the recording chops on this one belong entirely to my friend Randy Kline (one of the best musicians I&amp;rsquo;ve ever known). Thanks for checking it out.&lt;/p&gt;
 
-&lt;object classid=&quot;clsid:D27CDB6E-AE6D-11cf-96B8-444553540000&quot; width=&quot;470&quot; height=&quot;25&quot; id=&quot;single-1792&quot; name=&quot;single-1792&quot;&gt;
+&lt;object classid=&quot;clsid:D27CDB6E-AE6D-11cf-96B8-444553540000&quot; width=&quot;470&quot; height=&quot;25&quot; id=&quot;single-2564&quot; name=&quot;single-2564&quot;&gt;
 	&lt;param name=&quot;movie&quot; value=&quot;http://cdn.brettterpstra.com/share/player.swf&quot; /&gt;
 	&lt;param name=&quot;allowfullscreen&quot; value=&quot;true&quot; /&gt;
 	&lt;param name=&quot;allowscriptaccess&quot; value=&quot;always&quot; /&gt;
@@ -6430,7 +6430,7 @@ add_filter( 'get_comment_author' , 'change_comment_author' );
 
 &lt;p&gt;Without further ado, I offer &amp;ldquo;Alone Again.&amp;rdquo;&lt;/p&gt;
 
-&lt;object classid=&quot;clsid:D27CDB6E-AE6D-11cf-96B8-444553540000&quot; width=&quot;470&quot; height=&quot;25&quot; id=&quot;single-6451&quot; name=&quot;single-6451&quot;&gt;
+&lt;object classid=&quot;clsid:D27CDB6E-AE6D-11cf-96B8-444553540000&quot; width=&quot;470&quot; height=&quot;25&quot; id=&quot;single-4769&quot; name=&quot;single-4769&quot;&gt;
 	&lt;param name=&quot;movie&quot; value=&quot;http://cdn.brettterpstra.com/share/player.swf&quot; /&gt;
 	&lt;param name=&quot;allowfullscreen&quot; value=&quot;true&quot; /&gt;
 	&lt;param name=&quot;allowscriptaccess&quot; value=&quot;always&quot; /&gt;
@@ -6831,13 +6831,13 @@ function sendToWebbla() {
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;[caption id=&amp;rdquo;attachment_563&amp;rdquo; align=&amp;rdquo;aligncenter&amp;rdquo; width=&amp;rdquo;300&amp;rdquo; caption=&amp;rdquo;Page break closeup&amp;rdquo;]&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2010/06/SafariNewFullFramePageBreak.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/06/SafariNewFullFramePageBreak-300x70.jpg&quot; alt=&quot;Safari Reader Antique hack page break closeup&quot; title=&quot;Safari Reader Antique hack page break closeup&quot; width=&quot;300&quot; height=&quot;70&quot; class=&quot;size-medium wp-image-563&quot; /&gt;&lt;/a&gt;[/caption]&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2010/06/SafariNewFullFramePageBreak.jpg&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/06/SafariNewFullFramePageBreak-300x70.jpg&quot; alt=&quot;Safari Reader Antique hack page break closeup&quot; title=&quot;Safari Reader Antique hack page break closeup&quot; width=&quot;300&quot; height=&quot;70&quot; class=&quot;size-medium wp-image-563&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;If you want to try out the style, &amp;lt;a href=&amp;rdquo;[download id=&amp;rdquo;10&amp;rdquo; format=&amp;rdquo;2&amp;rdquo;]&amp;rdquo;&amp;gt;download it here&amp;lt;/a&amp;gt; (with background image), or grab the &amp;lt;a href=&amp;rdquo;[download id=&amp;rdquo;12&amp;rdquo; format=&amp;rdquo;2&amp;rdquo;]&amp;rdquo;&amp;gt;version with no background image&amp;lt;/a&amp;gt;, and open the archive. Inside you&amp;rsquo;ll find a file called Reader.html. The file you&amp;rsquo;re going to replace (back it up somewhere safe first) is &lt;code&gt;/Applications/Safari.app/Contents/Resources/Reader.html&lt;/code&gt;. If you don&amp;rsquo;t know how to do this from Terminal, you can just do it in Finder: go to your Applications folder and locate Safari, then right click on it and choose &amp;ldquo;Show Package Contents.&amp;rdquo; That will open a new window with the inner workings of Safari inside it. Open the folder called Contents, and then the Resources folder inside of that. Locate the file Reader.html and drag it out to your desktop (that&amp;rsquo;s your original, keep it safe). Then drag the new Reader.html file you downloaded into the Resources folder. Restart Safari and try it out!&lt;/p&gt;
 
 &lt;p&gt;Some gory details about the process follow&amp;hellip;&lt;/p&gt;
 
-&lt;p&gt;[caption id=&amp;rdquo;attachment_566&amp;rdquo; align=&amp;rdquo;aligncenter&amp;rdquo; width=&amp;rdquo;410&amp;rdquo; caption=&amp;rdquo;Antique HUD with Evernote button&amp;rdquo;]&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/06/SafariReaderNewFullFrameHUD.jpg&quot; alt=&quot;Safari Reader Antique hack HUD&quot; title=&quot;Safari Reader HUD&quot; width=&quot;410&quot; height=&quot;119&quot; class=&quot;size-full wp-image-566&quot; /&gt;[/caption]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/06/SafariReaderNewFullFrameHUD.jpg&quot; alt=&quot;Safari Reader Antique hack HUD&quot; title=&quot;Safari Reader HUD&quot; width=&quot;410&quot; height=&quot;119&quot; class=&quot;size-full wp-image-566&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;I added a button to the HUD as a proof-of-concept. It doesn&amp;rsquo;t do anything very useful yet, the current one just loads the title and URL in the Evernote web clipper in a new tab/window. It would be far more useful if I could get the in-page web clipper to work, but when Reader loads, &amp;ldquo;Reader.html&amp;rdquo; becomes the current location and title. You can access the original information using the ReaderJS object (&lt;code&gt;ReaderJS.originalURL&lt;/code&gt; for example), but Evernote&amp;rsquo;s web clipper doesn&amp;rsquo;t let you pass those in, it wants to find them itself. I played around with loading the entire contents of the Reader-rendered page into an iFrame and calling it from there, but I gave up on that after a while. The default print and email functions have success doing something similar; it&amp;rsquo;s more the Evernote clipper that&amp;rsquo;s dragging me down. Anyway, you can add Javascript right in the Reader.html file and insert a button to call it. It&amp;rsquo;s easy.&lt;/p&gt;
 
@@ -7898,14 +7898,14 @@ add_filter( &amp;#x27;tiny_mce_version&amp;#x27;, &amp;#x27;my_refresh_mce&amp;#
    <id>http://jek.brettterpstra.dev/instapaper-beyond-fluid</id>
    <content type="html">&lt;p&gt;Introducing Instapaper Beyond, an &lt;a href=&quot;http://www.instapaper.com&quot;&gt;Instapaper&lt;/a&gt; userscript for &lt;a href=&quot;http://fluidapp.com/&quot;&gt;Fluid&lt;/a&gt; that provides full keyboard navigation and some special features for browsing your Instapaper articles. If you&amp;rsquo;re not familiar, Fluid is a Mac (only) application which creates a Single Site Browser (SSB) for a site, using the same Webkit engine as Safari. It essentially allows you to turn web applications and sites into Mac apps. It&amp;rsquo;s pure Cocoa, so all of your Services and fun text tricks (like Control-T transposition) work on it. Oh, and it includes &lt;a href=&quot;http://userstyles.org/&quot;&gt;userstyle&lt;/a&gt; and &lt;a href=&quot;http://userscripts.org/&quot;&gt;userscript&lt;/a&gt; engines, similar to &lt;a href=&quot;https://addons.mozilla.org/en-US/firefox/addon/748&quot;&gt;Greasemonkey&lt;/a&gt;, which allows nerds like me to do some crazy things. Fluid (WebKit) is the only browser I&amp;rsquo;ve developed this for, so I doubt Greasemonkey (Firefox) users will have much luck with it.&lt;/p&gt;
 
-&lt;p&gt;[caption id=&amp;rdquo;attachment_347&amp;rdquo; width=&amp;rdquo;300&amp;rdquo; align=&amp;rdquo;alignright&amp;rdquo; caption=&amp;rdquo;Keyboard navigation highlight&amp;rdquo;]&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2010/03/highlighted.jpg&quot; class=&quot;alignright&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/03/highlighted-300x191.jpg&quot; alt=&quot;Screenshot of a highlighted entry&quot; title=&quot;Highlighted entry&quot; width=&quot;300&quot; height=&quot;191&quot; class=&quot;size-medium wp-image-347&quot; /&gt;&lt;/a&gt;[/caption]&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://brettterpstra.dev/wp-content/uploads/2010/03/highlighted.jpg&quot; class=&quot;alignright&quot;&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/03/highlighted-300x191.jpg&quot; alt=&quot;Screenshot of a highlighted entry&quot; title=&quot;Highlighted entry&quot; width=&quot;300&quot; height=&quot;191&quot; class=&quot;size-medium wp-image-347&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;Know what you&amp;rsquo;re doing and want to skip straight to the script? &lt;a href=&quot;http://brettterpstra.dev/userscripts/instapaperbeyond.user.js&quot;&gt;OK&lt;/a&gt;.&lt;/p&gt;
 
 &lt;!--more--&gt;
 &lt;p&gt;The script started as an expansion of a cool userscript called &lt;a href=&quot;http://userscripts.org/scripts/show/59917&quot;&gt;Instapaper Article Tools&lt;/a&gt;, which provides a floating menu with some options while in the text view of an article. For the most part, that script isn&amp;rsquo;t even visible in the final version, unless you manually click into an article. You don&amp;rsquo;t need to do that, though, because the whole point of the script is to provide keyboard navigation for Instapaper. Articles are loaded via Ajax and you can go from article to article in full-screen text view, starring/unstarring, moving and archiving on the fly. A full list of commands available at any time can be seen by pressing &amp;ldquo;h&amp;rdquo;, but here&amp;rsquo;s a quick overview:&lt;/p&gt;
 
-&lt;p&gt;[caption id=&amp;rdquo;attachment_373&amp;rdquo; align=&amp;rdquo;alignright&amp;rdquo; width=&amp;rdquo;300&amp;rdquo; caption=&amp;rdquo;Help HUD (h)&amp;rdquo;]&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/03/InstapaperHelpHud.jpg&quot; alt=&quot;Image of the Instapaper Beyond Help HUD&quot; title=&quot;InstapaperHelpHud&quot; width=&quot;300&quot; height=&quot;301&quot; class=&quot;size-full wp-image-373&quot; /&gt;[/caption]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://brettterpstra.dev/wp-content/uploads/2010/03/InstapaperHelpHud.jpg&quot; alt=&quot;Image of the Instapaper Beyond Help HUD&quot; title=&quot;InstapaperHelpHud&quot; width=&quot;300&quot; height=&quot;301&quot; class=&quot;size-full wp-image-373&quot; /&gt;&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;&amp;ldquo;h&amp;rdquo; will bring up a help screen with the available shortcuts on it&lt;/li&gt;

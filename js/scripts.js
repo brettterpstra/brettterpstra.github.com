@@ -26,5 +26,19 @@
 			if (tag == 'form') return $(':input', this).clearForm();
 			if (type == 'text' || tag == 'textarea') this.value = '';
 		});
-	};	
+	};
+	
+	if ($('#accordion').length) {
+		$("#accordion div.slide").find('ul').slideUp();
+	  $("#accordion div.slide h4").click(function(e){
+			if (e.target.tagName == 'A')
+				return true;
+			var parent = $(this).parent('div');
+			var targetul = parent.find('ul');
+			$('div.slide ul').not(targetul).slideUp('fast',function(){
+				targetul.slideDown();
+			});
+		});
+	}
+
 })(jQuery);

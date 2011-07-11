@@ -96,10 +96,16 @@ transition:all .2s ease-in-out;
 		/* Top level */
 		#nav ul { float:right; border-left:1px solid #4e4030; border-right:1px solid #2f271d;}
 		#nav ul li {float:left; position:relative;}
-		#nav ul li a.home { border-left:1px dotted #a7a68d; }
+		#nav ul li a#home { border-left:1px dotted #a7a68d; }
 		#nav ul li a:link,#nav ul li a:visited {color:#f2f1e3; font-family:Helvetica, Arial, sans-serif; font-size:14px; line-height:53px; text-decoration:none; height:50px; padding:0 13px; border-right:1px solid #4e4030; border-left:1px solid #2f271d;display:block; outline:none;}
 		#nav ul li:hover a {background-color:#344656; color:#fff; height:47px; border-top:3px solid #6296c9; }
-		#nav ul li a.current {
+		
+		.home #homebutton,
+		.categories #catebutton,
+		.tags #tagbutton,
+		.contact #contactbutton,
+		.about #aboutbutton
+		{
   			background:#2d3d4c;
 		}
 		#nav ul li a:active, #nav ul li a:focus {background-color:#234b72;}
@@ -589,19 +595,21 @@ h1 {
   color:#344656;
 }
 
-div.highlight {
-	padding:10px;
+.post pre {
+	padding:10px 5px 10px 15px;
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 	border-radius: 10px;
-	background:rgba(0,0,0,.85);
+	background:#29231e;
 	color:#ccc;
+	margin-bottom:20px;
+	line-height:1.2em;
 }
 
 pre {
 	white-space: pre;           /* CSS 2.0 */
 	white-space: pre-wrap;      /* CSS 2.1 */
-	white-space: pre-line;      /* CSS 3.0 */
+	/*white-space: pre-line;*/      /* CSS 3.0 */
 	white-space: -pre-wrap;     /* Opera 4-6 */
 	white-space: -o-pre-wrap;   /* Opera 7 */
 	white-space: -moz-pre-wrap; /* Mozilla */
@@ -673,14 +681,15 @@ a.more-link:hover {
 #headlines {
   padding:10px;
 }
+.biglist li,
 #headlines li {
-
   border-bottom:1px solid #fffdec;
   border-top:1px solid #c8c7b4;
   position:relative;
   float:left;
   width:100%;
 }
+ul.biglist,
 #headlines li:last-child {
   border-bottom:1px solid #c8c7b4;
 }
@@ -699,6 +708,7 @@ a.more-link:hover {
   height:30px;
   padding-top:10px;
 }
+.biglist li:nth-of-type(even),
 #headlines .even {
   background:#ebebe5;
 }
@@ -722,8 +732,61 @@ a.more-link:hover {
   max-height:70px;
   width:auto;
   float:right;
-  margin:0 0 10px 10px;
+  margin:0 0 10px 10px !important;
 }
 .archive .post p {
   display:inline;
+}
+#accordion h4 {
+  cursor:pointer;
+  float:left;
+  width:100%;
+  margin:0;
+  line-height:18px;
+  position:relative;
+  font-size:16px;
+}
+#accordion h4 span {
+  padding:5px 20px 5px 0;
+}
+#accordion h4 a {
+  padding:0 4px;
+  color:#4a5762;
+  background:#d7d7d1;
+  -moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+border-radius: 5px;
+position:absolute;
+left:-35px;
+top:2px;
+}
+#accordion h4 a:hover {
+  background:#48483b;
+  color:#efefe9;
+}
+ul.expand {
+  display:none;
+  padding:10px;
+  float:left;
+}
+ul.expand li {
+  list-style:square;
+  list-style-position:inside;
+  position:relative;
+}
+ul.expand li a {
+  display:block;
+}
+ul.biglist {
+  float:left;
+  width:400px;
+}
+.biglist li {
+  list-style:none;
+}
+.biglist a {
+   padding:5px;
+  font-size:16px;
+  line-height:18px;
+  display:block;
 }

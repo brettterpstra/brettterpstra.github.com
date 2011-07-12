@@ -620,6 +620,6 @@ form#contact .button:hover { background:#a7a68d;text-shadow:0 0 0 #edecdf; }
 .single-post .sharetools {
   float: right;
   position: relative;
-  top: 0;
+  top: -2px;
   right: -16px;
 }

@@ -12,7 +12,7 @@ Markdown Website:
 		duplicate portfolio post type
 	- donate button shortcode
 	- video/audio embed shortcode
-		Use a javascript library to load 
+		Use a javascript library to load without including a Kramdown-unfriendly audio tag
 	- handle downloads
 	- replicate Postalicious
 		Might want to just hand-curate these
@@ -30,3 +30,5 @@ Plugins:
 		needs to modify the templates to point to combined.min.css and combined.min.js
 	- HTML5 Audio shortcode
 	- SEO information generator
+
+still so much to do

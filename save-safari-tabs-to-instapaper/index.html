@@ -17,7 +17,7 @@
 	<meta name="copyright" content="" />
 	<link rel="icon" type="image/vnd.microsoft.icon" href="/favicon.ico" />
 	<link rel="apple-touch-icon" href="/favicon.png"/>
-	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.com RSS Feed" href="/feed.xml" />
 	<!-- CSS -->
 	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
 	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
@@ -56,7 +56,7 @@
 			<div class="sharetools"><a href="http://twitter.com/share?url=http://brettterpstra.github.com&amp;via=ttscoff" class="twitter-share-button">Tweet</a><g:plusone href="http://brettterpstra.github.com"></g:plusone></div>
 		</div>
 		<h1 class="post-title"><a href="#">Save Safari tabs to Instapaper</a></h1>
-		<p><img src="http://brettterpstra.dev/wp-content/uploads/2010/03/instapapericon.png" alt="InstaPaper icon" title="instapapericon" width="200" height="200" class="alignright size-full wp-image-323" />I posted a way to <a href="http://brettterpstra.dev/2010/03/06/saving-safari-browsing-sessions-to-evernote/">save your Safari tabs to Evernote</a>, which I&rsquo;ve found is generally a great way to save bookmarks. It syncs automatically to your other computers and your iPhone, and it&rsquo;s fast and easy. If you really want to highlight a few tabs to make sure you get back to them, you might consider this script, though. Once you&rsquo;ve saved your entire Safari browsing session for later, close everything except for those special urls, run the code below as a script, and your open tabs will be saved as entries in your <a href="http://www.instapaper.com/">InstaPaper</a> account.</p>
+		<p><img src="http://brettterpstra.com/wp-content/uploads/2010/03/instapapericon.png" alt="InstaPaper icon" title="instapapericon" width="200" height="200" class="alignright size-full wp-image-323" />I posted a way to <a href="http://brettterpstra.com/2010/03/06/saving-safari-browsing-sessions-to-evernote/">save your Safari tabs to Evernote</a>, which I&rsquo;ve found is generally a great way to save bookmarks. It syncs automatically to your other computers and your iPhone, and it&rsquo;s fast and easy. If you really want to highlight a few tabs to make sure you get back to them, you might consider this script, though. Once you&rsquo;ve saved your entire Safari browsing session for later, close everything except for those special urls, run the code below as a script, and your open tabs will be saved as entries in your <a href="http://www.instapaper.com/">InstaPaper</a> account.</p>
 
 <p>There are two &ldquo;property&rdquo; lines at the top of the script; edit them to set your Instapaper username and password (if you have one, otherwise, set it to <code>""</code>). The next section handles everything, iterating through each tab, grabbing its title and url and building a shell command to do a simple curl call to the <a href="http://blog.instapaper.com/post/73123968/read-later-api">InstaPaper API</a>.</p>
 

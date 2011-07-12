@@ -17,7 +17,7 @@
 	<meta name="copyright" content="" />
 	<link rel="icon" type="image/vnd.microsoft.icon" href="/favicon.ico" />
 	<link rel="apple-touch-icon" href="/favicon.png"/>
-	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.com RSS Feed" href="/feed.xml" />
 	<!-- CSS -->
 	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
 	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
@@ -57,7 +57,7 @@
 		</div>
 		<h1 class="post-title"><a href="#">Better WordPress security through comment&nbsp;filters</a></h1>
 		
-<p><img src="http://brettterpstra.dev/wp-content/uploads/2010/07/combolock200.jpg" alt="Combination Lock" border="0" width="200" height="200" class="alignright" />I have an admin username (it&rsquo;s not <em>admin</em>) which I use to manage my WordPress blog, and an editor user with which I write posts and leave comments. Sometimes, though, I get confused, lazy or both, and end up leaving comments as my admin user. This rather defeats the purpose of using a non-default admin username, which is generally done for security purposes (if they can&rsquo;t guess the admin&rsquo;s username, it makes it that much harder to hack the admin account).</p>
+<p><img src="http://brettterpstra.com/wp-content/uploads/2010/07/combolock200.jpg" alt="Combination Lock" border="0" width="200" height="200" class="alignright" />I have an admin username (it&rsquo;s not <em>admin</em>) which I use to manage my WordPress blog, and an editor user with which I write posts and leave comments. Sometimes, though, I get confused, lazy or both, and end up leaving comments as my admin user. This rather defeats the purpose of using a non-default admin username, which is generally done for security purposes (if they can&rsquo;t guess the admin&rsquo;s username, it makes it that much harder to hack the admin account).</p>
 
 <p>More out of laziness than anything else (we can call it efficiency, right?), I dropped the functions below into my <code>functions.php</code> file. They filter my admin username out of any comments I leave. Wordpress also adds the user&rsquo;s name in a class for the list item of the comment, so I needed to remove that as well. If you&rsquo;re in a similar situation, feel free to grab the code and place it in your own theme&rsquo;s <code>functions.php</code> file, replacing the adminuser and regularuser placeholders with your own admin and editor usernames. The comment class code is modified from a hack <a href="http://www.wprecipes.com/wordpress-hack-remove-admin-name-in-comments-class">found at WPRecipes</a>.</p>
 

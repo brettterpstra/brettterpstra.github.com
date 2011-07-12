@@ -17,7 +17,7 @@
 	<meta name="copyright" content="" />
 	<link rel="icon" type="image/vnd.microsoft.icon" href="/favicon.ico" />
 	<link rel="apple-touch-icon" href="/favicon.png"/>
-	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.com RSS Feed" href="/feed.xml" />
 	<!-- CSS -->
 	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
 	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
@@ -56,7 +56,7 @@
 			<div class="sharetools"><a href="http://twitter.com/share?url=http://brettterpstra.github.com&amp;via=ttscoff" class="twitter-share-button">Tweet</a><g:plusone href="http://brettterpstra.github.com"></g:plusone></div>
 		</div>
 		<h1 class="post-title"><a href="#">Bookmarklet: Read Pinboard links with Instapaper&nbsp;Text</a></h1>
-		<p><img src="http://brettterpstra.dev/wp-content/uploads/2011/01/pinboardbookmarkletscreenshot.jpg" alt="" title="pinboardbookmarkletscreenshot" width="316" height="97" class="alignright shadow size-full wp-image-1565" />Here&rsquo;s a quick bookmarklet you can run on any <a href="http://pinboard.in/">Pinboard</a> page containing a list of bookmarks. It adds a &ldquo;Read&rdquo; link at the end of the edit links for each post, and clicking the link will open the post in Instapaper Text<sup id="fnref:fn1"><a href="#fn:fn1" rel="footnote">1</a></sup> view in a new page/tab. It also marks the post you click as &ldquo;read.&rdquo; Note that this happens whether you have that specified in the preferences or not (because it&rsquo;s a quick hack and I think it&rsquo;s weird to not mark an article as read when you read it).</p>
+		<p><img src="http://brettterpstra.com/wp-content/uploads/2011/01/pinboardbookmarkletscreenshot.jpg" alt="" title="pinboardbookmarkletscreenshot" width="316" height="97" class="alignright shadow size-full wp-image-1565" />Here&rsquo;s a quick bookmarklet you can run on any <a href="http://pinboard.in/">Pinboard</a> page containing a list of bookmarks. It adds a &ldquo;Read&rdquo; link at the end of the edit links for each post, and clicking the link will open the post in Instapaper Text<sup id="fnref:fn1"><a href="#fn:fn1" rel="footnote">1</a></sup> view in a new page/tab. It also marks the post you click as &ldquo;read.&rdquo; Note that this happens whether you have that specified in the preferences or not (because it&rsquo;s a quick hack and I think it&rsquo;s weird to not mark an article as read when you read it).</p>
 
 <p>Just drag the link below into your bookmarks bar or right click and &ldquo;Add Bookmark&rdquo;. No promises, no guarantees, very little support. I love you all, but this is just something I wanted last night and it works for me. Hopefully it will for you, too.</p>
 
@@ -64,7 +64,7 @@
 
 <p>Also, here&rsquo;s a quick side experiment which does the same thing, but uses an experiment I set up on my server to run Readability and pipe it into an Antique-style page. It&rsquo;s not as fast, and sometimes misses things that Instapaper Text picks up, so it&rsquo;s just for fun right now. Nonetheless, it&rsquo;s pretty cool. Looks best in Safari. Looks good in Firefox. Probably looks like garbage on IE.</p>
 
-<div style="text-align:center;margin-bottom:15px"><a href="javascript:try%20{var%20els%20=%20document.getElementById(%27main_column%27).getElementsByTagName(%27a%27);for%20(i%20=%200;%20i%20&lt;%20els.length;%20i++)%20{if%20(%20/(^|\s)bookmark_title(\s|$)/.test(els[i].className)%20)%20{readlink%20=%20document.createElement(%27a%27);readlink.innerHTML%20=%20%27%20read%27;readlink.style.color%20=%20%27#666%27;readlink.href%20=%20%27http://brettterpstra.dev/reader/?u=%27+encodeURIComponent(els[i].href);readlink.target%20=%20%27_blank%27;readlink.onmousedown%20=%20els[i].onmousedown;els[i].parentNode.appendChild(readlink);}}}%20catch(e)%20{alert(e);}" class="bookmarklet">Pinboard Antique</a></div>
+<div style="text-align:center;margin-bottom:15px"><a href="javascript:try%20{var%20els%20=%20document.getElementById(%27main_column%27).getElementsByTagName(%27a%27);for%20(i%20=%200;%20i%20&lt;%20els.length;%20i++)%20{if%20(%20/(^|\s)bookmark_title(\s|$)/.test(els[i].className)%20)%20{readlink%20=%20document.createElement(%27a%27);readlink.innerHTML%20=%20%27%20read%27;readlink.style.color%20=%20%27#666%27;readlink.href%20=%20%27http://brettterpstra.com/reader/?u=%27+encodeURIComponent(els[i].href);readlink.target%20=%20%27_blank%27;readlink.onmousedown%20=%20els[i].onmousedown;els[i].parentNode.appendChild(readlink);}}}%20catch(e)%20{alert(e);}" class="bookmarklet">Pinboard Antique</a></div>
 
 <div class="footnotes">
   <ol>

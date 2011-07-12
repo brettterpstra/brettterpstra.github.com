@@ -17,7 +17,7 @@
 	<meta name="copyright" content="" />
 	<link rel="icon" type="image/vnd.microsoft.icon" href="/favicon.ico" />
 	<link rel="apple-touch-icon" href="/favicon.png"/>
-	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.com RSS Feed" href="/feed.xml" />
 	<!-- CSS -->
 	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
 	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
@@ -56,11 +56,11 @@
 			<div class="sharetools"><a href="http://twitter.com/share?url=http://brettterpstra.github.com&amp;via=ttscoff" class="twitter-share-button">Tweet</a><g:plusone href="http://brettterpstra.github.com"></g:plusone></div>
 		</div>
 		<h1 class="post-title"><a href="#">A better System Service for Evernote clipping - with MultiMarkdown</a></h1>
-		<p><strong>Update:</strong> If you&rsquo;re looking for a Markdown -&gt; Evernote, <a href="http://brettterpstra.dev/taking-the-markdown-to-evernote-service-further/">check this out</a>.</p>
+		<p><strong>Update:</strong> If you&rsquo;re looking for a Markdown -&gt; Evernote, <a href="http://brettterpstra.com/taking-the-markdown-to-evernote-service-further/">check this out</a>.</p>
 
 <p>Another post, quickly and with less explanation&hellip;</p>
 
-<p><img src="http://brettterpstra.dev/wp-content/uploads/2010/03/EvernoteIcon-300x300.png" alt="Evernote Icon" title="EvernoteIcon" width="300" height="300" class="alignright size-medium wp-image-305" />The fact that Evernote processes HTML so much better than it does plain or rich text got me thinking and tinkering. I use <a href="http://daringfireball.net/projects/markdown/">Markdown</a> (actually, <a href="http://fletcherpenney.net/multimarkdown/">MultiMarkdown</a>) constantly, and it does a great job of turning plain text into valid markup. With (Multi)Markdown, even plain text becomes HTML that&ndash;when imported into Evernote&ndash;retains most of its formatting. To answer your question, no, I&rsquo;m not obsessed with Evernote, I&rsquo;m obsessed with problems I think I could solve. It&rsquo;s unhealthy.</p>
+<p><img src="http://brettterpstra.com/wp-content/uploads/2010/03/EvernoteIcon-300x300.png" alt="Evernote Icon" title="EvernoteIcon" width="300" height="300" class="alignright size-medium wp-image-305" />The fact that Evernote processes HTML so much better than it does plain or rich text got me thinking and tinkering. I use <a href="http://daringfireball.net/projects/markdown/">Markdown</a> (actually, <a href="http://fletcherpenney.net/multimarkdown/">MultiMarkdown</a>) constantly, and it does a great job of turning plain text into valid markup. With (Multi)Markdown, even plain text becomes HTML that&ndash;when imported into Evernote&ndash;retains most of its formatting. To answer your question, no, I&rsquo;m not obsessed with Evernote, I&rsquo;m obsessed with problems I think I could solve. It&rsquo;s unhealthy.</p>
 
 <p><strong><em>Please note</em></strong>, this requires that you have <a href="http://fletcherpenney.net/">Fletcher Penney&rsquo;s</a> MultiMarkdown installed in <code>~/Library/Application Support/MultiMarkdown</code>, and that the Perl files (MultiMarkdown.pl and SmartyPants.pl) are located in a &lsquo;bin&rsquo; subdirectory (which is the default install). If you don&rsquo;t have MultiMarkdown, you should get it anyway (all the cool kids have it), so head over to the <a href="http://fletcher.github.com/MultiMarkdown/">download page</a> and grab a copy. Now, on with the show.</p>
 
@@ -116,7 +116,7 @@
 </code></pre>
 <p>&lt;/div&gt;</p>
 
-<p>You can create a System Service in Automator with it, set up a command in TextMate, or do whatever else you can think of. If you just want to download the service and try it out, I&rsquo;ve made it <a href="http://brettterpstra.dev/downloads/MarkdownToEvernote.zip">available here</a>. Unzip and copy it to ~/Library/Services (in your home folder). If you set it up as a System Service, assign a shortcut key in the Keyboard pane of System Preferences.</p>
+<p>You can create a System Service in Automator with it, set up a command in TextMate, or do whatever else you can think of. If you just want to download the service and try it out, I&rsquo;ve made it <a href="http://brettterpstra.com/downloads/MarkdownToEvernote.zip">available here</a>. Unzip and copy it to ~/Library/Services (in your home folder). If you set it up as a System Service, assign a shortcut key in the Keyboard pane of System Preferences.</p>
 
 <p>It does choke once in a while, apparently on Markdown-generated code snippets, but I haven&rsquo;t quite narrowed down why, yet. I&rsquo;ll update the code if I figure that one out. Overall, though, it makes pretty clippings and allows you to use some Markdown syntax to spice up your text without having to touch the (regrettably abominable) Evernote editor.</p>
 

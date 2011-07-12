@@ -17,7 +17,7 @@
 	<meta name="copyright" content="" />
 	<link rel="icon" type="image/vnd.microsoft.icon" href="/favicon.ico" />
 	<link rel="apple-touch-icon" href="/favicon.png"/>
-	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.com RSS Feed" href="/feed.xml" />
 	<!-- CSS -->
 	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
 	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
@@ -57,7 +57,7 @@
 		</div>
 		<h1 class="post-title"><a href="#">EverSave revisited, now with session restore!</a></h1>
 		
-<p>Safari 5 has brought several solutions for managing lists of open tabs, from the simple (like my <a href="http://brettterpstra.dev/2010/06/18/tablinks-safari-extension/">TabLinks extension</a>) to full session-management capabilities (see the beautiful <a href="http://dl.dropbox.com/u/8247646/sessions/index.html">Sessions extension</a>). However, I&rsquo;ve found I still like using my <a href="http://brettterpstra.dev/2010/03/06/saving-safari-browsing-sessions-to-evernote/">EverSave script</a> in many situations, primarily because it allows me to annotate, tag and sync my important sessions for later retrieval. One thing&rsquo;s been bugging me, though, and that&rsquo;s the inability to do a mass restore on a tab list (i.e. open them all at once).</p>
+<p>Safari 5 has brought several solutions for managing lists of open tabs, from the simple (like my <a href="http://brettterpstra.com/2010/06/18/tablinks-safari-extension/">TabLinks extension</a>) to full session-management capabilities (see the beautiful <a href="http://dl.dropbox.com/u/8247646/sessions/index.html">Sessions extension</a>). However, I&rsquo;ve found I still like using my <a href="http://brettterpstra.com/2010/03/06/saving-safari-browsing-sessions-to-evernote/">EverSave script</a> in many situations, primarily because it allows me to annotate, tag and sync my important sessions for later retrieval. One thing&rsquo;s been bugging me, though, and that&rsquo;s the inability to do a mass restore on a tab list (i.e. open them all at once).</p>
 
 <p>When I decided to fix this, the first issue was that when EverSave creates the Evernote note, it lets Evernote convert the list from HTML to Rich Text. Once it&rsquo;s stored in Rich Text Format (RTF), manipulating it via any shell language, including AppleScript, becomes quite difficult. It&rsquo;s not impossible, but I quickly decided it wasn&rsquo;t a route I wanted to wander down. Here&rsquo;s what I <strong>did</strong> do&hellip;</p>
 
@@ -67,9 +67,9 @@
 
 <p>What I ended up doing was modifying what EverSave stored, and including the actual URL in the visible text of the note. It&rsquo;s not the prettiest solution, but it&rsquo;s the only way that this particular system will work. I did my best to minimize the visual presence of the URL using the rudimentary markup that Evernote actually pays attention to. The final product looks like this:</p>
 
-<p><img src="http://brettterpstra.dev/wp-content/uploads/2010/07/EverSaveRevisedBookmarks1.jpg" alt="EverSaveRevisedBookmarks.jpg" border="0" width="650" height="93" /></p>
+<p><img src="http://brettterpstra.com/wp-content/uploads/2010/07/EverSaveRevisedBookmarks1.jpg" alt="EverSaveRevisedBookmarks.jpg" border="0" width="650" height="93" /></p>
 
-<p>The actual layout is still fully controlled by the _template property in the first line, which is the only line that&rsquo;s changed from the original script. I&rsquo;m posting the whole thing again, with this minor revision, for convenience. With a little bit of HTML (remember to escape your double quotes), you can modify the template to look however you like. Just keep in mind that Evernote strips 90% of markup out when it creates the note from your HTML, so stick with basic tags. See the <a href="http://brettterpstra.dev/2010/03/06/saving-safari-browsing-sessions-to-evernote/">original EverSave post</a> for a breakdown of the script.</p>
+<p>The actual layout is still fully controlled by the _template property in the first line, which is the only line that&rsquo;s changed from the original script. I&rsquo;m posting the whole thing again, with this minor revision, for convenience. With a little bit of HTML (remember to escape your double quotes), you can modify the template to look however you like. Just keep in mind that Evernote strips 90% of markup out when it creates the note from your HTML, so stick with basic tags. See the <a href="http://brettterpstra.com/2010/03/06/saving-safari-browsing-sessions-to-evernote/">original EverSave post</a> for a breakdown of the script.</p>
 
 <p>Be sure to continue reading after the script to see how we handle the &ldquo;restore&rdquo; functionality.</p>
 

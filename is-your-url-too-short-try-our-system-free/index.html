@@ -17,7 +17,7 @@
 	<meta name="copyright" content="" />
 	<link rel="icon" type="image/vnd.microsoft.icon" href="/favicon.ico" />
 	<link rel="apple-touch-icon" href="/favicon.png"/>
-	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.com RSS Feed" href="/feed.xml" />
 	<!-- CSS -->
 	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
 	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
@@ -57,7 +57,7 @@
 		</div>
 		<h1 class="post-title"><a href="#">Is your URL too short? Try our system,&nbsp;free!</a></h1>
 		
-<p><img src="http://brettterpstra.dev/wp-content/uploads/2010/08/urlextender_system.jpg" alt="URL Extender System" border="0" width="300" height="260" class="alignright noshadow" />I was sifting through my <a href="http://blog.circlesixdesign.com">previous blog</a> after Jeffery Zeldman kindly <a href="http://www.zeldman.com/2010/08/13/how-to-use-textmate/">sent a lot of visitors</a> in that direction for some <a href="http://blog.circlesixdesign.com/2007/01/02/digging-in-to-textmate/">TextMate starter tips</a>. Whilst milling around, I stumbled upon an <a href="http://blog.circlesixdesign.com/2007/10/19/reverse-shortened-urls-with-quicksilver/">old trick I used to use</a> in <a href="http://www.blacktree.com/">Quicksilver</a> (before I gave up on it<sup id="fnref:quicksilver"><a href="#fn:quicksilver" rel="footnote">1</a></sup>), but had forgotten about since.</p>
+<p><img src="http://brettterpstra.com/wp-content/uploads/2010/08/urlextender_system.jpg" alt="URL Extender System" border="0" width="300" height="260" class="alignright noshadow" />I was sifting through my <a href="http://blog.circlesixdesign.com">previous blog</a> after Jeffery Zeldman kindly <a href="http://www.zeldman.com/2010/08/13/how-to-use-textmate/">sent a lot of visitors</a> in that direction for some <a href="http://blog.circlesixdesign.com/2007/01/02/digging-in-to-textmate/">TextMate starter tips</a>. Whilst milling around, I stumbled upon an <a href="http://blog.circlesixdesign.com/2007/10/19/reverse-shortened-urls-with-quicksilver/">old trick I used to use</a> in <a href="http://www.blacktree.com/">Quicksilver</a> (before I gave up on it<sup id="fnref:quicksilver"><a href="#fn:quicksilver" rel="footnote">1</a></sup>), but had forgotten about since.</p>
 
 <p>It&rsquo;s a very simple little shell command which uses <code>curl</code> to track down the destination of a shortened url (or any link with a redirect). It works with an assortment of services, including bit.ly, tinyurl.com, ow.ly, etc. It returns the destination address (the original url), and you can pass that on to whatever you like!</p>
 
@@ -106,7 +106,7 @@ end handle_string
 
 <h3 id="snow-leopard-service">Snow Leopard Service</h3>
 
-<p>Lastly, here&rsquo;s a System Service that you can run on selected text in any Cocoa application. I&rsquo;ve previously posted a <a href="http://brettterpstra.dev/a-system-service-for-to-url-shortening/">Service for shortening urls</a>, so here&rsquo;s the opposite. This one can actually take a whole block of text and will scan for any and all links in it, attempting to lengthen and replace any shortened urls in the text. Here&rsquo;s how to build it:</p>
+<p>Lastly, here&rsquo;s a System Service that you can run on selected text in any Cocoa application. I&rsquo;ve previously posted a <a href="http://brettterpstra.com/a-system-service-for-to-url-shortening/">Service for shortening urls</a>, so here&rsquo;s the opposite. This one can actually take a whole block of text and will scan for any and all links in it, attempting to lengthen and replace any shortened urls in the text. Here&rsquo;s how to build it:</p>
 
 <ul>
   <li>Open Automator.app</li>

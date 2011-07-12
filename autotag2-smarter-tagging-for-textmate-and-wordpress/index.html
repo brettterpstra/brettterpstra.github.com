@@ -17,7 +17,7 @@
 	<meta name="copyright" content="" />
 	<link rel="icon" type="image/vnd.microsoft.icon" href="/favicon.ico" />
 	<link rel="apple-touch-icon" href="/favicon.png"/>
-	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.com RSS Feed" href="/feed.xml" />
 	<!-- CSS -->
 	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
 	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
@@ -56,7 +56,7 @@
 			<div class="sharetools"><a href="http://twitter.com/share?url=http://brettterpstra.github.com&amp;via=ttscoff" class="twitter-share-button">Tweet</a><g:plusone href="http://brettterpstra.github.com"></g:plusone></div>
 		</div>
 		<h1 class="post-title"><a href="#">AutoTag2: smarter tagging for TextMate and WordPress</a></h1>
-		<p><img src="http://brettterpstra.dev/wp-content/uploads/2011/04/autotag_add_tags_panel.jpg" alt="Autotag Add Tags panel" height="469" width="349" class="alignright" />I was tooling around the <a href="http://www.vim.org">Vim website</a> looking at blogging plugins this morning. I noticed that one of them, <a href="http://www.vim.org/scripts/script.php?script_id=1953">Vimpress</a>, had linked to an old <a href="http://blog.circlesixdesign.com/download/utw-rpc-autotag/">project of mine</a> that allowed you to work with Ultimate Tag Warrior tags through <a href="http://en.wikipedia.org/wiki/XML-RPC">XML-RPC</a>. Since the inclusion of tagging support in WordPress, Ultimate Tag Warrior has been defunct, and so have the UTW-RPC plugin and associated AutoTag TextMate bundle.</p>
+		<p><img src="http://brettterpstra.com/wp-content/uploads/2011/04/autotag_add_tags_panel.jpg" alt="Autotag Add Tags panel" height="469" width="349" class="alignright" />I was tooling around the <a href="http://www.vim.org">Vim website</a> looking at blogging plugins this morning. I noticed that one of them, <a href="http://www.vim.org/scripts/script.php?script_id=1953">Vimpress</a>, had linked to an old <a href="http://blog.circlesixdesign.com/download/utw-rpc-autotag/">project of mine</a> that allowed you to work with Ultimate Tag Warrior tags through <a href="http://en.wikipedia.org/wiki/XML-RPC">XML-RPC</a>. Since the inclusion of tagging support in WordPress, Ultimate Tag Warrior has been defunct, and so have the UTW-RPC plugin and associated AutoTag TextMate bundle.</p>
 
 <p>Thinking about it for a minute, I realized I really did miss the functionality that AutoTag had given me. While I&rsquo;ve toyed around with blogging from Vim, I still primarily use TextMate, not least because of the <a href="http://bundle.weblogzinc.com/docs/index.php">Blogsmith Blogging Bundle</a>. Until that kind of functionality is ported to Vim, I&rsquo;m happy right here. Thus, I spent my Sunday afternoon reviving the AutoTag bundle.</p>
 
@@ -92,7 +92,7 @@
 
 <h3 id="using-the-commands">Using the commands</h3>
 
-<p><img src="http://brettterpstra.dev/wp-content/uploads/2011/04/autotag_tab_trigger.jpg" alt="AutoTag Tab Trigger" height="166" width="287" class="alignright shadow" />The AutoTag commands can be triggered in two ways. First, you can just put your cursor one space after the colon in the &ldquo;Keywords:&rdquo; line of the template headers. If you don&rsquo;t have that line in your template, you can just type &ldquo;Keywords: &ldquo; on a line before the end of the headers, or add it permanently by editing the template in the Bundle Editor. Hit tab from there and you&rsquo;ll get a menu of the three commands in the bundle. You can trigger that from the same point even if you already have tags on the line; it will add appropriate commas automatically. Second, you can use Control-Option-T to get the same menu at any point in the file, although I&rsquo;m not sure why you&rsquo;d call it from anywhere <em>other</em> than the &ldquo;Keywords&rdquo; line.</p>
+<p><img src="http://brettterpstra.com/wp-content/uploads/2011/04/autotag_tab_trigger.jpg" alt="AutoTag Tab Trigger" height="166" width="287" class="alignright shadow" />The AutoTag commands can be triggered in two ways. First, you can just put your cursor one space after the colon in the &ldquo;Keywords:&rdquo; line of the template headers. If you don&rsquo;t have that line in your template, you can just type &ldquo;Keywords: &ldquo; on a line before the end of the headers, or add it permanently by editing the template in the Bundle Editor. Hit tab from there and you&rsquo;ll get a menu of the three commands in the bundle. You can trigger that from the same point even if you already have tags on the line; it will add appropriate commas automatically. Second, you can use Control-Option-T to get the same menu at any point in the file, although I&rsquo;m not sure why you&rsquo;d call it from anywhere <em>other</em> than the &ldquo;Keywords&rdquo; line.</p>
 
 <h4 id="commands">Commands</h4>
 

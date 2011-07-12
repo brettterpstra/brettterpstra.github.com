@@ -21,11 +21,11 @@
     Brett Terpstra
   </div>
   
-  <p>We&rsquo;ve covered a small truckload of Bash scripting ideas for Mac and OS X in the previous <a href="http://brettterpstra.dev/?p=2028">two</a> <a href="http://brettterpstra.dev/?p=2029">posts</a>. It&rsquo;s time to put them to use and create an Automator app that we can use as a droplet in Finder. If you skipped straight here, it probably means you don&rsquo;t really want to know about the messy details of the scripts, so this post won&rsquo;t go into a lot of Unix mumbo jumbo. </p>
+  <p>We&rsquo;ve covered a small truckload of Bash scripting ideas for Mac and OS X in the previous <a href="http://brettterpstra.com/?p=2028">two</a> <a href="http://brettterpstra.com/?p=2029">posts</a>. It&rsquo;s time to put them to use and create an Automator app that we can use as a droplet in Finder. If you skipped straight here, it probably means you don&rsquo;t really want to know about the messy details of the scripts, so this post won&rsquo;t go into a lot of Unix mumbo jumbo. </p>
 
 <p>You can download ready-to-go versions of the workflows covered in this post here: <a href="/share/GrabIconWorkflows.zip"><strong>GrabIconWorkflows.zip</strong></a>.</p>
 
-<p>If you want to customize these workflows, you&rsquo;ll need to know a little bit about the inner Bash workings, but nothing an up-and-coming nerd can&rsquo;t figure out. To get started, open up Automator.app and create a new file with the &ldquo;Application&rdquo; preset.<!--more--><img src="http://brettterpstra.dev/wp-content/uploads/2011/03/automator_application_workflow.jpg" alt="Automator Application Workflow" /></p>
+<p>If you want to customize these workflows, you&rsquo;ll need to know a little bit about the inner Bash workings, but nothing an up-and-coming nerd can&rsquo;t figure out. To get started, open up Automator.app and create a new file with the &ldquo;Application&rdquo; preset.<!--more--><img src="http://brettterpstra.com/wp-content/uploads/2011/03/automator_application_workflow.jpg" alt="Automator Application Workflow" /></p>
 
 <h3 id="a-basic-workflow">A basic workflow</h3>
 
@@ -43,7 +43,7 @@ OUTFILE="$HOME/Desktop/${APPNAME}_icon.jpg"
 
 <p>Make sure the shell is set to &ldquo;/bin/bash&rdquo; and change &ldquo;Pass input&rdquo; to &ldquo;as arguments&rdquo;. Save the workflow. You&rsquo;ll probably want to name it something creative and put it somewhere useful, such as <code>~/Applications/512Desktop.app</code>. I have the utmost faith that you&rsquo;ll come up with something brilliant. Here&rsquo;s what your workflow should look like:</p>
 
-<p><img src="http://brettterpstra.dev/wp-content/uploads/2011/03/512desktopapp.jpg" alt="512desktop.app" /></p>
+<p><img src="http://brettterpstra.com/wp-content/uploads/2011/03/512desktopapp.jpg" alt="512desktop.app" /></p>
 
 <p>Now, you can just drop an application onto the icon for 512Desktop.app and the extracted icon will show up on your Desktop, named based on the name of the application you dropped on the workflow, with &ldquo;_icon.jpg&rdquo; appended to it. That was easy, right?</p>
 
@@ -75,7 +75,7 @@ MAX=`sips -g pixelWidth "$1"|tail -1|awk '{print $2}'`
 
 <p>Here&rsquo;s what it should look like now:</p>
 
-<p><img src="http://brettterpstra.dev/wp-content/uploads/2011/03/max_png_to_user_loc.jpg" alt="Max PNG to User loc" /></p>
+<p><img src="http://brettterpstra.com/wp-content/uploads/2011/03/max_png_to_user_loc.jpg" alt="Max PNG to User loc" /></p>
 
 <p>Done. Save the workflow to a file such as <code>~/Applications/SaveMaxIcon.app</code>. Try dragging an application directly onto it. You&rsquo;ll be asked to choose a folder. Click &ldquo;OK&rdquo; and the resulting icon image file will show up in the selected location. You can stick this app on your Desktop (or alias it there) for easy access, add it to your Finder sidebar or even drag it into the toolbar of a Finder window.</p>
 

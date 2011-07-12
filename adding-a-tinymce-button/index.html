@@ -17,7 +17,7 @@
 	<meta name="copyright" content="" />
 	<link rel="icon" type="image/vnd.microsoft.icon" href="/favicon.ico" />
 	<link rel="apple-touch-icon" href="/favicon.png"/>
-	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.com RSS Feed" href="/feed.xml" />
 	<!-- CSS -->
 	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
 	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
@@ -60,13 +60,13 @@
 
 <p>Then, I thought I&rsquo;d just add a quick button to Wordpress&rsquo; TinyMCE editor to make adding the shortcode even easier. That turned out to be a real pain, at least the first time around, so I thought I&rsquo;d detail how I ended up pulling it off. Read on for a step-by-step as I add a button to the built-in visual editor that will request an ID (or a full url) and insert a custom shortcode to play the video. You can see the end results <a href="http://theurbaneanimal.com/2010/04/big-dog-in-a-little-package/">here</a>. I&rsquo;m positive there are plugins that do just this, but I wanted to figure it out for myself&hellip;</p>
 
-<p><img src="http://brettterpstra.dev/wp-content/uploads/2010/04/youtubebutton662135.jpg" alt="" title="youtubebutton662135" width="330" height="89" class="alignnone size-full wp-image-384" /></p>
+<p><img src="http://brettterpstra.com/wp-content/uploads/2010/04/youtubebutton662135.jpg" alt="" title="youtubebutton662135" width="330" height="89" class="alignnone size-full wp-image-384" /></p>
 
 <!--more-->
 
 <p><strong><em>Note that these instructions are for Wordpress 2.5+.</em></strong></p>
 
-<p>Want to just download the skeleton files and go for it? <a href="http://brettterpstra.dev/downloads/YourYouTubeButton.zip" title="Download and get started">YourYouTubeButton.zip</a></p>
+<p>Want to just download the skeleton files and go for it? <a href="http://brettterpstra.com/downloads/YourYouTubeButton.zip" title="Download and get started">YourYouTubeButton.zip</a></p>
 
 <p>First, the shortcode. Because the shadowbox plugin just needs a YouTube link to do it&rsquo;s job, all the shortcode is going to do is take an id and turn it into a properly formatted link, inserting the necessary markup for shadowbox to do its job. In your functions.php (or custom/custom_functions.php if you&rsquo;re using Thesis), add this code:</p>
 
@@ -164,8 +164,8 @@ add_filter( &#x27;tiny_mce_version&#x27;, &#x27;my_refresh_mce&#x27;);
 			return {
 				longname : &quot;Brett&#x27;s YouTube Shortcode&quot;,
 				author : &#x27;Brett Terpstra&#x27;,
-				authorurl : &#x27;http://brettterpstra.dev/&#x27;,
-				infourl : &#x27;http://brettterpstra.dev/&#x27;,
+				authorurl : &#x27;http://brettterpstra.com/&#x27;,
+				infourl : &#x27;http://brettterpstra.com/&#x27;,
 				version : &quot;1.0&quot;
 			};
 		}

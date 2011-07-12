@@ -21,7 +21,7 @@
     Brett Terpstra
   </div>
   
-  <p>In the <a href="http://brettterpstra.dev/?p=2028">previous post</a> in this series, we looked at the basic Terminal commands we&rsquo;d use to grab a Mac application&rsquo;s icon from the command line. In this post, we&rsquo;ll flesh out the script a little and turn it into a Bash function with some added features:</p>
+  <p>In the <a href="http://brettterpstra.com/?p=2028">previous post</a> in this series, we looked at the basic Terminal commands we&rsquo;d use to grab a Mac application&rsquo;s icon from the command line. In this post, we&rsquo;ll flesh out the script a little and turn it into a Bash function with some added features:</p>
 
 <ul>
   <li>Logic to locate the app if it exists outside of /Applications</li>
@@ -125,7 +125,7 @@ alias o="open -a"
 
 <p>At the command line, run <code>source ~/.bash_profile</code>. Now, assuming you&rsquo;ve also added the previous <code>geticon</code> function to <code>.bash_profile</code>, you should be able to type <code>geticon term</code> and hit tab right after the &lsquo;m&rsquo; to have it complete to &ldquo;Terminal.app&rdquo; automatically. This makes it a lot easier to get the app&rsquo;s name, spacing and capitalization exactly right. You&rsquo;ve also aliased &ldquo;o&rdquo; to launch an app in the process. Type <code>o auto</code> to complete to &ldquo;Automator.app&rdquo; and launch it.</p>
 
-<p>We&rsquo;ll <a href="http://brettterpstra.dev/grabbing-a-mac-apps-icon-automator-style/">dig into Automator next</a> and turn this whole thing into something pretty.</p>
+<p>We&rsquo;ll <a href="http://brettterpstra.com/grabbing-a-mac-apps-icon-automator-style/">dig into Automator next</a> and turn this whole thing into something pretty.</p>
 <div class="footnotes">
   <ol>
     <li id="fn:mdfind">

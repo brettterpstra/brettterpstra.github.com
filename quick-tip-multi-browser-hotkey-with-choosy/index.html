@@ -17,7 +17,7 @@
 	<meta name="copyright" content="" />
 	<link rel="icon" type="image/vnd.microsoft.icon" href="/favicon.ico" />
 	<link rel="apple-touch-icon" href="/favicon.png"/>
-	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.com RSS Feed" href="/feed.xml" />
 	<!-- CSS -->
 	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
 	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
@@ -56,9 +56,9 @@
 			<div class="sharetools"><a href="http://twitter.com/share?url=http://brettterpstra.github.com&amp;via=ttscoff" class="twitter-share-button">Tweet</a><g:plusone href="http://brettterpstra.github.com"></g:plusone></div>
 		</div>
 		<h1 class="post-title"><a href="#">Quick Tip: Multi-browser hotkey with&nbsp;Choosy</a></h1>
-		<p><img style="display:block; margin:0 auto;" src="http://brettterpstra.dev/wp-content/uploads/2011/01/ChoosyBar.jpg" alt="ChoosyBar.jpg" border="0" width="600" height="157" /></p>
+		<p><img style="display:block; margin:0 auto;" src="http://brettterpstra.com/wp-content/uploads/2011/01/ChoosyBar.jpg" alt="ChoosyBar.jpg" border="0" width="600" height="157" /></p>
 
-<p>Riffing on my AppleScript to <a href="http://brettterpstra.dev/quick-tip-applescript-application-toggle/">toggle an app between foreground and hidden</a>, and inspired by Daniel Jalkut&rsquo;s <a href="http://www.red-sweater.com/blog/1646/toggle-twitter">script to toggle multiple Twitter apps</a>, I wanted a way to do something similar with web browsers. I already have a great tool for intelligently detecting which browser I want to use: <a href="http://www.choosyosx.com/">Choosy</a>.</p>
+<p>Riffing on my AppleScript to <a href="http://brettterpstra.com/quick-tip-applescript-application-toggle/">toggle an app between foreground and hidden</a>, and inspired by Daniel Jalkut&rsquo;s <a href="http://www.red-sweater.com/blog/1646/toggle-twitter">script to toggle multiple Twitter apps</a>, I wanted a way to do something similar with web browsers. I already have a great tool for intelligently detecting which browser I want to use: <a href="http://www.choosyosx.com/">Choosy</a>.</p>
 
 <p>Choosy lets me set up &ldquo;rules&rdquo; and define behaviors which select the best option from my list of browsers, using the full list, just running browsers, or more specific lists based on source and type of the url I&rsquo;m opening. I just needed to get it onto a hotkey.</p>
 
@@ -68,7 +68,7 @@
 </code></pre>
 </div>
 
-<p><a href="http://brettterpstra.dev/wp-content/uploads/2011/01/ChoosyPrefPane.jpg"><img src="http://brettterpstra.dev/wp-content/uploads/2011/01/ChoosyPrefPane-300x232.jpg" alt="Choosy Preference Pane" title="Choosy Pref Pane" width="300" height="232" class="alignright size-medium wp-image-1662" /></a>That will trigger the Choosy popup HUD, which can be navigated by keyboard or mouse, where your full list of browsers shows up in your preferred order. Now, you&rsquo;re hotkey will do exactly what the settings in Choosy tell it to do. You can have it automatically pick your favorite browser if none are running, or offer you a choice of preferred or all browsers. Personally, if no browser is running, I like the choice of all browsers. I also tell Choosy to automatically pick the running browser with the highest preference level in my settings if more than one are running.</p>
+<p><a href="http://brettterpstra.com/wp-content/uploads/2011/01/ChoosyPrefPane.jpg"><img src="http://brettterpstra.com/wp-content/uploads/2011/01/ChoosyPrefPane-300x232.jpg" alt="Choosy Preference Pane" title="Choosy Pref Pane" width="300" height="232" class="alignright size-medium wp-image-1662" /></a>That will trigger the Choosy popup HUD, which can be navigated by keyboard or mouse, where your full list of browsers shows up in your preferred order. Now, you&rsquo;re hotkey will do exactly what the settings in Choosy tell it to do. You can have it automatically pick your favorite browser if none are running, or offer you a choice of preferred or all browsers. Personally, if no browser is running, I like the choice of all browsers. I also tell Choosy to automatically pick the running browser with the highest preference level in my settings if more than one are running.</p>
 
 <p>This method works well for all the browsers I&rsquo;ve tested, but has the annoying side effect of always opening a new tab in Chrome/Chromium. It&rsquo;s not a big deal to me, but might be a deal breaker if Chrome is your primary browser.</p>
 

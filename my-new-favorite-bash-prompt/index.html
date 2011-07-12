@@ -17,7 +17,7 @@
 	<meta name="copyright" content="" />
 	<link rel="icon" type="image/vnd.microsoft.icon" href="/favicon.ico" />
 	<link rel="apple-touch-icon" href="/favicon.png"/>
-	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.com RSS Feed" href="/feed.xml" />
 	<!-- CSS -->
 	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
 	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
@@ -56,7 +56,7 @@
 			<div class="sharetools"><a href="http://twitter.com/share?url=http://brettterpstra.github.com&amp;via=ttscoff" class="twitter-share-button">Tweet</a><g:plusone href="http://brettterpstra.github.com"></g:plusone></div>
 		</div>
 		<h1 class="post-title"><a href="#">My new favorite Bash&nbsp;prompt</a></h1>
-		<p><img class="alignleft headerimg" src="http://brettterpstra.dev/wp-content/uploads/2009/11/my_new_favorite_bash_prompt.jpg" alt="My new favorite Bash prompt" width="440" height="187" />
+		<p><img class="alignleft headerimg" src="http://brettterpstra.com/wp-content/uploads/2009/11/my_new_favorite_bash_prompt.jpg" alt="My new favorite Bash prompt" width="440" height="187" />
 I do a lot in Terminal. Sometimes, it&rsquo;s easier. Sometimes it&rsquo;s faster. Sometimes I&rsquo;d just rather type it out. Whatever the reason, I&rsquo;ve never been able to stand looking at a boring shell prompt. Bash is my primary shell, mostly because I&rsquo;ve never taken the time to learn much else. I&rsquo;ll get there someday. For now, here&rsquo;s my current Bash shell prompt&hellip;</p>
 
 <p>I&rsquo;m using the <code>PROMPT_COMMAND</code> variable to run a few quick functions to generate the prompt. It doesn&rsquo;t do anything processor-intensive, so I haven&rsquo;t seen any lag caused by this one (unlike some of my previous experiments). <code>PROMPT_COMMAND</code> is set to call a function called, appropriately, <code>prompt_command()</code>. This, in turn, calls a few external functions defined in my <code>.bash_profile</code>. To use it, just stick all of the code below into your <code>.bash_profile</code>, and modify it as you see fit. Be sure to replace any definitions of <code>PROMPT_COMMAND</code> or <code>PS1</code>.</p>
@@ -73,7 +73,7 @@ I do a lot in Terminal. Sometimes, it&rsquo;s easier. Sometimes it&rsquo;s faste
   <li>Lastly, it sets the title of the tab in Terminal to the last two portions of the current working directory (<code>pwd</code>) string, meaning the current directory and its parent directory.</li>
 </ul>
 
-<p><img class="aligncenter size-full wp-image-165" title="TerminalPromptFullMonty" src="http://brettterpstra.dev/wp-content/uploads/2009/11/TerminalPromptFullMonty.jpg" alt="TerminalPromptFullMonty" width="536" height="133" /></p>
+<p><img class="aligncenter size-full wp-image-165" title="TerminalPromptFullMonty" src="http://brettterpstra.com/wp-content/uploads/2009/11/TerminalPromptFullMonty.jpg" alt="TerminalPromptFullMonty" width="536" height="133" /></p>
 
 <p>All of the colors used in the prompt are defined as shell variables. In the final line of the <code>prompt_command</code> function, you can modify the colors just by replacing the color names in the line. That should be pretty self-explanatory.</p>
 

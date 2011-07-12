@@ -17,7 +17,7 @@
 	<meta name="copyright" content="" />
 	<link rel="icon" type="image/vnd.microsoft.icon" href="/favicon.ico" />
 	<link rel="apple-touch-icon" href="/favicon.png"/>
-	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.com RSS Feed" href="/feed.xml" />
 	<!-- CSS -->
 	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
 	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
@@ -56,9 +56,9 @@
 			<div class="sharetools"><a href="http://twitter.com/share?url=http://brettterpstra.github.com&amp;via=ttscoff" class="twitter-share-button">Tweet</a><g:plusone href="http://brettterpstra.github.com"></g:plusone></div>
 		</div>
 		<h1 class="post-title"><a href="#">Safari Reader Antique&nbsp;hack</a></h1>
-		<p><a href="http://brettterpstra.dev/wp-content/uploads/2010/06/SafariReaderNewFullFrame_1024.jpg"><img src="http://brettterpstra.dev/wp-content/uploads/2010/06/SafariReaderNewFullFrame_1024-300x219.jpg" alt="Safari Reader Antique hack" title="Safari Reader Antique hack" width="300" height="219" class="alignright size-medium wp-image-565" /></a></p>
+		<p><a href="http://brettterpstra.com/wp-content/uploads/2010/06/SafariReaderNewFullFrame_1024.jpg"><img src="http://brettterpstra.com/wp-content/uploads/2010/06/SafariReaderNewFullFrame_1024-300x219.jpg" alt="Safari Reader Antique hack" title="Safari Reader Antique hack" width="300" height="219" class="alignright size-medium wp-image-565" /></a></p>
 
-<p><strong>There is a new version of Antique available! <a href="http://brettterpstra.dev/2010/06/17/antique-1-6-final-release/">Check out version 1.6</a>!</strong></p>
+<p><strong>There is a new version of Antique available! <a href="http://brettterpstra.com/2010/06/17/antique-1-6-final-release/">Check out version 1.6</a>!</strong></p>
 
 <p>I was thrilled when it was first announced that someone had located the HTML/CSS for the new Safari Reader functionality in Safari 5, which happened the day it was released. I&rsquo;ve been toying around with some ideas in the days since, and this hack is the result of a little too much effort. Click the screenshot thumbnail to see a full version.</p>
 
@@ -91,13 +91,13 @@
   </li>
 </ul>
 
-<p><a href="http://brettterpstra.dev/wp-content/uploads/2010/06/SafariNewFullFramePageBreak.jpg"><img src="http://brettterpstra.dev/wp-content/uploads/2010/06/SafariNewFullFramePageBreak-300x70.jpg" alt="Safari Reader Antique hack page break closeup" title="Safari Reader Antique hack page break closeup" width="300" height="70" class="size-medium wp-image-563" /></a></p>
+<p><a href="http://brettterpstra.com/wp-content/uploads/2010/06/SafariNewFullFramePageBreak.jpg"><img src="http://brettterpstra.com/wp-content/uploads/2010/06/SafariNewFullFramePageBreak-300x70.jpg" alt="Safari Reader Antique hack page break closeup" title="Safari Reader Antique hack page break closeup" width="300" height="70" class="size-medium wp-image-563" /></a></p>
 
 <p>If you want to try out the style, &lt;a href=&rdquo;[download id=&rdquo;10&rdquo; format=&rdquo;2&rdquo;]&rdquo;&gt;download it here&lt;/a&gt; (with background image), or grab the &lt;a href=&rdquo;[download id=&rdquo;12&rdquo; format=&rdquo;2&rdquo;]&rdquo;&gt;version with no background image&lt;/a&gt;, and open the archive. Inside you&rsquo;ll find a file called Reader.html. The file you&rsquo;re going to replace (back it up somewhere safe first) is <code>/Applications/Safari.app/Contents/Resources/Reader.html</code>. If you don&rsquo;t know how to do this from Terminal, you can just do it in Finder: go to your Applications folder and locate Safari, then right click on it and choose &ldquo;Show Package Contents.&rdquo; That will open a new window with the inner workings of Safari inside it. Open the folder called Contents, and then the Resources folder inside of that. Locate the file Reader.html and drag it out to your desktop (that&rsquo;s your original, keep it safe). Then drag the new Reader.html file you downloaded into the Resources folder. Restart Safari and try it out!</p>
 
 <p>Some gory details about the process follow&hellip;</p>
 
-<p><img src="http://brettterpstra.dev/wp-content/uploads/2010/06/SafariReaderNewFullFrameHUD.jpg" alt="Safari Reader Antique hack HUD" title="Safari Reader HUD" width="410" height="119" class="size-full wp-image-566" /></p>
+<p><img src="http://brettterpstra.com/wp-content/uploads/2010/06/SafariReaderNewFullFrameHUD.jpg" alt="Safari Reader Antique hack HUD" title="Safari Reader HUD" width="410" height="119" class="size-full wp-image-566" /></p>
 
 <p>I added a button to the HUD as a proof-of-concept. It doesn&rsquo;t do anything very useful yet, the current one just loads the title and URL in the Evernote web clipper in a new tab/window. It would be far more useful if I could get the in-page web clipper to work, but when Reader loads, &ldquo;Reader.html&rdquo; becomes the current location and title. You can access the original information using the ReaderJS object (<code>ReaderJS.originalURL</code> for example), but Evernote&rsquo;s web clipper doesn&rsquo;t let you pass those in, it wants to find them itself. I played around with loading the entire contents of the Reader-rendered page into an iFrame and calling it from there, but I gave up on that after a while. The default print and email functions have success doing something similar; it&rsquo;s more the Evernote clipper that&rsquo;s dragging me down. Anyway, you can add Javascript right in the Reader.html file and insert a button to call it. It&rsquo;s easy.</p>
 
@@ -105,9 +105,9 @@
 
 <p>All external images used in the style are base64-encoded and included in the html file, so there are no extra files to mess with. The Google fonts are loaded directly from Google&rsquo;s website, so reading offline would provide a different look, but who reads web pages in Safari when they&rsquo;re offline, really? Using Google&rsquo;s Ajax API&rsquo;s, you can also easily inject jQuery into the mix, <del datetime="2010-06-12T21:15:52+00:00">but I haven&rsquo;t found anything really useful to do with it yet.</del> <ins datetime="2010-06-12T21:15:52+00:00">Actually, I just hacked in <a href="http://colorpowered.com/colorbox/">Colorbox</a> and improved image resizing with some jQuery&hellip; it&rsquo;s definitely going to be in the next release.</ins></p>
 
-<p>So, that&rsquo;s the story. I&rsquo;m sure I&rsquo;ll have completely revamped this by the end of the weekend, but it&rsquo;s at a good place right now. Here&rsquo;s the download link again: &lt;a href=&rdquo;[download id=&rdquo;10&rdquo; format=&rdquo;2&rdquo;]&rdquo;&gt;Antique Style&lt;/a&gt; (and with &lt;a href=&rdquo;[download id=&rdquo;12&rdquo; format=&rdquo;2&rdquo;]&rdquo;&gt;no background image&lt;/a&gt;). Also, I got bored with looking at this style at one point, and decided to make a <a href="http://www.tuaw.com">TUAW</a> style, just for giggles. If you&rsquo;re curious what the whole web would look like through a TUAW lens (<a href="http://brettterpstra.dev/wp-content/uploads/2010/06/TUAWReader.jpg">preview</a>), you can try <a href="http://brettterpstra.dev/downloads/TUAWReader.zip">that one</a> out too. As always, have fun.</p>
+<p>So, that&rsquo;s the story. I&rsquo;m sure I&rsquo;ll have completely revamped this by the end of the weekend, but it&rsquo;s at a good place right now. Here&rsquo;s the download link again: &lt;a href=&rdquo;[download id=&rdquo;10&rdquo; format=&rdquo;2&rdquo;]&rdquo;&gt;Antique Style&lt;/a&gt; (and with &lt;a href=&rdquo;[download id=&rdquo;12&rdquo; format=&rdquo;2&rdquo;]&rdquo;&gt;no background image&lt;/a&gt;). Also, I got bored with looking at this style at one point, and decided to make a <a href="http://www.tuaw.com">TUAW</a> style, just for giggles. If you&rsquo;re curious what the whole web would look like through a TUAW lens (<a href="http://brettterpstra.com/wp-content/uploads/2010/06/TUAWReader.jpg">preview</a>), you can try <a href="http://brettterpstra.com/downloads/TUAWReader.zip">that one</a> out too. As always, have fun.</p>
 
-<p><strong>There is a new version of Antique available! <a href="http://brettterpstra.dev/2010/06/17/antique-1-6-final-release/">Check out version 1.6</a>!</strong></p>
+<p><strong>There is a new version of Antique available! <a href="http://brettterpstra.com/2010/06/17/antique-1-6-final-release/">Check out version 1.6</a>!</strong></p>
 
 <p>[download id=&rdquo;10&rdquo;]</p>
 

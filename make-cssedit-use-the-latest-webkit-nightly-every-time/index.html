@@ -17,7 +17,7 @@
 	<meta name="copyright" content="" />
 	<link rel="icon" type="image/vnd.microsoft.icon" href="/favicon.ico" />
 	<link rel="apple-touch-icon" href="/favicon.png"/>
-	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.com RSS Feed" href="/feed.xml" />
 	<!-- CSS -->
 	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
 	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
@@ -57,7 +57,7 @@
 		</div>
 		<h1 class="post-title"><a href="#">Make CSSEdit use the latest Webkit nightly every&nbsp;time</a></h1>
 		
-<p><img src="http://brettterpstra.dev/wp-content/uploads/2011/03/CSSEditWebkitMashup.jpg" alt="Post main image" title="CSSEditWebkitMashup" width="350" height="276" class="alignright size-full wp-image-2130" />If you&rsquo;re a web designer with a Mac, you probably use&ndash;or at least know of&ndash;<a href="http://macrabbit.com/cssedit/">CSSEdit</a>. In it&rsquo;s heyday, it was <em>the</em> way to edit CSS. It&rsquo;s fallen a little out of repair; it doesn&rsquo;t recognize new selectors and properties (which messes up color coding and completion). Plus, it doesn&rsquo;t play well with nifty frameworks like LESS or SASS, if you&rsquo;re in the habit of using those. My <a href="http://brettterpstra.dev/watch-for-file-changes-and-refresh-your-browser-automatically/">&ldquo;watcher&rdquo; script</a> was my solution to the latter. There&rsquo;s a cool trick, though, that allows you to force CSSEdit to use the bleeding-edge Webkit for rendering.</p>
+<p><img src="http://brettterpstra.com/wp-content/uploads/2011/03/CSSEditWebkitMashup.jpg" alt="Post main image" title="CSSEditWebkitMashup" width="350" height="276" class="alignright size-full wp-image-2130" />If you&rsquo;re a web designer with a Mac, you probably use&ndash;or at least know of&ndash;<a href="http://macrabbit.com/cssedit/">CSSEdit</a>. In it&rsquo;s heyday, it was <em>the</em> way to edit CSS. It&rsquo;s fallen a little out of repair; it doesn&rsquo;t recognize new selectors and properties (which messes up color coding and completion). Plus, it doesn&rsquo;t play well with nifty frameworks like LESS or SASS, if you&rsquo;re in the habit of using those. My <a href="http://brettterpstra.com/watch-for-file-changes-and-refresh-your-browser-automatically/">&ldquo;watcher&rdquo; script</a> was my solution to the latter. There&rsquo;s a cool trick, though, that allows you to force CSSEdit to use the bleeding-edge Webkit for rendering.</p>
 
 <p>Quite a while back, developer Jan Van Boghout <a href="http://macrabbit.com/blog/tip-cssedit-webkit-nightly/">posted a tip</a> for unlinking the default Webkit framework and using the one inside of the latest nightly build you have installed. It was a simple Terminal command that you had to launch from the command line, and the effect only lasted for that session. The command eventually stopped working, until <a href="http://macrabbit.com/blog/tip-cssedit-webkit-nightly/#c7970">Ian Beck noted</a> that the location of the frameworks in Webkit.app had changed. It worked with that tweak, but it was still a pain sometimes, even with aliases.</p>
 

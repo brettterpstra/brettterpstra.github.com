@@ -17,7 +17,7 @@
 	<meta name="copyright" content="" />
 	<link rel="icon" type="image/vnd.microsoft.icon" href="/favicon.ico" />
 	<link rel="apple-touch-icon" href="/favicon.png"/>
-	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.com RSS Feed" href="/feed.xml" />
 	<!-- CSS -->
 	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
 	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
@@ -56,7 +56,7 @@
 			<div class="sharetools"><a href="http://twitter.com/share?url=http://brettterpstra.github.com&amp;via=ttscoff" class="twitter-share-button">Tweet</a><g:plusone href="http://brettterpstra.github.com"></g:plusone></div>
 		</div>
 		<h1 class="post-title"><a href="#">TabLinks Safari Extension</a></h1>
-		<p><a href="http://brettterpstra.dev/wp-content/uploads/2010/06/TabLinksScreenshot.jpg"><img src="http://brettterpstra.dev/wp-content/uploads/2010/06/TabLinksScreenshot-150x150.jpg" alt="" title="TabLinksScreenshot" width="150" height="150" class="alignright size-thumbnail wp-image-644" /></a></p>
+		<p><a href="http://brettterpstra.com/wp-content/uploads/2010/06/TabLinksScreenshot.jpg"><img src="http://brettterpstra.com/wp-content/uploads/2010/06/TabLinksScreenshot-150x150.jpg" alt="" title="TabLinksScreenshot" width="150" height="150" class="alignright size-thumbnail wp-image-644" /></a></p>
 
 <p>TabLinks is a quick experiment, designed to meet my own needs. It needs some work, but it does the trick: it copies the link information for every tab open in Safari, and outputs them as a list, based on a user-defined template. You set up your template in the Extension settings, and use the following variables to define your link style:</p>
 
@@ -69,7 +69,7 @@
 
 <p>That&rsquo;s all there is for now. The default link format is a Markdown reference list, with the references being window#-tab#, so they come out as <code>[0-12]: yourlink.com "and its title"</code>. If you dig Markdown, you can easily modify this to make a list of titles linked to their respective pages by changing the template to <code>* [%t](%u)</code>. If you&rsquo;d rather get plain HTML, try <code>&lt;a href="%u"&gt;%t&lt;/a&gt;</code>. Maybe you just want a list of URLs, in which case your template would just be <code>%u</code>.</p>
 
-<p>Like I said, it&rsquo;s pretty simple right now, and may stay that way while I go back to tidy up and improve on <a href="http://brettterpstra.dev/2010/06/09/instapaper-beyond-for-safari/">InstapaperBeyond</a>. I do plan to add a checkbox to the settings that lets you decide whether clicking the toolbar button copies just the current window&rsquo;s tabs, or all tabs as it does now. I would have liked to add a &ldquo;copy to clipboard&rdquo; button, but (as far as I know), Safari doesn&rsquo;t allow access to the clipboard in any fashion, even with something like <a href="http://code.google.com/p/zeroclipboard/">ZeroClipboard</a>. </p>
+<p>Like I said, it&rsquo;s pretty simple right now, and may stay that way while I go back to tidy up and improve on <a href="http://brettterpstra.com/2010/06/09/instapaper-beyond-for-safari/">InstapaperBeyond</a>. I do plan to add a checkbox to the settings that lets you decide whether clicking the toolbar button copies just the current window&rsquo;s tabs, or all tabs as it does now. I would have liked to add a &ldquo;copy to clipboard&rdquo; button, but (as far as I know), Safari doesn&rsquo;t allow access to the clipboard in any fashion, even with something like <a href="http://code.google.com/p/zeroclipboard/">ZeroClipboard</a>. </p>
 
 <p>The popup window could use some classing up, too&hellip; a little CSS3 animation/transition and some more consistent styling that isn&rsquo;t constantly being overridden by site styles. However, it&rsquo;s quite useful to me as is, so I&rsquo;m sharing it in the hopes that others will find it as helpful as I do. Personally, I use it when I write posts, especially <a href="http://www.tuaw.com/bloggers/brett-terpstra">on TUAW</a>, where there are a lot of links to deal with. I pop open the links I know, run searches in new tabs for the ones I need, then copy the whole bunch as references to paste into the top of my post.</p>
 

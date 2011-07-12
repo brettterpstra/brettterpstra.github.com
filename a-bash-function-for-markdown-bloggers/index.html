@@ -17,7 +17,7 @@
 	<meta name="copyright" content="" />
 	<link rel="icon" type="image/vnd.microsoft.icon" href="/favicon.ico" />
 	<link rel="apple-touch-icon" href="/favicon.png"/>
-	<link rel="alternate" type="application/atom+xml" title="brettterpstra.dev RSS Feed" href="/feed.xml" />
+	<link rel="alternate" type="application/atom+xml" title="brettterpstra.com RSS Feed" href="/feed.xml" />
 	<!-- CSS -->
 	<link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"/>
 	<link rel="stylesheet" href="/css/monokai.css" media="screen" type="text/css"/>
@@ -56,7 +56,7 @@
 			<div class="sharetools"><a href="http://twitter.com/share?url=http://brettterpstra.github.com&amp;via=ttscoff" class="twitter-share-button">Tweet</a><g:plusone href="http://brettterpstra.github.com"></g:plusone></div>
 		</div>
 		<h1 class="post-title"><a href="#">A Bash function for Markdown bloggers</a></h1>
-		<p><img src="http://brettterpstra.dev/wp-content/uploads/2011/06/markdowntypewriter.jpg" alt="Markdown Typewriter Image" class="alignright" />I store all of my writing as separate Markdown files. A basic tagging system<sup id="fnref:tag"><a href="#fn:tag" rel="footnote">1</a></sup> adds more &ldquo;searchability,&rdquo; and I can quickly locate any file with Spotlight<sup id="fnref:spot"><a href="#fn:spot" rel="footnote">2</a></sup>. Given the amount of time I spend in Terminal (well, <a href="http://www.iterm2.com/">iTerm 2</a> these days), I use <a href="http://osxdaily.com/2006/12/05/use-spotlight-from-the-command-line-with-mdfind/"><code>mdfind</code></a> quite a bit to do the Spotlight searching. This function just makes it a little more convenient to search for and quickly edit an existing document. </p>
+		<p><img src="http://brettterpstra.com/wp-content/uploads/2011/06/markdowntypewriter.jpg" alt="Markdown Typewriter Image" class="alignright" />I store all of my writing as separate Markdown files. A basic tagging system<sup id="fnref:tag"><a href="#fn:tag" rel="footnote">1</a></sup> adds more &ldquo;searchability,&rdquo; and I can quickly locate any file with Spotlight<sup id="fnref:spot"><a href="#fn:spot" rel="footnote">2</a></sup>. Given the amount of time I spend in Terminal (well, <a href="http://www.iterm2.com/">iTerm 2</a> these days), I use <a href="http://osxdaily.com/2006/12/05/use-spotlight-from-the-command-line-with-mdfind/"><code>mdfind</code></a> quite a bit to do the Spotlight searching. This function just makes it a little more convenient to search for and quickly edit an existing document. </p>
 
 <p>By default, it looks in a Dropbox &ldquo;Writing&rdquo; folder, but you can adjust that to restrict to any folder at the top of the script. You can also set your edit command there (<code>mate</code>, <code>mvim</code>, <code>vim</code>, etc.). Then it takes all arguments and uses them as a Spotlight search, restricted to your writing folder and the Markdown filetype, and offers you a quick menu of matches. Selecting a match opens the file with your preferred editor. If there&rsquo;s only one match, it&rsquo;s opened automatically.</p>
 

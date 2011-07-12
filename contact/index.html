@@ -46,19 +46,81 @@
 	</div><!-- end: #header-wrapper-->
 	<div id="content-wrapper">
 		<div id="main-container" class="clearfix">
-			<div class="post">
-  <script type="text/javascript">var host = (("https:" == document.location.protocol) ? "https://secure." : "http://");document.write(unescape("%3Cscript src='" + host + "wufoo.com/scripts/embed/form.js' type='text/javascript'%3E%3C/script%3E"));</script>
+			<div id="content">
 
-  		<script type="text/javascript">
-  		var z7x3k7 = new WufooForm();
-  		z7x3k7.initialize({
-  		'userName':'brettterpstra', 
-  		'formHash':'z7x3k7', 
-  		'autoResize':true,
-  		'height':'428'});
-  		z7x3k7.display();
-  		</script>
+<div class="post">
+<div id="contact-form">	
+
+<form id="contact" method="post" action="">
+<fieldset>	
+
+<label for="name">Name</label>
+<input type="text" name="name" placeholder="Full Name" title="Enter your name" class="required">
+
+<label for="email">E-mail</label>
+<input type="email" name="email" placeholder="yourname@domain.com" title="Enter your e-mail address" class="required email">
+
+<label for="message">Question/Comment</label>
+<textarea name="message"></textarea>
+
+<input type="submit" name="submit" class="button" id="submit" value="Send Message" />
+
+</fieldset>
+</form>
+
+</div><!-- /end #contact-form -->
 </div>
+</div><!-- end: #content-->
+<div id="sidebar">
+	<div id="side-intro" class="section">
+	<div id="side-description">
+		<p><strong>Brett Terpstra</strong> is the Tech Lead for the blogs of AOL Tech (Engadget, TUAW, Joystiq, Massively&hellip;). In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+	</div>
+	<div id="update-icons">
+		<ul>
+			<li class="rss"><a href="/feed.xml" title="Grab the Feed">RSS</a></li>
+			<li class="twitter"><a class="twitter-anywhere-user" href="http://www.twitter.com/ttscoff">@ttscoff</a></li>
+		</ul>
+	</div>
+</div>
+	<div id="side-tabs">
+	<ul class="tabnav clearfix">
+		<li class="active"><a href="#ui-tabs-1">Recent</a></li>
+		<li><a href="#ui-tabs-2">Categories</a></li>
+		<li><a href="#ui-tabs-3">Projects</a></li>
+	</ul>
+	<div id="ui-tabs-1" class="tab-content">
+		<ul>
+			
+				<li><a href="/oft-bash-function-for-opening-a-specific-filetype/" title="oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></li>
+			
+				<li><a href="/otask-cli-for-omnifocus/" title="OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></li>
+			
+				<li><a href="/web-excursions-june-28-2011-june-30-2011/" title="Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></li>
+			
+				<li><a href="/web-excursions-june-15-2011-june-23-2011/" title="Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></li>
+			
+				<li><a href="/a-bash-function-for-markdown-bloggers/" title="A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></li>
+			
+		</ul>
+		<a href="/2011/" class="btn-more">more &raquo;</a>
+	</div>
+	<div id="ui-tabs-2" class="tab-content">
+		<ul>
+			
+		</ul>
+		<a href="/categories/" class="btn-more">more &raquo;</a>
+	</div>
+	
+  
+  <div id="ui-tabs-3" class="tab-content">
+  	<a href="#" class="btn-more">more &raquo;</a>
+  	
+  	</ul>
+  </div>
+  
+</div>
+</div><!-- end: #sidebar -->
 		</div><!-- end: #main-container -->
 	</div><!-- end: #content-wrapper -->
 	<div id="footer-wrapper">
@@ -73,6 +135,31 @@
 	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
 	<script src="/js/scripts.js" type="text/javascript"></script>
 	
+	<script src="/js/jquery.validate.js"></script>
+  <script src="/js/jquery.placeholder.js"></script>
+  <script src="/js/jquery.form.js"></script>
+  <script src="/js/modernizr-min.js"></script>
+  <script>
+  (function($){
+  if (!Modernizr.input.placeholder){
+        $('input[placeholder], textarea[placeholder]').placeholder();
+  }
+  $('#contact').validate({
+    submitHandler: function(form) {
+        $(form).ajaxSubmit({
+        url: '/process.php',
+        success: function() {
+        $('#contact').hide();
+        $('#contact-form').append("<p class='thanks'>Thanks! Your request has been sent.</p>")
+        }
+        });
+        }
+    });         
+  })(jQuery);
+  </script>
+  
+  
+  <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
   <script type="text/javascript">
       /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
       var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
@@ -85,5 +172,6 @@
           (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
       }());
   </script>
+  <script src="https://apis.google.com/js/plusone.js"></script>
 </body>
 </html>

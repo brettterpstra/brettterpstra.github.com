@@ -1,0 +1,32 @@
+Markdown Website:
+	- Tags page, move list in from outer edge.
+	- Post-commit hook to render and rsync the result
+	- Widon't (do this with Ruby, not JS)
+	- Fix anchor scrolling to account for fixed header (and be smooth)
+	- lighbox for all image links
+	- Wufoo contact form @done(2011-07-11)
+	- Add "Wait for contact form" message
+	- convert | to - in link titles @done
+	- merge categories @done
+	- add project post type
+		duplicate portfolio post type
+	- donate button shortcode
+	- video/audio embed shortcode
+		Use a javascript library to load 
+	- handle downloads
+	- replicate Postalicious
+		Might want to just hand-curate these
+	- minify as part of render @done
+	- implement LESS conversion @done
+	- basic archives
+	- comments? @done
+	- make the excerpt command preserve footnotes (or remove them) @done(2011-07-11)
+	- iPhone/iPad optimizations
+	- Print styles
+	- footnote hovers
+Plugins:
+	- make excerpt preserve sentences and quotes
+	- Plugin to combine css and js when config.deploy is true
+		needs to modify the templates to point to combined.min.css and combined.min.js
+	- HTML5 Audio shortcode
+	- SEO information generator

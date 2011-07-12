@@ -50,10 +50,10 @@
 	<div class="post">
 		<div class="post-meta">
 			<span class="date">28 Apr 2010 | </span>
-			<span class="num-comments"><a href="#comments"><span class="responses-number">0</span> Comments</a> | </span>
 			<span class="categories">
 				Category: <a href="/categories/code">Code</a>
 			</span>
+			<div class="sharetools"><a href="http://twitter.com/share?url=http://brettterpstra.github.com&amp;via=ttscoff" class="twitter-share-button">Tweet</a><g:plusone href="http://brettterpstra.github.com"></g:plusone></div>
 		</div>
 		<h1 class="post-title"><a href="#">A System Service for to. url shortening</a></h1>
 		<p>I&rsquo;m fascinated by <a href="http://to.">http://to</a>. It&rsquo;s a url shortener with no <acronym title="Top Level Domain">TLD</acronym>. Some browsers, and apparently some DNS setups, don&rsquo;t like the urls it creates (they want a .com or .org or <em>anything</em> at the end), so it&rsquo;s not exactly in heavy usage. Still, I wish they had an API. In lieu of that, here&rsquo;s a quick Ruby script that will run on a stock OS X install as a System Service. It&rsquo;s so simple that I&rsquo;m not even going to package it up&hellip; It&rsquo;ll be a good chance to show the steps for creating your own utilities using <a href="http://macosautomation.com/services/index.html">Snow Leopard Services</a>:</p>
@@ -136,7 +136,7 @@
 <div id="sidebar">
 	<div id="side-intro" class="section">
 	<div id="side-description">
-		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+		<p><strong>Brett Terpstra</strong> is the Tech Lead for the blogs of AOL Tech (Engadget, TUAW, Joystiq, Massively&hellip;). In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
 	</div>
 	<div id="update-icons">
 		<ul>
@@ -169,18 +169,6 @@
 	</div>
 	<div id="ui-tabs-2" class="tab-content">
 		<ul>
-			
-				<li><a href="/categories/misc">Misc</a></li>
-			
-				<li><a href="/categories/blog">Blog</a></li>
-			
-				<li><a href="/categories/code">Code</a></li>
-			
-				<li><a href="/categories/bookmarks">Bookmarks</a></li>
-			
-				<li><a href="/categories/music">Music</a></li>
-			
-				<li><a href="/categories/write">Write</a></li>
 			
 		</ul>
 		<a href="/categories/" class="btn-more">more &raquo;</a>
@@ -240,6 +228,7 @@
 	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
 	<script src="/js/scripts.js" type="text/javascript"></script>
 	
+  <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
   <script type="text/javascript">
       /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
       var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
@@ -252,5 +241,6 @@
           (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
       }());
   </script>
+  <script src="https://apis.google.com/js/plusone.js"></script>
 </body>
 </html>

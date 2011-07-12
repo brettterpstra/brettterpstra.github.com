@@ -47,432 +47,37 @@
 	<div id="content-wrapper">
 		<div id="main-container" class="clearfix">
 			<div id="content">
-	
+	{% for post in site.posts limit:10 %}
 <div class="post">
 
-  <h1><a href="/oft-bash-function-for-opening-a-specific-filetype" data-disqus-identifier="oft-bash-function-for-opening-a-specific-filetype" title="Permanent link to oft: Bash function for opening a specific filetype">oft: Bash function for opening a specific filetype</a></h1>
-  <div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
+  <h1><a href="{{ post.url }}" data-disqus-identifier="{{ post.url | replace:"/" "" }}" title="Permanent link to {{ post.title }}">{{ post.title | widont }}</a></h1>
+  <!-- <div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div> -->
+  <div class="sharetools"><a href="http://twitter.com/share?url={{ site.base_url | escape }}{{ post.url | escape }}&amp;via=ttscoff" class="twitter-share-button">Tweet</a><g:plusone href="{{ site.base_url }}{{ post.url }}"></g:plusone></div>
+  
   <div>
-    <p>Here&rsquo;s another simple Bash function that I&rsquo;ve used so much recently I thought I should share. It&rsquo;s called <code>oft</code>, which stands for Open File Type, and can be used as a standalone shell script or as a function in your <code>.bash_profile</code>. When run, it looks in the current directory for files with extensions that match (or partially match) the first argument and opens them.</p>
-
-<p>My most obvious use case is Xcode projects, where I may have dozens (and dozens) of files, but there&rsquo;s only one <code>.xcodeproj</code> file (folder). I don&rsquo;t always know the name of the project in the folder, but if I run <code>oft xco</code> it will open it without my having to search. If there is more than one result, it gives you a numeric menu to select the file you want to open. You can cancel, select a single file or &ldquo;Open ALL&rdquo; from that menu. If you run <code>oft</code> with no arguments, it will read a (partial) extension from a prompt.</p>
-
-<p>This is a script born of laziness (so many good ones are, though). You can accomplish the same with an <code>ls *.ext</code>, spot the file and <code>open filename.ext</code>. This is just faster and better for me when I&rsquo;m working with less-than-optimal amounts of sleep.</p>
-
-<div class="highlight"><pre><code class="bash"><span class="c"># Open filetype</span>
-<span class="c"># Finds every file in folder whose extension starts with the first parameter passed</span>
-<span class="c"># if more than one file of given type is found, it offers a menu</span>
-oft <span class="o">()</span> <span class="o">{</span>
-  <span class="k">if</span> <span class="o">[[</span> <span class="nv">$# </span><span class="o">==</span> 0 <span class="o">]]</span>; <span class="k">then</span>
-<span class="k">    </span><span class="nb">echo</span> -n <span class="s2">&quot;Enter an extension or partial extension: &quot;</span>
-    <span class="nb">read </span>extension
-  <span class="k">fi</span>
-<span class="k">  if</span> <span class="o">[[</span> <span class="nv">$# </span>&gt; 1 <span class="o">]]</span>; <span class="k">then</span>
-<span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;Usage: oft [(partial) file extension]&quot;</span>
-    <span class="k">return</span>
-<span class="k">  fi</span>
-<span class="k">  </span><span class="nv">extension</span><span class="o">=</span><span class="nv">$1</span>
-
-  ls *.*<span class="nv">$extension</span>* &gt; /dev/null
-  <span class="k">if</span> <span class="o">[[</span> <span class="nv">$?</span> <span class="o">==</span> 1 <span class="o">]]</span>; <span class="k">then</span>
-<span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;No files matching \&quot;$extension\&quot; found.&quot;</span>
-    <span class="k">return</span>
-<span class="k">  fi</span>
-<span class="k">  </span><span class="nb">declare</span> -a <span class="nv">fileList</span><span class="o">=(</span> *<span class="se">\.</span>*<span class="nv">$extension</span>* <span class="o">)</span>
-
-  <span class="k">if</span> <span class="o">[[</span> <span class="k">${#</span><span class="nv">fileList</span><span class="p">[*]</span><span class="k">}</span> -gt 1 <span class="o">]]</span>; <span class="k">then</span>
-<span class="k">    </span><span class="nv">IFS</span><span class="o">=</span><span class="s1">$&#39;\n&#39;</span>
-    <span class="nv">PS3</span><span class="o">=</span><span class="s1">&#39;Open which file? &#39;</span>
-    <span class="k">select </span>OPT in <span class="s2">&quot;Cancel&quot;</span> <span class="k">${</span><span class="nv">fileList</span><span class="p">[*]</span><span class="k">}</span> <span class="s2">&quot;Open ALL&quot;</span>; <span class="k">do</span>
-<span class="k">      if</span> <span class="o">[</span> <span class="nv">$OPT</span> <span class="o">==</span> <span class="s2">&quot;Open ALL&quot;</span> <span class="o">]</span>; <span class="k">then</span>
-<span class="k">        </span><span class="nb">read</span> -n1 -p <span class="s2">&quot;Open all matching files? (y/N): &quot;</span>
-        <span class="o">[[</span> <span class="nv">$REPLY</span> <span class="o">=</span> <span class="o">[</span>Yy<span class="o">]</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="k">$(</span>/usr/bin/open <span class="k">${</span><span class="nv">fileList</span><span class="p">[*]</span><span class="k">})</span>
-      <span class="k">elif</span> <span class="o">[</span> <span class="nv">$OPT</span> !<span class="o">=</span> <span class="s2">&quot;Cancel&quot;</span> <span class="o">]</span>; <span class="k">then</span>
-        <span class="k">$(</span>/usr/bin/open <span class="s2">&quot;$OPT&quot;</span><span class="k">)</span>
-      <span class="k">fi</span>
-<span class="k">      </span><span class="nb">unset </span>IFS
-      <span class="nb">break</span>
-<span class="nb">    </span><span class="k">done</span>
-<span class="k">  else</span>
-    <span class="k">$(</span>/usr/bin/open <span class="s2">&quot;${fileList[0]}&quot;</span><span class="k">)</span>
-  <span class="k">fi</span>
-<span class="o">}</span>
-</code></pre>
-</div>
-
-
+    {{ post.content }}
   </div>
-  <div class="cats"></div>
+  <div class="cats">{{ category_links }}</div>
 </div>
-
-<div class="post">
-
-  <h1><a href="/otask-cli-for-omnifocus" data-disqus-identifier="otask-cli-for-omnifocus" title="Permanent link to OTask: CLI for OmniFocus">OTask: CLI for OmniFocus</a></h1>
-  <div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
-  <div>
-    
-<p><em>I&rsquo;ve been sitting on this one for a while, until I got a request from <a href="https://twitter.com/#!/pattulus">Patrick</a> regarding an OmniFocus CLI and LaunchBar. I thought it might be time to dig this up and post it.</em></p>
-
-<hr />
-
-<p>A reader named Tony <a href="http://brettterpstra.dev/duplicating-safari-browsing-sessions-between-macs/#comment-16853">left a comment</a> on my <a href="http://brettterpstra.dev/duplicating-safari-browsing-sessions-between-macs/">Duplicating Safari browsing sessions</a> post, recommending that I try out <a href="http://appscript.sourceforge.net/">appscript</a> for my AppleScript bridging needs. I frequently use system calls to <code>osascript</code> to do this, and I&rsquo;ve shied away from scripting bridges in the past because they make things much harder to share and distribute. I thought I&rsquo;d give it a try, though.</p>
-
-<p>I like it. I like it a lot. It&rsquo;s frustrating that I can&rsquo;t just hand you this script without a list of requirements and dependencies, but I&rsquo;m going share it anyway, just to show off some of the appscript&rsquo;s capabilities.</p>
-
-<p>What I built was a CLI for OmniFocus. I had an AppleScript/Ruby monstrosity that actually worked with TaskPaper, The Hit List, Things and OmniFocus, but that one got out of hand. I took the good parts of it, concentrated on OmniFocus and converted it to appscript in short time. The result is OTask.</p>
-
-<!--more-->
-
-<h3 id="requirements">Requirements</h3>
-
-<p>You need a few things before this will even think about running for you. RubyGems is a must. I still haven&rsquo;t figured out if that&rsquo;s part of the default OS X install or not, but if you have Developer tools, you&rsquo;ve got it. Then you need the &lsquo;rb-appscript&rsquo; gem. You also need the gems &lsquo;chronic&rsquo; and &lsquo;amatch&rsquo;. You can install each by using <code>gem install gemname</code>, and you may have to run the command with <code>sudo</code>, depending on your system&rsquo;s permissions. If you&rsquo;re still on board, here are the docs, and the script <a href="https://github.com/ttscoff/OTask">is on GitHub</a>.</p>
-
-<h4 id="documentation">Documentation</h4>
-
-<p>OTask uses a custom syntax to allow entry of the various elements of an action in one line of text. The following formats can be used anywhere in the line, with the exception of the flag (!) which must be the last character on the line, preceded by a space.</p>
-
-<ul>
-  <li>@context			   (fragment, no spaces)</li>
-  <li>#project             (fragment, no spaces)</li>
-  <li>due(due date)        (can be shortened as d(date))</li>
-  <li>start(start date)    (can be shortened as s(date))</li>
-  <li>(notes)</li>
-  <li>!						(sets task as flagged)</li>
-</ul>
-
-<p>Contexts and project specifiers should not include spaces. The algorithm that is used will find the best match for the string you give it, so you only need to include enough of it to distinguish it from other contexts or projects. For example, if I were going to put an action directly into my Markdown QuickTags folder, I could just use &ldquo;#mdqt&rdquo; and it will find it. &ldquo;@corr&rdquo; will get me the &ldquo;correspondence&rdquo; context.</p>
-
-<p>Dates are entered in natural language format. You can type &ldquo;tomorrow,&rdquo; &ldquo;in 3 days,&rdquo; &ldquo;next tuesday,&rdquo; etc. You can also use &ldquo;+3&rdquo; to set a date 3 days from the current day, &ldquo;+7&rdquo; for a week, and so on.</p>
-
-<h3 id="command-line-options">Command line options</h3>
-
-<p>-h, &ndash;help     Displays help message <br />
- -q, &ndash;quiet    Output as little as possible, overrides verbose <br />
- -V, &ndash;verbose  Verbose output <br />
- -g, &ndash;growl    Use Growl for feedback   </p>
-
-<h3 id="example-usage">Example usage</h3>
-
-<pre><code>$ otask "Write a letter to mom"
-</code></pre>
-
-<p>This will put a task into your inbox with the name &ldquo;Write a letter to mom.&rdquo; Nothing else will be set, it will wait there for you to pick it up.</p>
-
-<pre><code>$ otask -g "Pick up the kids from school @err #single due(today 3pm) !"
-</code></pre>
-
-<p>This creates a new task in a project called Single Tasks, with a context of &ldquo;errands&rdquo;, a due date of 3pm on the current day, and flags the task. </p>
-
-<p>The task will go to your inbox by default, and&ndash;if provided&ndash;project and context will be set. Your settings for automatic cleanup will determine what happens after that. Task elements not specified are left unset.</p>
-
-<p>The <code>-g</code> parameter gives us our feedback via Growl, which is handy if you&rsquo;re calling it from a background script or application launcher like Quicksilver or LaunchBar.</p>
-
-<pre><code>$ otask "Brainstorm for the morning meeting (Bill had some ideas, it might be worth checking in with him this afternoon) d(tomorrow 8am) #hipstartup @think"
-</code></pre>
-
-<p>This will create a task with a note. Everything in parenthesis is removed from the task name and placed into the notes of the action, sans parenthesis. Note that the due date prefix can be shortened to just &ldquo;d,&rdquo; (and the start date prefix can be just &ldquo;s&rdquo;).</p>
-
-<p>OTask looks for notes in parenthesis, but it can also receive piped input from other applications as a note for the task. If you wanted to include text from a file, the output of a command or the plain-text contents of your clipboard, you can just pipe the output into the command, specifying the rest of the options as usual.</p>
-
-<pre><code>$ pbpaste - otask "Notes from the morning meeting @ref"
-</code></pre>
-
-<p>That would take the current contents of your clipboard and make them the attached note on the &ldquo;Notes from the morning meeting&rdquo; task (with the context &ldquo;reference&rdquo;).</p>
-
-<h4 id="calling-from-launchbar-et-al">Calling from LaunchBar (et al.)</h4>
-
-<p>You can do this with any app that can run a script with input, or call it from automated scripts if you could think of a reason to. Below is the AppleScript for a LaunchBar action. Create a new script in AppleScript Editor and paste the code in. Edit the path in the last function to point to wherever you put the otask script. Save the AppleScript as OTask.scpt in <code>~/Library/Application Support/LaunchBar/Actions</code>. </p>
-
-<p>You&rsquo;ll find the Action in LaunchBar after it indexes. Type &lsquo;ota&rsquo; (or as much as you need to get it to come up) and then press space bar. Use the syntax shown above to write out your action and its elements, but leave out the &lsquo;otask&rsquo; part and any parameters. Hit return and Growl (you have it <a href="http://growl.info">installed, right?</a>) will tell you what&rsquo;s up.</p>
-
-<div class="highlight"><pre><code class="as"><span class="nx">on</span> <span class="nx">handle_string</span><span class="p">(</span><span class="nx">actionString</span><span class="p">)</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">length</span> <span class="nx">of</span> <span class="nx">actionString</span> <span class="nx">is</span> <span class="nx">not</span> <span class="mi">0</span><span class="p">)</span> <span class="nx">then</span>
-		<span class="nx">my</span> <span class="nx">runRubyScript</span><span class="p">(</span><span class="nx">actionString</span><span class="p">)</span>
-	<span class="nx">end</span> <span class="k">if</span>
-	<span class="nx">open</span> <span class="nx">location</span> <span class="s2">&quot;x-launchbar:hide&quot;</span>
-<span class="nx">end</span> <span class="nx">handle_string</span>
-
-<span class="nx">on</span> <span class="nx">runRubyScript</span><span class="p">(</span><span class="nx">action</span><span class="p">)</span>
-	<span class="kd">set</span> <span class="nx">res</span> <span class="nx">to</span> <span class="k">do</span> <span class="nx">shell</span> <span class="nx">script</span> <span class="s2">&quot;$HOME/scripts/otask.rb -g \&quot;&quot;</span> <span class="o">&amp;</span> <span class="nx">action</span> <span class="o">&amp;</span> <span class="s2">&quot;\&quot;&quot;</span>
-<span class="nx">end</span> <span class="nx">runRubyScript</span>
-</code></pre>
-</div>
-
-<h4 id="download">Download</h4>
-
-<p><a href="https://github.com/ttscoff/OTask">https://github.com/ttscoff/OTask</a></p>
-
-  </div>
-  <div class="cats"></div>
-</div>
-
-<div class="post">
-
-  <h1><a href="/web-excursions-june-28-2011-june-30-2011" data-disqus-identifier="web-excursions-june-28-2011-june-30-2011" title="Permanent link to Web excursions: June 28, 2011 - June 30, 2011">Web excursions: June 28, 2011 - June 30, 2011</a></h1>
-  <div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
-  <div>
-    <p><strong>Links of interest from <em>June 28, 2011 through June 30, 2011</em>:</strong></p>
-
-<ul>
-  <li><strong><a href="http://hasseg.org/peg-markdown-highlight/">PEG Markdown Highlight</a></strong><br />Well, this part of my work just got easier.</li>
-  <li><strong><a href="http://josephscott.org/archives/2011/05/pressfs-a-wordpress-filesystem/">pressfs &ndash; A WordPress Filesystem - Joseph Scott</a></strong><br />Holy mackerel, that&#039;s pretty cool.</li>
-  <li><strong><a href="http://www.spritecow.com/">Sprite Cow - Generate CSS for sprite sheets</a></strong><br />Another hat tip to Erik Sagan&hellip; this one is awesome. Check it out in Chrome next time you need to build a CSS sprite.</li>
-  <li><strong><a href="http://swiffy.googlelabs.com/">Google Swiffy</a></strong><br />Convert Flash swf&#039;s to HTML5. Nifty. Hat tip to <a href="http://kartooner.com">Erik Sagan</a>.</li>
-  <li><strong><a href="http://markjaquith.wordpress.com/2011/06/24/wordpress-local-dev-tips/">WordPress local dev tips: DB &amp; plugins &laquo; Mark on WordPress</a></strong><br />An intriguing approach to local WordPress development environments.</li>
-</ul>
-
-  </div>
-  <div class="cats"></div>
-</div>
-
-<div class="post">
-
-  <h1><a href="/web-excursions-june-15-2011-june-23-2011" data-disqus-identifier="web-excursions-june-15-2011-june-23-2011" title="Permanent link to Web excursions: June 15, 2011 - June 23, 2011">Web excursions: June 15, 2011 - June 23, 2011</a></h1>
-  <div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
-  <div>
-    <p><strong>Links of interest from <em>June 15, 2011 through June 23, 2011</em>:</strong></p>
-
-<ul>
-  <li><strong><a href="https://chrome.google.com/webstore/detail/fpjlkgihgfjkaepjpijjjbeelddmkfnk">Too Long; Didn&rsquo;t Read - Chrome Web Store</a></strong><br />I want this for Safari.</li>
-  <li><strong><a href="http://tj.luo.ma/post/6598593173/dot-source">luo.ma - My dot-source file</a></strong><br />More evidence that TJ is, in fact, super smart.Yummy shell goodness.</li>
-  <li><strong><a href="http://www.mediabistro.com/10000words/how-to-run-a-news-site-and-newspaper-using-wordpress-and-google-docs_b4781">How To Run A News Site And Newspaper Using WordPress And Google Docs - 10,000 Words</a></strong><br />Now that&#039;s pretty cool. Plugin available.</li>
-  <li><strong><a href="http://csslint.net/">CSS Lint</a></strong><br />Points out errors and warnings in your CSS. I always wished there was something like this around.</li>
-  <li><strong><a href="http://csswizardry.com/2011/06/styling-alt-text-on-images/">Styling alt text on images</a></strong><br />CSS for styling something I&#039;d never considered styling.</li>
-  <li><strong><a href="http://popcornjs.org/">Popcorn.js - The HTML5 Media Framework</a></strong><br />There are so many unbelievably cool possibilities for HTML5 video interactions, and this framework makes doing it <em>easy</em>.</li>
-  <li><strong><a href="http://thatcoolguy.github.com/gridless-boilerplate/#contribute">Gridless - An awesome boilerplate for responsive, cross-browser websites</a></strong><br />Seems to me that HTML/CSS frameworks are getting smarter. I like this one.</li>
-  <li><strong><a href="http://net.tutsplus.com/tutorials/php/how-to-squeeze-the-most-out-of-less/">How to Squeeze the Most out of LESS - Nettuts+</a></strong><br />Yeah, it&#039;s from 2010, but it got me re-excited about using Less. Again.</li>
-</ul>
-
-  </div>
-  <div class="cats"></div>
-</div>
-
-<div class="post">
-
-  <h1><a href="/a-bash-function-for-markdown-bloggers" data-disqus-identifier="a-bash-function-for-markdown-bloggers" title="Permanent link to A Bash function for Markdown bloggers">A Bash function for Markdown bloggers</a></h1>
-  <div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
-  <div>
-    <p><img src="http://brettterpstra.dev/wp-content/uploads/2011/06/markdowntypewriter.jpg" alt="Markdown Typewriter Image" class="alignright" />I store all of my writing as separate Markdown files. A basic tagging system<sup id="fnref:tag"><a href="#fn:tag" rel="footnote">1</a></sup> adds more &ldquo;searchability,&rdquo; and I can quickly locate any file with Spotlight<sup id="fnref:spot"><a href="#fn:spot" rel="footnote">2</a></sup>. Given the amount of time I spend in Terminal (well, <a href="http://www.iterm2.com/">iTerm 2</a> these days), I use <a href="http://osxdaily.com/2006/12/05/use-spotlight-from-the-command-line-with-mdfind/"><code>mdfind</code></a> quite a bit to do the Spotlight searching. This function just makes it a little more convenient to search for and quickly edit an existing document. </p>
-
-<p>By default, it looks in a Dropbox &ldquo;Writing&rdquo; folder, but you can adjust that to restrict to any folder at the top of the script. You can also set your edit command there (<code>mate</code>, <code>mvim</code>, <code>vim</code>, etc.). Then it takes all arguments and uses them as a Spotlight search, restricted to your writing folder and the Markdown filetype, and offers you a quick menu of matches. Selecting a match opens the file with your preferred editor. If there&rsquo;s only one match, it&rsquo;s opened automatically.</p>
-
-<p>It&rsquo;s written as a function to be included in your .bash_profile (or sourced from there). If you want to run it as a shell script, just remove the <code>edmd () {</code> at the top and the closing <code>}</code>, put it in your path and run <code>chmod a+x filename</code>.</p>
-
-<p>Once it&rsquo;s installed you can just type <code>edmd keyword</code> to find posts and drafts related to keyword. You can use multiple words (no quotes required) and prefixes like &ldquo;keyword:&rdquo; or &ldquo;tag:&rdquo;, just like a Spotlight query.</p>
-
-<div class="highlight"><pre><code class="bash"><span class="c"># Edit Markdown File from Writing directory</span>
-<span class="c"># Finds Markdown files matching a Spotlight-style search query</span>
-<span class="c"># If there&#39;s more than one, you get a menu</span>
-edmd <span class="o">()</span> <span class="o">{</span>
-  <span class="nv">WRITINGDIR</span><span class="o">=</span><span class="s2">&quot;~/Dropbox/Writing&quot;</span>
-  <span class="nv">EDITCMD</span><span class="o">=</span><span class="s2">&quot;mate&quot;</span>
-  <span class="nv">filelist</span><span class="o">=</span><span class="k">$(</span>mdfind -onlyin <span class="s2">&quot;$WRITINGDIR&quot;</span> <span class="s2">&quot;($@) AND kind:markdown&quot;</span><span class="k">)</span>
-  <span class="nv">listlength</span><span class="o">=</span><span class="k">$(</span>mdfind -onlyin <span class="s2">&quot;$WRITINGDIR&quot;</span> -count <span class="s2">&quot;($@) AND kind:markdown&quot;</span><span class="k">)</span>
-  <span class="k">if</span> <span class="o">[[</span> <span class="nv">$listlength</span> &gt; 0 <span class="o">]]</span>; <span class="k">then</span>
-<span class="k">    if</span> <span class="o">[[</span> <span class="nv">$listlength</span> <span class="o">==</span> 1 <span class="o">]]</span>; <span class="k">then</span>
-      <span class="nv">$EDITCMD</span> <span class="nv">$filelist</span>
-    <span class="k">else</span>
-<span class="k">      </span><span class="nv">IFS</span><span class="o">=</span><span class="s1">$&#39;\n&#39;</span>
-      <span class="nv">PS3</span><span class="o">=</span><span class="s1">&#39;Edit which file? (1 to cancel): &#39;</span>
-      <span class="k">select </span>OPT in <span class="s2">&quot;Cancel&quot;</span> <span class="nv">$filelist</span>; <span class="k">do</span>
-<span class="k">        if</span> <span class="o">[</span> <span class="nv">$OPT</span> !<span class="o">=</span> <span class="s2">&quot;Cancel&quot;</span> <span class="o">]</span>; <span class="k">then</span>
-          <span class="nv">$EDITCMD</span> <span class="nv">$OPT</span>
-        <span class="k">fi</span>
-<span class="k">        </span><span class="nb">break</span>
-<span class="nb">      </span><span class="k">done</span>
-<span class="k">    fi</span>
-<span class="k">  else</span>
-<span class="k">    return </span>1
-  <span class="k">fi</span>
-<span class="k">  return </span>0
-<span class="o">}</span>
-</code></pre>
-</div>
-
-<div class="footnotes">
-  <ol>
-    <li id="fn:tag">
-      <p>I save drafts and posts to my desktop as <code>.md</code> files. During my daily review I use <a href="http://www.caseapps.com/tags/">Tags.app</a> or <a href="http://itunes.apple.com/us/app/filr/id402468144?mt=12">Filr</a> to quickly add target keywords (&lsquo;blogging&rsquo;, a tag for which blog it&rsquo;s for and one, maybe two topical tags). <a href="http://www.noodlesoft.com/hazel.php">Hazel</a> picks these up and stores them in my Dropbox &ldquo;Writing&rdquo; folder, in subfolders based on blog and filetype.<a href="#fnref:tag" rev="footnote">&#8617;</a></p>
-    </li>
-    <li id="fn:spot">
-      <p>I never realized it, but apparently Spotlight doesn&rsquo;t search these by default. My use of the <a href="https://github.com/toland/qlmarkdown">QLMarkdown Quick Look plugin</a> fixes that, I guess.<a href="#fnref:spot" rev="footnote">&#8617;</a></p>
-    </li>
-  </ol>
-</div>
-
-  </div>
-  <div class="cats"></div>
-</div>
-
-<div class="post">
-
-  <h1><a href="/thanks-wwdc" data-disqus-identifier="thanks-wwdc" title="Permanent link to Thanks WWDC">Thanks WWDC</a></h1>
-  <div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
-  <div>
-    <p><a href="http://www.flickr.com/photos/circlesixdesign/5817563710/sizes/l/in/photostream/"><img class="alignright shadow" alt="Photo of the TUAW Dev Interviews setup" src="http://farm3.static.flickr.com/2386/5817563710_b08dfee385_m_d.jpg" title="The TUAW Dev Interviews" width="240" height="160" /></a></p>
-
-<p>Thanks to everyone I met at WWDC this year and to the friends I got to see for a great time. San Francisco was as beautiful as ever and the Mac and iOS development communities are, as usual, full of new and brilliant ideas. It&rsquo;s always heartening to see. TUAW and MacTech will be posting the result of our blogging work at WWDC over the next few weeks.</p>
-
-<p>The Smile party was a blast, and thanks to <a href="http://twitter.com/#!/macgenie">Jean MacDonald</a> and <a href="http://www.smilesoftware.com/">Smile</a> for throwing such a great geekfest. The <a href="http://www.tuaw.com/">TUAW</a> bash was a great time, too, and it was great to see some Apple employees show up (happens less often than you&rsquo;d think). They were there with <a href="http://twitter.com/#!/danielpunkass">Daniel Jalkut</a>, and it was great to finally meet him, too. Violet Blue, Jim Dalrymple, Manton Reese and more than I can remember right now, great to meet you all!</p>
-
-<p>I&rsquo;m headed back to Minnesota right now, and not looking forward to the two-hour drive I&rsquo;ll be in for after landing. Then I&rsquo;ll have about 5 days to get things in order at work, get nvALT 2.1 released and pack before I head off to a family reunion for almost a week. I seem to be moving around a lot for a grumpy homebody. Oh, well.</p>
-
-<p>Feel free to browse <a href="http://www.flickr.com/photos/circlesixdesign/sets/72157626779972019/with/5814485364/">my WWDC 2011 photos</a> to see a bit of what went on.</p>
-
-<h4 id="addendum">Addendum</h4>
-
-<p>So I&rsquo;m sitting and waiting for a tow truck to come start my car right now, and I realize I forgot to thank <a href="https://twitter.com/#!/superpixels">Victor Agreda, Jr.</a><sup id="fnref:fn1"><a href="#fn:fn1" rel="footnote">1</a></sup> who instigated most of these meetings, kept me alive and introduced me to In-n-Out Burger. Thanks, Victor!</p>
-
-<div class="footnotes">
-  <ol>
-    <li id="fn:fn1">
-      <p>See his <a href="http://www.superpixel.com/">amazing HTML1-compliant page</a> for more info.<a href="#fnref:fn1" rev="footnote">&#8617;</a></p>
-    </li>
-  </ol>
-</div>
-
-  </div>
-  <div class="cats"></div>
-</div>
-
-<div class="post">
-
-  <h1><a href="/web-excursions-june-6-2011-june-8-2011" data-disqus-identifier="web-excursions-june-6-2011-june-8-2011" title="Permanent link to Web excursions: June 6, 2011 - June 8, 2011">Web excursions: June 6, 2011 - June 8, 2011</a></h1>
-  <div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
-  <div>
-    <p><strong>Links of interest from <em>June 6, 2011 through June 8, 2011</em>:</strong></p>
-
-<ul>
-  <li><strong><a href="http://actionatadistance.net/post/6256026184/five-minute-guide-wwdc-2011-keynote">Action at a Distance &mdash; The five-minute guide to Apple&rsquo;s announcements at the WWDC keynote in 2011</a></strong><br />TUAW&#039;s Richard Gaywood&#039;s beautiful summary of the WWDC 2011 Keynote. I&#039;m amazed that he had this written up almost before the Keynote ended.</li>
-  <li><strong><a href="http://www.catswhocode.com/blog/amazing-css3-techniques-you-should-know">Amazing CSS3 techniques you should know</a></strong><br />Basic tips, but some inspirational ideas.</li>
-  <li><strong><a href="http://www.hongkiat.com/blog/dealing-with-online-content-theft/">Personal Experience to: Dealing with Online Content Theft</a></strong><br />Good advice for anyone who gets their content scraped.</li>
-  <li><strong><a href="http://www.alistapart.com/articles/modern-debugging-tips-and-tricks/">A List Apart: Articles: Modern Debugging Tips and Tricks</a></strong><br />Good stuff.</li>
-  <li><strong><a href="http://www.devwebpro.com/a-mysql-primer-on-joins-part-one/">A MySQL Primer on Joins, Part One - DevWebPro</a></strong><br />I&#039;m not an SQL pro. This is a great overview of JOIN statements, and I greatly appreciate the approach.</li>
-</ul>
-
-  </div>
-  <div class="cats"></div>
-</div>
-
-<div class="post">
-
-  <h1><a href="/quick-tip-fixing-the-other-account-mac-app-store-issue" data-disqus-identifier="quick-tip-fixing-the-other-account-mac-app-store-issue" title="Permanent link to Quick Tip: fixing the "other account" Mac App Store issue">Quick Tip: fixing the "other account" Mac App Store issue</a></h1>
-  <div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
-  <div>
-    <p>I like the Mac App Store. I&rsquo;ve purchased a <em>lot</em> of apps since it opened, and I dig the centralized update system. I&rsquo;ve been having this issue on my MacBook Air, though, where trying to update an installed app would trigger a dialog which says &ldquo;You have updates available for other accounts&hellip;&rdquo; and suggest that I log in with that account to update my software. Thing is, I only have one Apple ID, one account.</p>
-
-<p>After digging around and trying various things, I found <a href="https://discussions.apple.com/thread/2718993?start=0&amp;tstart=0">this thread</a> in the Apple Support Communities. The solution, buried in there somewhere, was to both repair disk permissions in Disk Utility and rebuild my Spotlight index. You can rebuild your index simply by adding your entire hard drive to the Privacy settings in Spotlight&rsquo;s System Preferences panel and then removing it. You can do it from the command line or from a utility such as Cocktail<sup id="fnref:cocktail"><a href="#fn:cocktail" rel="footnote">1</a></sup>, too, but don&rsquo;t make it complicated.</p>
-
-<p>After doing both (in that order), I&rsquo;ve been able to update without hassle. Somehow, it made LaunchBar stop indexing my applications, but I&rsquo;ll figure that out when I have time&hellip;</p>
-
-<div class="footnotes">
-  <ol>
-    <li id="fn:cocktail">
-      <p>Cocktail&rsquo;s a great utility app for cleaning up log files, caches, etc. and handling a gazillion system tasks and maintenance. Plus, it doesn&rsquo;t mess up apps like 1Password the way that other &ldquo;cleaning&rdquo; apps tend to. <a href="http://www.maintain.se/cocktail/index.php">Check it out</a>.<a href="#fnref:cocktail" rev="footnote">&#8617;</a></p>
-    </li>
-  </ol>
-</div>
-
-  </div>
-  <div class="cats"></div>
-</div>
-
-<div class="post">
-
-  <h1><a href="/taking-the-markdown-to-evernote-service-further" data-disqus-identifier="taking-the-markdown-to-evernote-service-further" title="Permanent link to Taking the Markdown to Evernote service further">Taking the Markdown to Evernote service further</a></h1>
-  <div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
-  <div>
-    <p>Martin Kopischke has taken my little <a href="http://brettterpstra.dev/a-better-os-x-system-service-for-evernote-notes-with-multimarkdown/">Markdown to Evernote Service</a> and made it whole. I dropped the project pretty quickly as I stopped using Evernote as my primary storage for text notes, and I left it in pretty poor shape. <a href="http://nsuserview.kopischke.net/">Martin has fixed that</a>.</p>
-
-<p>The new Service adds way better tag handling, MultiMarkdown-style metadata hooks for Notebook, tags and more, and generally amped up the parser and error handling, as well as the Evernote side of things. <a href="http://nsuserview.kopischke.net/">Check it out at NSUserView</a>. Thanks Martin, nice work!</p>
-
-  </div>
-  <div class="cats"></div>
-</div>
-
-<div class="post">
-
-  <h1><a href="/web-excursions-may-24-2011-may-31-2011" data-disqus-identifier="web-excursions-may-24-2011-may-31-2011" title="Permanent link to Web excursions: May 24, 2011 - May 31, 2011">Web excursions: May 24, 2011 - May 31, 2011</a></h1>
-  <div id="num-responses"><span class="responses-number">0</span> Responses. <a href="#comments">Add Yours!</a></div>
-  <div>
-    <p><strong>Links of interest from <em>May 24, 2011 through May 31, 2011</em>:</strong></p>
-
-<ul>
-  <li><strong><a href="http://webdesignerwall.com/tutorials/css-elastic-videos">CSS: Elastic Videos</a></strong><br />&quot;Using the max-width:100% and height:auto trick works with native HTML5 video tag, but it doesn&#039;t work with embed code using iframe or object tag&hellip;&quot;</li>
-  <li><strong><a href="http://andyrutledge.com/the-designer-designs.php">Andy Rutledge - The Designer Designs</a></strong><br />&quot;&hellip;if you&rsquo;re the client, you describe problems or concerns and the designer then <em>shows</em> you changes. If you&rsquo;re asking for changes you&rsquo;re the one doing the designing. In that case there&rsquo;s no need for you to have hired a designer and you&rsquo;re wasting money.&quot; Great response to 37signals from Andy Rutledge</li>
-  <li><strong><a href="http://www.jstiles.com/Blog/How-To-Implement-Keyboard-Shortcuts-In-Your-Web-Application---Part-1">How To Implement Keyboard Shortcuts In Your Web Application - Part 1 - Jason T. Stiles, Web Developer and Enthusiast</a></strong><br />This is a much more maintainable pattern for adding keyboard navigation than what I&#039;ve used in the past. This is the first part of a great, three-part series.</li>
-  <li><strong><a href="http://msdn.microsoft.com/en-us/scriptjunkie/hh201955.aspx">Script Junkie - Understanding the Publish/Subscribe Pattern for Greater JavaScript Scalability</a></strong><br />I didn&#039;t discover this pattern until I wrote my first Safari extension. It&#039;s worth getting a grasp on.</li>
-  <li><strong><a href="http://seancoates.com/blogs/remote-pbcopy">Sean Coates blogs: Remote pbcopy</a></strong><br />Unbelievably cool. If you&#039;re into that sort of thing, I suppose. I am. <a href="https://twitter.com/nriley/status/73110215725297664">Via @nriley</a></li>
-</ul>
-
-  </div>
-  <div class="cats"></div>
-</div>
-
+{% endfor %}
 <ul id="headlines">
-  
-    <li class="odd"><span class="date">May 24, 2011</span> <a href="/quick-link-terminal-navigation-utilities">Quick Link: Terminal navigation utilities</a></li>
-  
-    <li class="even"><span class="date">May 23, 2011</span> <a href="/web-excursions-may-16-2011-may-23-2011">Web excursions: May 16, 2011 - May 23, 2011</a></li>
-  
-    <li class="odd"><span class="date">May 23, 2011</span> <a href="/quick-tip-clean-up-your-multimarkdown-tables">Quick Tip: clean up your MultiMarkdown tables</a></li>
-  
-    <li class="even"><span class="date">May 22, 2011</span> <a href="/the-mac-and-ios-mind-mapping-app-extravaganza">The Mac and iOS mind mapping app extravaganza</a></li>
-  
-    <li class="odd"><span class="date">May 20, 2011</span> <a href="/quick-tip-throttling-parallel-batch-processes-in-terminal">Quick Tip: throttling parallel batch processes in Terminal</a></li>
-  
-    <li class="even"><span class="date">May 20, 2011</span> <a href="/nvalt-2-1-progress-report">nvALT 2.1 progress report</a></li>
-  
-    <li class="odd"><span class="date">May 16, 2011</span> <a href="/web-excursions-may-4-2011-may-16-2011">Web excursions: May 4, 2011 - May 16, 2011</a></li>
-  
-    <li class="even"><span class="date">May 15, 2011</span> <a href="/a-cheat-sheet-for-app-store-pricing">A cheat sheet for App Store pricing</a></li>
-  
-    <li class="odd"><span class="date">May 03, 2011</span> <a href="/duplicating-safari-browsing-sessions-between-macs">Duplicating Safari browsing sessions between Macs</a></li>
-  
-    <li class="even"><span class="date">May 01, 2011</span> <a href="/web-excursions-may-1-2011">Web excursions: May 1, 2011</a></li>
-  
-    <li class="odd"><span class="date">May 01, 2011</span> <a href="/web-excursions-april-26-may-1">Web excursions: April 26 - May 1</a></li>
-  
-    <li class="even"><span class="date">May 01, 2011</span> <a href="/automated-html5-video-encoding-revisited">Automated HTML5 video encoding revisited</a></li>
-  
-    <li class="odd"><span class="date">Apr 24, 2011</span> <a href="/web-excursions-april-20-april-24">Web excursions: April 20 - April 24</a></li>
-  
-    <li class="even"><span class="date">Apr 24, 2011</span> <a href="/a-couple-of-textmate-macros-for-markdown-lists">A couple of TextMate Macros for Markdown lists</a></li>
-  
-    <li class="odd"><span class="date">Apr 23, 2011</span> <a href="/markdown-quicktags-makes-1000-people-happier-and-more-attractive">Markdown QuickTags makes 1000 people happier and more attractive</a></li>
-  
-    <li class="even"><span class="date">Apr 23, 2011</span> <a href="/bored-with-your-macvim-icon-me-too">Bored with your MacVim icon? Me too.</a></li>
-  
-    <li class="odd"><span class="date">Apr 19, 2011</span> <a href="/web-excursions-april-13-april-19">Web excursions: April 13 - April 19</a></li>
-  
-    <li class="even"><span class="date">Apr 13, 2011</span> <a href="/web-excursions-april-9-april-13">Web excursions: April 9 - April 13</a></li>
-  
-    <li class="odd"><span class="date">Apr 13, 2011</span> <a href="/another-pit-bull-proves-her-good-citizenship">Another pit bull proves her good citizenship</a></li>
-  
-    <li class="even"><span class="date">Apr 13, 2011</span> <a href="/address-book-search-and-skype-from-the-command-line">Address Book search and Skype from the command line</a></li>
-  
+  {% for post in site.posts limit:20 offset:10 %}
+    <li class="{% cycle 'odd', 'even' %}"><span class="date">{{ post.date | date: "%b %d, %Y" }}</span> <a href="{{ post.url }}">{{ post.title | widont }}</a></li>
+  {% endfor %}
 </ul>
 
-
+{% unless site.deploy %}
 <!-- <ul class="pinboard-links">
-  
-  <li><strong><a href="http://boxjs.com/" title="BoxJS - A simple package management service" rel="external">BoxJS - A simple package management service</a></strong><br />Script loading and minification via third party.</li>
-  
-  <li><strong><a href="https://github.com/jingweno/jekyll_and_hyde" title="jingweno/jekyll_and_hyde - GitHub" rel="external">jingweno/jekyll_and_hyde - GitHub</a></strong><br />This may quench my desire for a good Markdown->HTML Presentation setup.</li>
-  
-  <li><strong><a href="http://loads.in/" title="loads.in - test how fast a webpage loads in a real browser from over 50 locations worldwide" rel="external">loads.in - test how fast a webpage loads in a real browser from over 50 locations worldwide</a></strong><br />Nice webpage speed test with 50 some locations and your choice of browser.</li>
-  
-  <li><strong><a href="http://bricss.net/" title="Bricss" rel="external">Bricss</a></strong><br />Cool CSS tips in a bite-size format.</li>
-  
-  <li><strong><a href="http://code.google.com/p/jslibs/wiki/JavascriptTips#language_advanced_Tips_&_Tricks" title="JavascriptTips - jslibs - JavaScript language advanced tips and tricks - standalone JavaScript development runtime environment with general purpose native libraries - Google Project Hosting" rel="external">JavascriptTips - jslibs - JavaScript language advanced tips and tricks - standalone JavaScript development runtime environment with general purpose native libraries - Google Project Hosting</a></strong><br />Ever feel like you know JavaScript pretty well? Guess again.</li>
-  
+  {% pinboard username:ttscoff tag:blogit count:5 ttl:3600 %}
+  <li><strong><a href="{{ item.link }}" title="{{ item.title }}" rel="external">{{ item.title }}</a></strong><br />{{ item.description }}</li>
+  {% endpinboard %}
 </ul> -->
-
+{% endunless %}
 </div><!-- end: #content-->
 <div id="sidebar">
 	<div id="side-intro" class="section">
 	<div id="side-description">
-		<p><strong>Brett Terpstra</strong> is Tech Lead for the blogs of AOL Tech. In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
+		<p><strong>Brett Terpstra</strong> is the Tech Lead for the blogs of AOL Tech (Engadget, TUAW, Joystiq, Massively&hellip;). In his free time, he performs mad science with code and shares the results with whoever is curious.</p>
 	</div>
 	<div id="update-icons">
 		<ul>
@@ -506,18 +111,6 @@ edmd <span class="o">()</span> <span class="o">{</span>
 	<div id="ui-tabs-2" class="tab-content">
 		<ul>
 			
-				<li><a href="/categories/misc">Misc</a></li>
-			
-				<li><a href="/categories/blog">Blog</a></li>
-			
-				<li><a href="/categories/code">Code</a></li>
-			
-				<li><a href="/categories/bookmarks">Bookmarks</a></li>
-			
-				<li><a href="/categories/music">Music</a></li>
-			
-				<li><a href="/categories/write">Write</a></li>
-			
 		</ul>
 		<a href="/categories/" class="btn-more">more &raquo;</a>
 	</div>
@@ -545,6 +138,7 @@ edmd <span class="o">()</span> <span class="o">{</span>
 	<script src="/js/ui.tabs.min.js" type="text/javascript"></script>
 	<script src="/js/scripts.js" type="text/javascript"></script>
 	
+  <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
   <script type="text/javascript">
       /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
       var disqus_shortname = 'brettterpstra'; // required: replace example with your forum shortname
@@ -557,5 +151,6 @@ edmd <span class="o">()</span> <span class="o">{</span>
           (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
       }());
   </script>
+  <script src="https://apis.google.com/js/plusone.js"></script>
 </body>
 </html>

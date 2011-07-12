@@ -1,12 +1,11 @@
-$(function () {
-
+(function($){
 	// Clear Form on Submit
 	$.fn.clearForm = function () {
 		return this.each(function () {
 			var type = this.type,
 				tag = this.tagName.toLowerCase();
-			if (tag == 'form') return $(':input', this).clearForm();
-			if (type == 'text' || tag == 'textarea') this.value = '';
+			if (tag === 'form') return $(':input', this).clearForm();
+			if (type === 'text' || tag === 'textarea') this.value = '';
 		});
 	};
 
@@ -21,29 +20,29 @@ $(function () {
 		var emailRegex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 
 		// Validate Name
-		if (jQuery.trim($('#name').val()) == '') {
+		if ($.trim($('#name').val()) == '') {
 			$('#name').parent().find('label').append(' <span class="alert">You forgot to enter your name.</span>');
 			$('#name').addClass('error');
 			hasError = true;
 		}
 		// Validate Email
-		if (jQuery.trim($('#email').val()) == '') {
+		if ($.trim($('#email').val()) == '') {
 			$('#email').parent().find('label').append(' <span class="alert">You forgot to enter your email address.</span>');
 			$('#email').addClass('error');
 			hasError = true;
-		} else if (!emailRegex.test(jQuery.trim($('#email').val()))) {
+		} else if (!emailRegex.test($.trim($('#email').val()))) {
 			$('#email').parent().find('label').append(' <span class="alert">You entered an invalid email address.</span>');
 			$('#email').addClass('error');
 			hasError = true;
 		}
 		// Validate Subject 
-		if (jQuery.trim($('#subject').val()) == '') {
+		if ($.trim($('#subject').val()) == '') {
 			$('#subject').parent().find('label').append(' <span class="alert">You forgot to enter a subject.</span>');
 			$('#subject').addClass('error');
 			hasError = true;
 		}
 		// Validate Message
-		if (jQuery.trim($('#message').val()) == '') {
+		if ($.trim($('#message').val()) == '') {
 			$('#message').parent().find('label').append(' <span class="alert">You forgot to enter your message.</span>');
 			$('#message').addClass('error');
 			hasError = true;
@@ -59,7 +58,7 @@ $(function () {
 			// Fade and disable Submit button
 			.animate({
 				opacity: '0.3'
-			}, 200).end().find('#submit').attr('disabled', 'disabled')
+			}, 200).end().find('#submit').attr('disabled', 'disabled');
 
 
 			// AJAX Submit				
@@ -82,10 +81,10 @@ $(function () {
 					.attr('disabled', '');
 					$('form#contact-form').clearForm();
 				}
-			})
+			});
 
 		} // end if no errors
 		return false;
 
-	}) // end if submitted
-})
+	}); // end if submitted
+})(jQuery);

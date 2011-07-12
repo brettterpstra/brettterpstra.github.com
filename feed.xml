@@ -4,7 +4,7 @@
  <title>Brett Terpstra</title>
  <link href="http://jek.brettterpstra.dev/feed.xml" rel="self"/>
  <link href="http://jek.brettterpstra.dev"/>
- <updated>2011-07-12T05:11:30-05:00</updated>
+ <updated>2011-07-12T05:21:11-05:00</updated>
  <id>http://jek.brettterpstra.dev/</id>
  <author>
    <name>Brett Terpstra</name>
@@ -4657,7 +4657,7 @@ A lot of filetypes will automatically open up in their browser. Here&amp;rsquo;s
 
 &lt;p&gt;The main riff is courtesy of my friend Adele Murray. We jammed on it once long ago; it was actually my impetus for learning palm muting. Hopefully she doesn&amp;rsquo;t mind me using it in this little scratchpad experiment&amp;hellip;&lt;/p&gt;
 
-&lt;p&gt;{% audioplayer src=&amp;rdquo;/share/InconsequentialMartyr&amp;rdquo; title=&amp;rdquo;Inconsequential Martyr&amp;rdquo; %}&lt;/p&gt;
+&lt;p&gt;Liquid error: undefined method `downcase&amp;rsquo; for nil:NilClass&lt;/p&gt;
 
 &lt;!--more--&gt;
 
@@ -4847,7 +4847,7 @@ this train don't carry no gamblers.&lt;/p&gt;
 
 &lt;p&gt;This track, though, is actually the banner track for the collection I&amp;rsquo;ve slowly been building here. It started as a sequel to &lt;a href=&quot;http://brettterpstra.dev/sad-songs-part-2-junky-angel/&quot;&gt;Junky Angel&lt;/a&gt;, but grew into something of its own pretty quickly. It&amp;rsquo;s about love and heartbreak, and the initial feeling of moving from major cities to small towns. I wrote a lot of those after I got back here. I&amp;rsquo;ll let &amp;ldquo;Something Precious&amp;rdquo; tell the rest of the story.&lt;/p&gt;
 
-&lt;p&gt;{% audioplayer  src=&amp;rdquo;/share/SomethingPrecious&amp;rdquo; title=&amp;rdquo;Something Precious (Dies)&amp;rdquo; %}&lt;/p&gt;
+&lt;p&gt;Liquid error: undefined method `downcase&amp;rsquo; for nil:NilClass&lt;/p&gt;
 
 &lt;!--more--&gt;
 
@@ -5860,7 +5860,7 @@ defaults write com.macromates.textmate NSUserKeyEquivalents -dict-add &quot;Refo
 
 &lt;p&gt;I&amp;rsquo;m posting the lyrics after the player, as this is an older recording and I don&amp;rsquo;t think my mix on the vocals was optimal for making out all of the words. I&amp;rsquo;m going to go back and add lyrics to the others in this series as well, when I get a chance. &lt;/p&gt;
 
-&lt;p&gt;{% audioplayer  src=&amp;rdquo;/share/BlueBags&amp;rdquo; title=&amp;rdquo;Blue Bags&amp;rdquo; %}&lt;/p&gt;
+&lt;p&gt;Liquid error: undefined method `downcase&amp;rsquo; for nil:NilClass&lt;/p&gt;
 
 &lt;!--more--&gt;
 
@@ -6179,7 +6179,7 @@ $(document).ready(function($){
 
 &lt;p&gt;The lyrics and music were written by me, and I did the vocals, but the guitar &lt;em&gt;and&lt;/em&gt; the recording chops on this one belong entirely to my friend Randy Kline (one of the best musicians I&amp;rsquo;ve ever known). Thanks for checking it out.&lt;/p&gt;
 
-&lt;p&gt;{% audioplayer  src=&amp;rdquo;/share/JunkyAngel&amp;rdquo; title=&amp;rdquo;Junky Angel&amp;rdquo; %}&lt;/p&gt;
+&lt;p&gt;Liquid error: undefined method `downcase&amp;rsquo; for nil:NilClass&lt;/p&gt;
 
 &lt;p&gt;Next one&amp;rsquo;s a little more upbeat, I promise.&lt;/p&gt;
 </content>
@@ -6422,7 +6422,7 @@ add_filter( 'get_comment_author' , 'change_comment_author' );
 
 &lt;p&gt;Without further ado, I offer &amp;ldquo;Alone Again.&amp;rdquo;&lt;/p&gt;
 
-&lt;p&gt;{% audioplayer src=&amp;rdquo;/share/AloneAgain&amp;rdquo; title=&amp;rdquo;Alone Again&amp;rdquo; %}&lt;/p&gt;
+&lt;p&gt;Liquid error: undefined method `downcase&amp;rsquo; for nil:NilClass&lt;/p&gt;
 </content>
  </entry>
  

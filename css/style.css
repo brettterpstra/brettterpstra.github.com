@@ -1,6 +1,7 @@
 /* @override 
 	http://jek.brettterpstra.com/css/style.css
 	http://temp.brettterpstra.com/css/style.css
+	http://temp.brettterpstra.dev/css/style.css
 */
 /* -------------------------------------------------------------- 
  Auguste
@@ -561,7 +562,7 @@ ul.biglist,
 
 /* Headline decor */
 
-.post h1 { padding-left:50px;margin-left:-50px;display:block;background:url(../images/asterisk.png) no-repeat 0 2px; }
+.post h1 { padding-left:50px;margin-left:-50px;display:block;background:url(../images/asterisk.png) no-repeat 0 2px;margin-bottom:0; }
 
 /* End decore */
 
@@ -607,15 +608,18 @@ form#contact .button { display:block;border:none;width:150px;margin:10px auto;fo
 
 form#contact .button:hover { background:#a7a68d;text-shadow:0 0 0 #edecdf; }
 
+.home .post div {
+  position:relative;
+}
 .home .sharetools {
-  float:right;
-  margin:0 0 10px 10px;
-  position: relative;
-  right: -40px;
+  margin:0 0 10px 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
 .single-post .sharetools {
   float: right;
   position: relative;
-  top: -25px;
-  right: -40px;
+  top: 0;
+  right: -16px;
 }
